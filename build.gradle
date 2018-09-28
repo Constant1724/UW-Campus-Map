@@ -1,0 +1,159 @@
+plugins {
+  id "net.ltgt.errorprone-base" version "0.0.13"
+}
+apply plugin: 'java'
+apply from: "checkerframework.gradle"
+
+sourceCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation group: 'asm', name: 'asm-all', version: '2.2.3' // for staff tools
+    implementation group: 'org.plumelib', name: 'require-javadoc', version: '0.1.0'
+    testImplementation group: 'junit', name: 'junit', version: '4.12'
+    testImplementation group: 'org.hamcrest', name: 'hamcrest-core', version: '1.3'
+    testImplementation group: 'org.hamcrest', name: 'hamcrest-all', version: '1.3'
+}
+
+///
+/// Extra code quality checks
+///
+
+// Creates task `runErrorProne`, which runs the Error Prone linter.
+// For more information: https://errorprone.info
+tasks.create(name: 'runErrorProne', type: JavaCompile, group: 'Validation') {
+    description 'Run the error-prone compiler on the main sources'
+    toolChain net.ltgt.gradle.errorprone.ErrorProneToolChain.create(project)
+    source = sourceSets.main.java.asFileTree
+    classpath = sourceSets.main.compileClasspath.asFileTree
+    destinationDir = new File("${buildDir}", 'errorprone')
+
+    options.compilerArgs = [
+        '-Werror',
+    ]
+}
+build.dependsOn runErrorProne
+
+// Require Javadoc on all members.
+// For more information: https://github.com/plume-lib/require-javadoc
+javadoc {
+    options.memberLevel = JavadocMemberLevel.PRIVATE
+    options.docletpath = project.sourceSets.main.compileClasspath as List
+    options.doclet = "org.plumelib.javadoc.RequireJavadoc"
+    // options.addStringOption('skip', 'ClassNotToCheck|OtherClass')
+}
+build.dependsOn javadoc
+
+// This checks the code formatting.
+// For more information: https://github.com/plume-lib/run-google-java-format
+task getCodeFormatScripts(type: Exec) {
+  description "Obtain the run-google-java-format scripts"
+  commandLine "bash", "-c", "(cd .run-google-java-format && git pull -q)" +
+          " || " +
+          "git clone -q https://github.com/plume-lib/run-google-java-format.git .run-google-java-format"
+}
+task checkFormat(type: Exec) {
+  description "Check whether the source code is properly formatted"
+  commandLine "bash", "-c", "find . -name \"*.java\" -type f " +
+          "| xargs ./.run-google-java-format/check-google-java-format.py " +
+          "|| (echo 'Try running:  ./gradlew reformat' && false)"
+}
+checkFormat.dependsOn getCodeFormatScripts
+/* Format the code according to the Google Java format code style. */
+task reformat(type: Exec) {
+  description "Format the Java source code"
+  commandLine "bash", "-c", "find src -name \"*.java\" -type f " +
+          "| xargs ./.run-google-java-format/run-google-java-format.py"
+}
+reformat.dependsOn getCodeFormatScripts
+
+///
+/// Validation: Checking additional assignment requirements
+///
+
+// FAILS if there are any unpushed commits.
+task checkNoUnpushedCommits {
+    description = 'Ensure there are no unpushed commits.'
+    doLast {
+        def git_push_output = 'git rev-list origin..HEAD'.execute().text
+        assert git_push_output.size() == 0 : "There are unpushed commits. Run `git status` for more detail."
+    }
+}
+
+// FAILS if there are any unstaged, or staged but uncommitted, changes.
+task checkNoUncommittedChanges {
+    description = 'Ensure there are no uncommitted changes.'
+    doLast {
+        def git_commit_output = 'git status --untracked-files=no --porcelain'.execute().text
+        assert git_commit_output.size() == 0 : "There are uncommitted changes. Run `git status` for more detail."
+    }
+}
+
+task validateWorkingCopy(group: 'Validation') {
+    description = 'Validate the working copy.  Ensures that the project builds and that required files exist.'
+    doLast {
+        def String[] hws_p = hws.split(',')
+        hws_p.each { hw_files ->
+            def String[] hw_files_p = getProperty(hw_files).split(',')
+            hw_files_p.each { fileName ->
+                fileName = fileName.trim()
+                assert file("src/main/java/${fileName}").exists() : "File ${fileName} does not exist."
+            }
+        }
+    }
+}
+validateWorkingCopy.dependsOn clean
+validateWorkingCopy.dependsOn build
+
+/*
+ * Removes the .validation_repo before running any of the other validates
+ * that would require Git to clone into said repo.
+ */
+task noValidationRepo {
+    description = 'Removes .validation_repo if it exists.'
+    doLast {
+        if (file(".validation_repo").exists()) {
+            exec {
+                commandLine 'rm', '-r', '.validation_repo'
+            }
+        }
+    }
+}
+
+task validateLocalRepo(group: 'Validation') {
+    description = 'Validates the local repository.  Runs validateWorkingCopy on a fresh clone of it.  Fails if there are uncommitted changes.'
+    doLast {
+        exec {
+            commandLine 'git', 'clone', '-q', '.', '.validation_repo'
+        }
+        exec {
+            commandLine './gradlew', '-b', '.validation_repo/build.gradle', 'validateWorkingCopy'
+        }
+    }
+}
+validateLocalRepo.dependsOn noValidationRepo
+validateLocalRepo.dependsOn checkNoUncommittedChanges
+
+task validateRemote(group: 'Validation') {
+    description = 'Validates the remote repository.  Runs validateWorkingCopy on a fresh clone of it.  Fails if there are uncommitted changes or unpushed commits.'
+    doLast {
+        def remote = 'git remote get-url origin'.execute().text.trim()
+        exec {
+            commandLine 'git', 'clone', '-q', remote, '.validation_repo'
+        }
+        exec {
+            commandLine './gradlew', '-b', '.validation_repo/build.gradle', 'validateWorkingCopy'
+        }
+    }
+}
+validateRemote.dependsOn noValidationRepo
+validateRemote.dependsOn checkNoUncommittedChanges
+validateRemote.dependsOn checkNoUnpushedCommits
+
+// This task is not advertised.
+task validate {
+    dependsOn validateRemote
+}

@@ -1,0 +1,2 @@
+validate:
+  script: chmod +x gradlew && ./gradlew validateWorkingCopy
