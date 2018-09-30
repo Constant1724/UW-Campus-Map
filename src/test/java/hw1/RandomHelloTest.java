@@ -7,6 +7,7 @@ import java.util.HashSet;
 import java.util.Set;
 import org.junit.Test;
 
+
 /**
  * RandomHelloTest is a simple test of the RandomHello class that is to be written by the students.
  * This test just makes sure that the program does not crash and that it prints at least 5 different
