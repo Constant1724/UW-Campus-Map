@@ -4,7 +4,7 @@ package hw1;
 // You may not make Ball implement the Comparable interface.
 public class Ball {
 
-  // The volume of the ball.
+  /** @param volume The volume of the ball. */
   private double volume;
 
   /**
