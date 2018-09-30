@@ -4,7 +4,7 @@ import java.util.Random;
 
 /**
  * This class is used to print out Hello World in 5 languages. Each time it will randomly choose one of five languages
- * and print it out.
+ * and print out 'Hello World' in that language.
  */
 public class RandomHello {
     /** Prints a random greeting to the console. */

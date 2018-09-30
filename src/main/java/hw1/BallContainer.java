@@ -11,15 +11,13 @@ import java.util.Set;
  */
 public class BallContainer implements Iterable<Ball> {
 
-  // Contents of the BallContainer.
-    /**
-     * @param contents the data structure that holds all balls.
-     * @param sum_volume the sum of volumes of all balls currently in the BallContainer.
-     * @param num_of_balls the number of balls currently in the BallContainer
-     */
+    // Contents of the BallContainer.
     private Set<Ball> contents;
+    // the sum of volume of all balls currently inside the BallContainer.
     private double sum_volume;
+    // the number of all balls currently inside the BallContainer.
     private int num_of_balls;
+
   /** Constructor that creates a new ballcontainer. */
   public BallContainer() {
     contents = new LinkedHashSet<Ball>();
