@@ -13,7 +13,7 @@ public class BallContainer implements Iterable<Ball> {
 
   // Contents of the BallContainer.
   private Set<Ball> contents;
-  private int sum_volume;
+  private double sum_volume;
   private int num_of_balls;
   /** Constructor that creates a new ballcontainer. */
   public BallContainer() {

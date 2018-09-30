@@ -1,6 +1,6 @@
 package hw1;
 
-import java.util.Iterator;
+import java.util.*;
 
 /**
  * This is a container can be used to contain Balls. The key difference between a BallContainer and
@@ -10,7 +10,7 @@ public class Box implements Iterable<Ball> {
 
   /** ballContainer is used to internally store balls for this Box. */
   private BallContainer ballContainer;
-
+  private double maxVolume;
   /**
    * Constructor that creates a new box.
    *
@@ -18,7 +18,8 @@ public class Box implements Iterable<Ball> {
    */
   public Box(double maxVolume) {
     // Your code goes here.  Remove the exception after you're done.
-    throw new RuntimeException("Method not implemented");
+    ballContainer = new BallContainer();
+    this.maxVolume = maxVolume;
   }
 
   /**
@@ -42,7 +43,12 @@ public class Box implements Iterable<Ball> {
    */
   public boolean add(Ball b) {
     // Your code goes here.  Remove the exception after you're done.
-    throw new RuntimeException("Method not implemented");
+      if (ballContainer.getVolume() + b.getVolume() <= maxVolume) {
+          return ballContainer.add(b);
+      }
+      else {
+          return false;
+      }
   }
 
   /**
@@ -53,7 +59,23 @@ public class Box implements Iterable<Ball> {
    */
   public Iterator<Ball> getBallsFromSmallest() {
     // Your code goes here.  Remove the exception after you're done.
-    throw new RuntimeException("Method not implemented");
+      List<Ball> list = new ArrayList<Ball>();
+      for (Ball ball: ballContainer) {
+          list.add(ball);
+      }
+      list.sort(new Comparator<Ball>() {
+          @Override
+          public int compare(Ball b1, Ball b2) {
+              if (b1.getVolume() - b2.getVolume() > 0) {
+                  return 1;
+              } else if (b1.getVolume() - b2.getVolume() < 0) {
+                  return -1;
+              } else {
+                  return 0;
+              }
+          }
+      });
+      return list.iterator();
   }
 
   /**

@@ -42,5 +42,19 @@ Problem 7.
     However, on the contrary, if the implementation is expected to run well as the program scales
     (large number of balls is expected), then the second approach wins since it takes O(1) to run. It will be a little
     harder to implement.
+ (c)
+    The first implementation is to loop through the iterator returned by ballContainer and sort it by using SortedSet or
+    ArrayList and get the final iterator.
 
-<replace this line with your answers>
+    The second implementation is to maintain another sorted data structure beside ballContainer to have the iterator
+    return sorted elements. In this case, the sorted data structure only cares about order and we have to modify the
+    remove, add and clear method to keep the sorted data structure up-to-date with the original one.
+
+    The answer to the question that which one is better really depends on the situation.
+    For example, the first implementation favors the situation that the implementation does not face huge load
+    (large number of balls is not expected) or the hardware is really powerful,
+    thus looping through all balls should not take too long. The first implementation is easier to program.
+
+    The second implementation favors the situation that huge number of balls is expected. In such case, looping through
+    all balls is extremely time-consuming. Though it may take more memory, the program will respond faster.
+
