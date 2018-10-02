@@ -43,7 +43,7 @@ javadoc {
     options.memberLevel = JavadocMemberLevel.PRIVATE
     options.docletpath = project.sourceSets.main.compileClasspath as List
     options.doclet = "org.plumelib.javadoc.RequireJavadoc"
-    // options.addStringOption('skip', 'ClassNotToCheck|OtherClass')
+    options.addStringOption('skip', 'CalculatorFrame|PolyGraph')
 }
 build.dependsOn javadoc
 
@@ -78,8 +78,8 @@ reformat.dependsOn getCodeFormatScripts
 task checkNoUnpushedCommits {
     description = 'Ensure there are no unpushed commits.'
     doLast {
-        def git_push_output = 'git rev-list origin..HEAD'.execute().text
-        assert git_push_output.size() == 0 : "There are unpushed commits. Run `git status` for more detail."
+        def unpushedCommits = 'git rev-list origin..HEAD'.execute().text
+        assert unpushedCommits.size() == 0 : "There are unpushed commits. Run `git status` for more detail."
     }
 }
 
@@ -87,18 +87,18 @@ task checkNoUnpushedCommits {
 task checkNoUncommittedChanges {
     description = 'Ensure there are no uncommitted changes.'
     doLast {
-        def git_commit_output = 'git status --untracked-files=no --porcelain'.execute().text
-        assert git_commit_output.size() == 0 : "There are uncommitted changes. Run `git status` for more detail."
+        def uncommittedChanges = 'git status --untracked-files=no --porcelain'.execute().text
+        assert uncommittedChanges.size() == 0 : "There are uncommitted changes. Run `git status` for more detail."
     }
 }
 
 task validateWorkingCopy(group: 'Validation') {
     description = 'Validate the working copy.  Ensures that the project builds and that required files exist.'
     doLast {
-        def String[] hws_p = hws.split(',')
-        hws_p.each { hw_files ->
-            def String[] hw_files_p = getProperty(hw_files).split(',')
-            hw_files_p.each { fileName ->
+        def String[] homeworkProperties = homeworks.split(',')
+        homeworkProperties.each { requiredHwFiles ->
+            def String[] requiredFiles = getProperty(requiredHwFiles).split(',')
+            requiredFiles.each { fileName ->
                 fileName = fileName.trim()
                 assert file("src/main/java/${fileName}").exists() : "File ${fileName} does not exist."
             }
@@ -109,15 +109,15 @@ validateWorkingCopy.dependsOn clean
 validateWorkingCopy.dependsOn build
 
 /*
- * Removes the .validation_repo before running any of the other validates
+ * Removes the .validationRepo before running any of the other validates
  * that would require Git to clone into said repo.
  */
 task noValidationRepo {
-    description = 'Removes .validation_repo if it exists.'
+    description = 'Removes .validationRepo if it exists.'
     doLast {
-        if (file(".validation_repo").exists()) {
+        if (file("${buildDir}/.validationRepo").exists()) {
             exec {
-                commandLine 'rm', '-r', '.validation_repo'
+                commandLine 'rm', '-r', "${buildDir}/.validationRepo"
             }
         }
     }
@@ -127,10 +127,10 @@ task validateLocalRepo(group: 'Validation') {
     description = 'Validates the local repository.  Runs validateWorkingCopy on a fresh clone of it.  Fails if there are uncommitted changes.'
     doLast {
         exec {
-            commandLine 'git', 'clone', '-q', '.', '.validation_repo'
+            commandLine 'git', 'clone', '-q', '.', "${buildDir}/.validationRepo"
         }
         exec {
-            commandLine './gradlew', '-b', '.validation_repo/build.gradle', 'validateWorkingCopy'
+            commandLine './gradlew', '-b', "${buildDir}/.validationRepo/build.gradle", 'validateWorkingCopy'
         }
     }
 }
@@ -142,10 +142,10 @@ task validateRemote(group: 'Validation') {
     doLast {
         def remote = 'git remote get-url origin'.execute().text.trim()
         exec {
-            commandLine 'git', 'clone', '-q', remote, '.validation_repo'
+            commandLine 'git', 'clone', '-q', remote, "${buildDir}/.validationRepo"
         }
         exec {
-            commandLine './gradlew', '-b', '.validation_repo/build.gradle', 'validateWorkingCopy'
+            commandLine './gradlew', '-b', "${buildDir}/.validationRepo/build.gradle", 'validateWorkingCopy'
         }
     }
 }
