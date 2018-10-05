@@ -1,21 +1,62 @@
 plugins {
   id "net.ltgt.errorprone-base" version "0.0.13"
+  id 'org.ajoberstar.grgit' version '2.3.0'
 }
 apply plugin: 'java'
-apply from: "checkerframework.gradle"
+apply from: "gradle/checkerframework.gradle"
+
+import org.ajoberstar.grgit.Grgit
 
 sourceCompatibility = 1.8
 
 repositories {
-    mavenCentral()
+  mavenCentral()
+  jcenter()
 }
 
 dependencies {
-    implementation group: 'asm', name: 'asm-all', version: '2.2.3' // for staff tools
-    implementation group: 'org.plumelib', name: 'require-javadoc', version: '0.1.0'
-    testImplementation group: 'junit', name: 'junit', version: '4.12'
-    testImplementation group: 'org.hamcrest', name: 'hamcrest-core', version: '1.3'
-    testImplementation group: 'org.hamcrest', name: 'hamcrest-all', version: '1.3'
+  implementation group: 'asm', name: 'asm-all', version: '2.2.3' // for staff tools
+  implementation group: 'org.plumelib', name: 'require-javadoc', version: '0.1.0'
+  // These should really be testImplementation, but put them in implementation so
+  // javadoc target works without change for test files.
+  implementation group: 'junit', name: 'junit', version: '4.12'
+  implementation group: 'org.hamcrest', name: 'hamcrest-core', version: '1.3'
+  implementation group: 'org.hamcrest', name: 'hamcrest-all', version: '1.3'
+
+  compile 'org.ajoberstar:grgit:2.3.0'
+}
+
+///
+/// Testing
+///
+
+test {
+  // comment out this line to start work on HW2
+  exclude 'hw2/**'
+}
+
+///
+/// Javadoc
+///
+
+configurations {
+  taglet
+}
+
+dependencies {
+  taglet "org.plumelib:javadoc331:0.0.1"
+}
+
+tasks.withType(Javadoc) {
+  options {
+    taglets "javadoc331.DerivedfieldTaglet",
+      "javadoc331.EffectsTaglet",
+      "javadoc331.ModifiesTaglet",
+      "javadoc331.RequiresTaglet",
+      "javadoc331.ReturnsTaglet",
+      "javadoc331.SpecfieldTaglet"
+    tagletPath(configurations.taglet.files as File[])
+  }
 }
 
 ///
@@ -25,50 +66,84 @@ dependencies {
 // Creates task `runErrorProne`, which runs the Error Prone linter.
 // For more information: https://errorprone.info
 tasks.create(name: 'runErrorProne', type: JavaCompile, group: 'Validation') {
-    description 'Run the error-prone compiler on the main sources'
-    toolChain net.ltgt.gradle.errorprone.ErrorProneToolChain.create(project)
-    source = sourceSets.main.java.asFileTree
-    classpath = sourceSets.main.compileClasspath.asFileTree
-    destinationDir = new File("${buildDir}", 'errorprone')
+  description 'Run the error-prone compiler on the main sources'
+  toolChain net.ltgt.gradle.errorprone.ErrorProneToolChain.create(project)
+  source = sourceSets.main.java.asFileTree
+  classpath = sourceSets.main.compileClasspath.asFileTree
+  destinationDir = new File("${buildDir}", 'errorprone')
 
-    options.compilerArgs = [
-        '-Werror',
-    ]
+  options.compilerArgs = [
+    '-Werror',
+  ]
 }
 build.dependsOn runErrorProne
 
-// Require Javadoc on all members.
-// For more information: https://github.com/plume-lib/require-javadoc
-javadoc {
-    options.memberLevel = JavadocMemberLevel.PRIVATE
-    options.docletpath = project.sourceSets.main.compileClasspath as List
-    options.doclet = "org.plumelib.javadoc.RequireJavadoc"
-    options.addStringOption('skip', 'CalculatorFrame|PolyGraph')
-}
 build.dependsOn javadoc
 
-// This checks the code formatting.
-// For more information: https://github.com/plume-lib/run-google-java-format
-task getCodeFormatScripts(type: Exec) {
+// Require Javadoc on all members.
+// For more information: https://github.com/plume-lib/require-javadoc
+task requireJavadoc(type: Javadoc) {
+  description = 'Ensures that Javadoc documentation exists.'
+  destinationDir temporaryDir
+  source = sourceSets.main.allJava
+  classpath = project.sourceSets.main.compileClasspath
+  options.docletpath = project.sourceSets.main.compileClasspath as List
+  options.doclet = "org.plumelib.javadoc.RequireJavadoc"
+  options.memberLevel = JavadocMemberLevel.PRIVATE
+  options.addStringOption('skip', 'CalculatorFrame|PolyGraph')
+}
+build.dependsOn requireJavadoc
+
+///
+/// Code formatting:
+/// For more information: https://github.com/plume-lib/run-google-java-format
+///
+
+task getCodeFormatScripts {
   description "Obtain the run-google-java-format scripts"
-  commandLine "bash", "-c", "(cd .run-google-java-format && git pull -q)" +
-          " || " +
-          "git clone -q https://github.com/plume-lib/run-google-java-format.git .run-google-java-format"
+  doLast {
+    if (! new File("$projectDir/.run-google-java-format").exists()) {
+      def rgjfGit = Grgit.clone(dir: "$projectDir/.run-google-java-format", uri: 'https://github.com/plume-lib/run-google-java-format.git')
+    } else {
+      def rgjfGit = Grgit.open(dir: "$projectDir/.run-google-java-format")
+      rgjfGit.pull()
+    }
+  }
 }
-task checkFormat(type: Exec) {
-  description "Check whether the source code is properly formatted"
-  commandLine "bash", "-c", "find . -name \"*.java\" -type f " +
-          "| xargs ./.run-google-java-format/check-google-java-format.py " +
-          "|| (echo 'Try running:  ./gradlew reformat' && false)"
+
+task pythonIsInstalled(type: Exec) {
+  description "Check that the python executable is installed."
+  executable = "python"
+  args "--version"
 }
-checkFormat.dependsOn getCodeFormatScripts
-/* Format the code according to the Google Java format code style. */
-task reformat(type: Exec) {
-  description "Format the Java source code"
-  commandLine "bash", "-c", "find src -name \"*.java\" -type f " +
-          "| xargs ./.run-google-java-format/run-google-java-format.py"
+
+task checkFormat(type: Exec, dependsOn: [getCodeFormatScripts, pythonIsInstalled], group: 'Formatting') {
+  description "Check whether the Java source code is properly formatted"
+  def javaFiles = fileTree("$projectDir").matching{ include "**/*.java" } as List
+  def pythonArgs = javaFiles.clone()
+  pythonArgs.add(0, "$projectDir/.run-google-java-format/check-google-java-format.py")
+
+  commandLine "python"
+  args pythonArgs
+  ignoreExitValue true
+
+  doLast {
+    if (execResult.exitValue != 0) {
+      throw new GradleException("Found improper formatting, try running:  ./gradlew reformat")
+    }
+  }
 }
-reformat.dependsOn getCodeFormatScripts
+
+task reformat(type: Exec, dependsOn: [getCodeFormatScripts, pythonIsInstalled], group: 'Formatting') {
+  description "Format the Java source code according to the Google Java Format style"
+  def javaFiles = fileTree("$projectDir").matching{ include "**/*.java" } as List
+  def pythonArgs = javaFiles.clone()
+  pythonArgs.add(0, "$projectDir/.run-google-java-format/run-google-java-format.py")
+
+  commandLine "python"
+  args pythonArgs
+}
+
 
 ///
 /// Validation: Checking additional assignment requirements
@@ -76,84 +151,114 @@ reformat.dependsOn getCodeFormatScripts
 
 // FAILS if there are any unpushed commits.
 task checkNoUnpushedCommits {
-    description = 'Ensure there are no unpushed commits.'
-    doLast {
-        def unpushedCommits = 'git rev-list origin..HEAD'.execute().text
-        assert unpushedCommits.size() == 0 : "There are unpushed commits. Run `git status` for more detail."
-    }
+  description = 'Ensure there are no unpushed commits.'
+  doLast {
+    // TODO:  How to do this in grgit?  It doesn't support rev-list: https://github.com/ajoberstar/grgit/issues/41
+    def unpushedCommits = 'git rev-list origin..HEAD'.execute().text
+    assert unpushedCommits.size() == 0 : "There are unpushed commits. Run `git status` for more detail."
+  }
 }
 
 // FAILS if there are any unstaged, or staged but uncommitted, changes.
 task checkNoUncommittedChanges {
-    description = 'Ensure there are no uncommitted changes.'
-    doLast {
-        def uncommittedChanges = 'git status --untracked-files=no --porcelain'.execute().text
-        assert uncommittedChanges.size() == 0 : "There are uncommitted changes. Run `git status` for more detail."
+  description = 'Ensure there are no uncommitted changes.'
+  doLast {
+    def uncommittedChanges = 'git status --untracked-files=no --porcelain'.execute().text
+    if (uncommittedChanges.size() != 0) {
+      throw new GradleException("There are uncommitted changes. Run `git status` for more detail.")
     }
+
+    //TODO: Working on the below.  The Grgit documentation is a bit lacking.
+    /*
+    // command-line version: git status --untracked-files=no --porcelain
+    def status = grgit.status()
+    def uncommittedChanges = ...
+    */
+  }
 }
 
 task validateWorkingCopy(group: 'Validation') {
-    description = 'Validate the working copy.  Ensures that the project builds and that required files exist.'
-    doLast {
-        def String[] homeworkProperties = homeworks.split(',')
-        homeworkProperties.each { requiredHwFiles ->
-            def String[] requiredFiles = getProperty(requiredHwFiles).split(',')
-            requiredFiles.each { fileName ->
-                fileName = fileName.trim()
-                assert file("src/main/java/${fileName}").exists() : "File ${fileName} does not exist."
-            }
-        }
+  description = 'Validate the working copy.  Ensures that the project builds and that required files exist.'
+  doLast {
+    def String[] homeworkProperties = homeworks.split(',')
+    homeworkProperties.each { requiredHwFiles ->
+      def String[] requiredFiles = getProperty(requiredHwFiles).split(',')
+      requiredFiles.each { fileName ->
+        fileName = fileName.trim()
+        if (! file("src/main/java/${fileName}").exists()) {
+	  throw new GradleException("File ${fileName} does not exist.")
+	}
+      }
     }
+  }
 }
 validateWorkingCopy.dependsOn clean
 validateWorkingCopy.dependsOn build
 
-/*
- * Removes the .validationRepo before running any of the other validates
- * that would require Git to clone into said repo.
- */
-task noValidationRepo {
-    description = 'Removes .validationRepo if it exists.'
-    doLast {
-        if (file("${buildDir}/.validationRepo").exists()) {
-            exec {
-                commandLine 'rm', '-r', "${buildDir}/.validationRepo"
-            }
-        }
-    }
-}
+task validateLocalRepo(type: GradleBuild, group: 'Validation') {
+  description = 'Validates the local repository.  Runs validateWorkingCopy on a fresh clone of it.  Fails if there are uncommitted changes.'
+  def validationRepo = "${temporaryDir}/validationRepo"
+  doFirst {
+    // delete may fail because of hanging file descriptors, so rename instead :-(
+    file(validationRepo).renameTo(file(validationRepo + new Random().nextInt(1000000)))
+    Grgit.clone(dir: validationRepo, uri: "${projectDir}")
+  }
 
-task validateLocalRepo(group: 'Validation') {
-    description = 'Validates the local repository.  Runs validateWorkingCopy on a fresh clone of it.  Fails if there are uncommitted changes.'
-    doLast {
-        exec {
-            commandLine 'git', 'clone', '-q', '.', "${buildDir}/.validationRepo"
-        }
-        exec {
-            commandLine './gradlew', '-b', "${buildDir}/.validationRepo/build.gradle", 'validateWorkingCopy'
-        }
-    }
+  dir = validationRepo
+  tasks = ["validateWorkingCopy"]
 }
-validateLocalRepo.dependsOn noValidationRepo
 validateLocalRepo.dependsOn checkNoUncommittedChanges
 
-task validateRemote(group: 'Validation') {
-    description = 'Validates the remote repository.  Runs validateWorkingCopy on a fresh clone of it.  Fails if there are uncommitted changes or unpushed commits.'
-    doLast {
-        def remote = 'git remote get-url origin'.execute().text.trim()
-        exec {
-            commandLine 'git', 'clone', '-q', remote, "${buildDir}/.validationRepo"
-        }
-        exec {
-            commandLine './gradlew', '-b', "${buildDir}/.validationRepo/build.gradle", 'validateWorkingCopy'
-        }
-    }
+task validateRemote(type: GradleBuild, group: 'Validation') {
+  description = 'Validates the remote repository.  Runs validateWorkingCopy on a fresh clone of it.  Fails if there are uncommitted changes or unpushed commits.'
+  def validationRepo = "${temporaryDir}/validationRepo"
+  doFirst {
+    // delete may fail because of hanging file descriptors, so rename instead :-(
+    file(validationRepo).renameTo(file(validationRepo + new Random().nextInt(1000000)))
+    // Command-line equivalent for "remote" variable: git remote get-url origin
+    // HACK: Assume there is just one remote.  We want the remote named "origin".
+    assert grgit.remote.list().size() == 1
+    def remote = grgit.remote.list().get(0).url
+    Grgit.clone(dir: validationRepo, uri: remote)
+  }
+
+  dir = validationRepo
+  tasks = ["validateWorkingCopy"]
 }
-validateRemote.dependsOn noValidationRepo
 validateRemote.dependsOn checkNoUncommittedChanges
 validateRemote.dependsOn checkNoUnpushedCommits
 
 // This task is not advertised.
 task validate {
-    dependsOn validateRemote
+  dependsOn validateRemote
 }
+
+///
+/// Targets for course staff use
+///
+
+task javadocStaging(type: Javadoc) {
+  source = sourceSets.main.allJava
+  destinationDir = new File("/cse/web/courses/cse331/staff/staging/api")
+}
+
+task javadocPublic(type: Javadoc) {
+  source = sourceSets.main.allJava
+  destinationDir = new File("/cse/web/courses/cse331/18au/api")
+}
+
+sourceSets {
+  staffTest {
+    java {
+      srcDirs = ['src/staff_test/java']
+    }
+    compileClasspath += sourceSets.main.runtimeClasspath
+  }
+}
+
+task staffTest(type: Test) {
+  description = "Runs staff Tests"
+  testClassesDirs = sourceSets.staffTest.output.classesDirs
+  classpath += sourceSets.staffTest.runtimeClasspath
+}
+staffTest.dependsOn test
