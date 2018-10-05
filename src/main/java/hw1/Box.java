@@ -11,8 +11,10 @@ public class Box implements Iterable<Ball> {
   /** ballContainer is used to internally store balls for this Box. */
   private BallContainer ballContainer;
 
-  /** maxVolume is The maxVolume of the Box. The sum of volumes of all balls should
-   * be less than this value*/
+  /**
+   * maxVolume is The maxVolume of the Box. The sum of volumes of all balls should be less than this
+   * value
+   */
   private double maxVolume;
 
   /**
@@ -47,12 +49,11 @@ public class Box implements Iterable<Ball> {
    */
   public boolean add(Ball b) {
     // Your code goes here.  Remove the exception after you're done.
-      if (ballContainer.getVolume() + b.getVolume() <= maxVolume) {
-          return ballContainer.add(b);
-      }
-      else {
-          return false;
-      }
+    if (ballContainer.getVolume() + b.getVolume() <= maxVolume) {
+      return ballContainer.add(b);
+    } else {
+      return false;
+    }
   }
 
   /**
@@ -63,23 +64,24 @@ public class Box implements Iterable<Ball> {
    */
   public Iterator<Ball> getBallsFromSmallest() {
     // Your code goes here.  Remove the exception after you're done.
-      List<Ball> list = new ArrayList<Ball>(ballContainer.size());
-      for (Ball ball: ballContainer) {
-          list.add(ball);
-      }
-      list.sort(new Comparator<Ball>() {
+    List<Ball> list = new ArrayList<Ball>(ballContainer.size());
+    for (Ball ball : ballContainer) {
+      list.add(ball);
+    }
+    list.sort(
+        new Comparator<Ball>() {
           @Override
           public int compare(Ball b1, Ball b2) {
-              if (b1.getVolume() - b2.getVolume() > 0) {
-                  return 1;
-              } else if (b1.getVolume() - b2.getVolume() < 0) {
-                  return -1;
-              } else {
-                  return 0;
-              }
+            if (b1.getVolume() - b2.getVolume() > 0) {
+              return 1;
+            } else if (b1.getVolume() - b2.getVolume() < 0) {
+              return -1;
+            } else {
+              return 0;
+            }
           }
-      });
-      return list.iterator();
+        });
+    return list.iterator();
   }
 
   /**

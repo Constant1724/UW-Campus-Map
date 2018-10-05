@@ -11,14 +11,14 @@ import java.util.Set;
  */
 public class BallContainer implements Iterable<Ball> {
 
-    /** Contents of the BallContainer. */
-    private Set<Ball> contents;
+  /** Contents of the BallContainer. */
+  private Set<Ball> contents;
 
-    /** The sum of volume of all balls currently inside the BallContainer. */
-    private double sumVolume;
+  /** The sum of volume of all balls currently inside the BallContainer. */
+  private double sumVolume;
 
-    /** The number of all balls currently inside the BallContainer. */
-    private int numOfBalls;
+  /** The number of all balls currently inside the BallContainer. */
+  private int numOfBalls;
 
   /** Constructor that creates a new ballcontainer. */
   public BallContainer() {
@@ -56,11 +56,11 @@ public class BallContainer implements Iterable<Ball> {
    */
   public boolean add(Ball b) {
     // Your code goes here.  Remove the exception after you're done.
-      boolean flag = contents.add(b);
-      if (flag) {
-          sumVolume += b.getVolume();
-          numOfBalls ++;
-      }
+    boolean flag = contents.add(b);
+    if (flag) {
+      sumVolume += b.getVolume();
+      numOfBalls++;
+    }
     return flag;
   }
 
@@ -76,12 +76,12 @@ public class BallContainer implements Iterable<Ball> {
    */
   public boolean remove(Ball b) {
     // Your code goes here.  Remove the exception after you're done.
-      boolean flag = contents.remove(b);
-      if (flag) {
-          sumVolume -= b.getVolume();
-          numOfBalls --;
-      }
-      return flag;
+    boolean flag = contents.remove(b);
+    if (flag) {
+      sumVolume -= b.getVolume();
+      numOfBalls--;
+    }
+    return flag;
   }
 
   /**
@@ -91,7 +91,7 @@ public class BallContainer implements Iterable<Ball> {
    */
   public double getVolume() {
     // Your code goes here.  Remove the exception after you're done.
-      return sumVolume;
+    return sumVolume;
   }
 
   /**
@@ -101,15 +101,15 @@ public class BallContainer implements Iterable<Ball> {
    */
   public int size() {
     // Your code goes here.  Remove the exception after you're done.
-      return numOfBalls;
+    return numOfBalls;
   }
 
   /** Empties the container, i.e. removes all its contents. */
   public void clear() {
     // Your code goes here.  Remove the exception after you're done.
-      contents.clear();
-      numOfBalls = 0;
-      sumVolume = 0;
+    contents.clear();
+    numOfBalls = 0;
+    sumVolume = 0;
   }
 
   /**
@@ -122,6 +122,6 @@ public class BallContainer implements Iterable<Ball> {
    */
   public boolean contains(Ball b) {
     // Your code goes here.  Remove the exception after you're done.
-      return contents.contains(b);
+    return contents.contains(b);
   }
 }
