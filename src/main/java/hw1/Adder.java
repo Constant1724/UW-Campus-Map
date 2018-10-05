@@ -28,6 +28,6 @@ public class Adder {
    * @return sum of x and y
    */
   public static int computeSum(int x, int y) {
-    return x - y;
+    return x + y;
   }
 }

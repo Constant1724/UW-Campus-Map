@@ -11,18 +11,20 @@ import java.util.Set;
  */
 public class BallContainer implements Iterable<Ball> {
 
-    /** @param Contents of the BallContainer. */
+    /** Contents of the BallContainer. */
     private Set<Ball> contents;
-    /** @param sum_volume the sum of volume of all balls currently inside the BallContainer. */
-    private double sum_volume;
-    /** @param num_of_balls the number of all balls currently inside the BallContainer. */
-    private int num_of_balls;
+
+    /** The sum of volume of all balls currently inside the BallContainer. */
+    private double sumVolume;
+
+    /** The number of all balls currently inside the BallContainer. */
+    private int numOfBalls;
 
   /** Constructor that creates a new ballcontainer. */
   public BallContainer() {
     contents = new LinkedHashSet<Ball>();
-    sum_volume = 0;
-    num_of_balls = 0;
+    sumVolume = 0;
+    numOfBalls = 0;
   }
 
   /**
@@ -56,8 +58,8 @@ public class BallContainer implements Iterable<Ball> {
     // Your code goes here.  Remove the exception after you're done.
       boolean flag = contents.add(b);
       if (flag) {
-          sum_volume += b.getVolume();
-          num_of_balls ++;
+          sumVolume += b.getVolume();
+          numOfBalls ++;
       }
     return flag;
   }
@@ -76,8 +78,8 @@ public class BallContainer implements Iterable<Ball> {
     // Your code goes here.  Remove the exception after you're done.
       boolean flag = contents.remove(b);
       if (flag) {
-          sum_volume -= b.getVolume();
-          num_of_balls --;
+          sumVolume -= b.getVolume();
+          numOfBalls --;
       }
       return flag;
   }
@@ -89,7 +91,7 @@ public class BallContainer implements Iterable<Ball> {
    */
   public double getVolume() {
     // Your code goes here.  Remove the exception after you're done.
-      return sum_volume;
+      return sumVolume;
   }
 
   /**
@@ -99,15 +101,15 @@ public class BallContainer implements Iterable<Ball> {
    */
   public int size() {
     // Your code goes here.  Remove the exception after you're done.
-      return num_of_balls;
+      return numOfBalls;
   }
 
   /** Empties the container, i.e. removes all its contents. */
   public void clear() {
     // Your code goes here.  Remove the exception after you're done.
       contents.clear();
-      num_of_balls = 0;
-      sum_volume = 0;
+      numOfBalls = 0;
+      sumVolume = 0;
   }
 
   /**
