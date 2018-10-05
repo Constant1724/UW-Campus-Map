@@ -6,7 +6,7 @@ Name:  Haopeng Zhou
 Problem 6.
 
 (a)
-The original implementation mistakenly classify 0 as negative number.
+The original implementation mistakenly classifies 0 as negative number.
 To fix it, simply remove replace 'n <= 0' with 'n < 0' in the first if clause. (line 19)
 
 (b)
@@ -22,8 +22,8 @@ basic case, which is wrong according to the definition of Fibonacci number.
 
 The implementation is inconsistent with the spec.
 
-To fix it, replace the minus sign with add sign in the return clause (line 24) and replace 'n <= 2' with 'n < 2' in the first
-else if clause. (line 21)
+To fix it, replace the minus sign with add sign in the return clause (line 24)
+and replace 'n <= 2' with 'n < 2' in the first else if clause. (line 21)
 
 Problem 7. 
  (a)
@@ -39,12 +39,13 @@ Problem 7.
  (b)
     The answer depends. If the implementation does not mean to face huge load (small number of balls is expected),
     then it would be fine to loop through the set and add up the volume. It will be easier to implement.
-    However, on the contrary, if the implementation is expected to run well as the program scales
+
+    However, on the contrary, if the implementation is expected to run fast as the program scales
     (large number of balls is expected), then the second approach wins since it takes O(1) to run. It will be a little
     harder to implement.
  (c)
     The first implementation is to loop through the iterator returned by ballContainer and sort it by using SortedSet or
-    ArrayList and get the final iterator.
+    ArrayList.sort() and get the final iterator.
 
     The second implementation is to maintain another sorted data structure beside ballContainer to have the iterator
     return sorted elements. In this case, the sorted data structure only cares about order and we have to modify the

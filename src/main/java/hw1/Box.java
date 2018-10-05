@@ -63,7 +63,7 @@ public class Box implements Iterable<Ball> {
    */
   public Iterator<Ball> getBallsFromSmallest() {
     // Your code goes here.  Remove the exception after you're done.
-      List<Ball> list = new ArrayList<Ball>();
+      List<Ball> list = new ArrayList<Ball>(ballContainer.size());
       for (Ball ball: ballContainer) {
           list.add(ball);
       }
