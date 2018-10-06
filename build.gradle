@@ -31,8 +31,11 @@ dependencies {
 ///
 
 test {
-  // comment out this line to start work on HW2
-  exclude 'hw2/**'
+  // Comment out a line to start work on that homework.
+  // exclude 'hw2/**'
+  exclude 'hw3/**'
+  exclude 'hw4/**'
+  exclude 'hw5/**'
 }
 
 ///
