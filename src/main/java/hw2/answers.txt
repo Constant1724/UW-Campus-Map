@@ -79,24 +79,20 @@ Problem 0.
 Problem 1.
 
 (a)
-    Apparently, the first method needed to change is the checkRep. Since the new invariant does not require numer and
-    denom to stored in reduce form, the checkRep does not need to check whether their common GCD is 1 or -1. In terms of
-    complexity, simply remove this part does not bring too much change. In fact, the code will run a little faster,
-    because it does not need to find the GCD of two large numbers.
+For hashCode and equals and toString, we have to turn numer and denom into reduced forms first, which adds a little
+complex for reading the code. Moreover, running will be slower, since it needs to do more work (turn into reduce form).
 
-    The second method needed to change is the equals. Specifically, before comparing, it is necessary to add code that
-    turns this.numer and this.denom, other.numer and other.denom into reduced form. Otherwise, two mathematically equal
-    rationals may return unexpected answer, simply because one is in reduced form and the other is not. In terms of
-    complexity, it makes the code a little bit harder to read. Reader may be confused about the code to give reduced form
-    in equals method. In addition, it will decrease the running time, since each time client calls equals, the code
-    need to first get reduced form and then do comparison. By the way, the code will try to find the reduced form of
-    this.numer and this.denom multiple times, which is redundant and inefficient.
+For checkRep, we can just remove the part check if it is in reduced form. Code will run faster, since it does less work.
 
 (b)
-
+It violates the immutability property of the ratNum class, which says all operation should create new instance instead
+of modifying existing one.
+Moreover, the implementation behavior is different from spec. Particularly, according to spec, the behavior should not
+have any side effects, while the implementation does modify this.
 
 (c)
-
+The reason is that the ratNum class is immutable. Once the instance is created, the fields can no longer be changed.
+Any attempts will cause compile-time error, since fields are declared as final.
 
 Problem 2.
 

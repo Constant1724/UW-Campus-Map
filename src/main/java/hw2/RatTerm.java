@@ -69,8 +69,7 @@ public final class RatTerm {
    * @return the coefficient of this RatTerm.
    */
   public RatNum getCoeff() {
-    // TODO: Fill in this method, then remove the RuntimeException
-    throw new RuntimeException("RatTerm->getCoeff() is not yet implemented");
+      return this.coeff;
   }
 
   /**
@@ -79,8 +78,7 @@ public final class RatTerm {
    * @return the exponent of this RatTerm.
    */
   public int getExpt() {
-    // TODO: Fill in this method, then remove the RuntimeException
-    throw new RuntimeException("RatTerm->getExpt() is not yet implemented");
+      return this.expt;
   }
 
   /**
@@ -89,8 +87,7 @@ public final class RatTerm {
    * @return true if and only if this has NaN as a coefficient.
    */
   public boolean isNaN() {
-    // TODO: Fill in this method, then remove the RuntimeException
-    throw new RuntimeException("RatTerm->isNaN() is not yet implemented");
+      return this.equals(this.NaN);
   }
 
   /**
@@ -99,8 +96,7 @@ public final class RatTerm {
    * @return true if and only if this has zero as a coefficient.
    */
   public boolean isZero() {
-    // TODO: Fill in this method, then remove the RuntimeException
-    throw new RuntimeException("RatTerm->isZero() is not yet implemented");
+      return this.equals(this.ZERO);
   }
 
   /**
@@ -111,9 +107,11 @@ public final class RatTerm {
    *     is 12. if (this.isNaN() == true), return Double.NaN
    */
   public double eval(double d) {
-    // TODO: Fill in this method, then remove the RuntimeException
+      if (this.isNaN()) {
+          return Double.NaN;
+      }
+      return this.coeff.doubleValue() * Math.pow(d, this.expt);
     // Hint: You may find java.lang.Math's pow() method useful.
-    throw new RuntimeException("RatTerm->eval() is not yet implemented");
   }
 
   /**
