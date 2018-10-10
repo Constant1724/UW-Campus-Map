@@ -1,23 +1,96 @@
 CSE 331 Homework 2.  Answers to Written questions.
 Edit this file to supply your answers.
 
-Name:  <replace this with your name>
+Name:  Haopeng Zhou
 
 Problem 0.
 
 (a)
-
-
+    r = p * q:
+    initialize variable r to be empty.
+    foreach term t_p in p:
+        create a variable temp
+        foreach term t_q in q:
+            insert a new term in temp, whose coefficient is the product of coefficient of t_p and t_q
+            and whose degree is the sum of degree of t_p and t_q
+        use algorithm for polynomial addition to add temp to r, and assign the result back to r.
 (b)
-
-
+    r = p / q:
+    create variable remainder = p by making a term-by-term copy of all terms in p to remainder.
+    create variable quotient and initialize it to be empty
+    while ( highest degree of remainder >= highest degree of q):
+        create variable temp, whose coefficient is the coefficient of the highest degree term in remainder /
+        the coefficient of the highest degree term in q, whose degree is highest degree of remainder - highest degree of
+        q.
+        let temp2 be the production of temp and q, by polynomial multiplication algorithm defined in part(a).
+            (Note that, in this case temp should be interpreted as a single-term polynomial, to keep type consistent)
+        foreach term temp2_ in temp2:
+            Replace the coefficient of temp2_ be -1 * original coefficient of temp2_
+        insert temp into the quotient variable.
+        let remainder be the sum of temp2 and remainder, by polynomial addition algorithm.
 (c)
+    p = (x^3 + x - 1)
+    q = (x + 1)
+
+    remainder = copy of p = (x^3 + x - 1)
+    quotient = empty
+    while [highest degree of remainder >= highest degree of q] :
+        Iteration1: while loop is YES,since 3 >= 1. remainder = (x^3 + x - 1), quotient = empty,
+            [coefficient = 1 / 1 = 1. Degree = 3 - 1 = 2] temp = x^2.
+            [Multiply temp and q by polynomial Multiplication algorithm] temp2 = (x + 1) * (x^2) = x^3 + x^2
+            foreach term temp2_ in temp2 :
+                iteration1_1 [temp2_ = x^3]:
+                    temp2_ = -1 * x^3, so now temp2 = -x^3 + x^2
+                iteration1_2 [temp2_ = x^2]:
+                    temp2_ = -1 * x^2, so now temp2 = -x^3 - x^2
+            [insert temp into the quotient variable.] quotient = x^2
+            [let remainder be the sum of temp2 and remainder, by polynomial addition algorithm.] remainder =
+            (x^3 + x - 1) + (-x^3 - x^2) = -x^2 + x - 1
+
+        Iteration2: while loop is YES,since 2 >= 1. remainder = (-x^2 + x - 1), quotient = x^2,
+            [coefficient = -1 / 1 = 1. Degree = 2 - 1 = 1] temp = -x.
+            [Multiply temp and q by polynomial Multiplication algorithm] temp2 = (x + 1) * (-x) = -x^2 - x
+            foreach term temp2_ in temp2 :
+                iteration1_1 [temp2_ = -x^2]:
+                    temp2_ = -1 * -x^2, so now temp2 = x^2 - x
+                iteration1_2 [temp2_ = -x]:
+                    temp2_ = -1 * -x, so now temp2 = x^2 + x
+            [insert temp into the quotient variable.] quotient = x^2 - x
+            [let remainder be the sum of temp2 and remainder, by polynomial addition algorithm.] remainder =
+            (-x^2 + x - 1) + (x^2 + x) = 2x - 1
+
+        Iteration3: while loop is YES,since 1 >= 1. remainder = (2x - 1), quotient = x^2 - x,
+            [coefficient = 2 / 1 = 2. Degree = 1 - 1 = 0] temp = 2.
+            [Multiply temp and q by polynomial Multiplication algorithm] temp2 = (x + 1) * (2) = 2x + 1
+            foreach term temp2_ in temp2 :
+                iteration1_1 [temp2_ = 2x]:
+                    temp2_ = -1 * 2x, so now temp2 = -2x + 1
+                iteration1_2 [temp2_ = 1]:
+                    temp2_ = -1 * 1, so now temp2 = -2x - 1
+            [insert temp into the quotient variable.] quotient = x^2 - x + 2
+            [let remainder be the sum of temp2 and remainder, by polynomial addition algorithm.] remainder =
+            (2x - 1) + (-2x - 1) = -2
+
+        Iteration3: while loop is NO,since 0 >= 1 is wrong. remainder = (-2), quotient = x^2 - x + 2
+
+    We are done, so quotient = x^2 - x + 2
 
 
 Problem 1.
 
 (a)
+    Apparently, the first method needed to change is the checkRep. Since the new invariant does not require numer and
+    denom to stored in reduce form, the checkRep does not need to check whether their common GCD is 1 or -1. In terms of
+    complexity, simply remove this part does not bring too much change. In fact, the code will run a little faster,
+    because it does not need to find the GCD of two large numbers.
 
+    The second method needed to change is the equals. Specifically, before comparing, it is necessary to add code that
+    turns this.numer and this.denom, other.numer and other.denom into reduced form. Otherwise, two mathematically equal
+    rationals may return unexpected answer, simply because one is in reduced form and the other is not. In terms of
+    complexity, it makes the code a little bit harder to read. Reader may be confused about the code to give reduced form
+    in equals method. In addition, it will decrease the running time, since each time client calls equals, the code
+    need to first get reduced form and then do comparison. By the way, the code will try to find the reduced form of
+    this.numer and this.denom multiple times, which is redundant and inefficient.
 
 (b)
 
