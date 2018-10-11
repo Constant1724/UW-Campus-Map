@@ -1,6 +1,6 @@
 package hw2;
-
 import java.util.*;
+
 
 /**
  * <b>RatPoly</b> represents an immutable single-variate polynomial expression. RatPolys are sums of
@@ -224,7 +224,7 @@ public final class RatPoly {
               if (sumTerm.isZero()) {
                   lst.remove(term);
               } else {
-                  lst.set(index, new RatTerm(term.getCoeff().add(newTerm.getCoeff()), term.getExpt()));
+                  lst.set(index, sumTerm);
               }
           }
       }
@@ -331,12 +331,12 @@ public final class RatPoly {
       RatPoly remainder = new RatPoly();
       remainder.terms.addAll(this.terms);
       RatPoly result = new RatPoly();
-      while (remainder.degree() >= p.degree()) {
+      while (remainder.degree() >= p.degree() && !remainder.equals(RatPoly.ZERO)) {
           RatTerm remainderHighestOrderTerm = remainder.getTerm(remainder.degree());
           RatTerm dividendHighestOrderTerm = p.getTerm(p.degree());
           RatPoly temp = new RatPoly(remainderHighestOrderTerm.div(dividendHighestOrderTerm));
           remainder = remainder.sub(temp.mul(p));
-          result.add(temp);
+          result = result.add(temp);
       }
       return result;
   }
@@ -349,8 +349,17 @@ public final class RatPoly {
    *     <p>The derivative of a polynomial is the sum of the derivative of each term.
    */
   public RatPoly differentiate() {
-    // TODO: Fill in this method, then remove the RuntimeException
-    throw new RuntimeException("RatPoly->differentiate() is not yet implemented");
+      if (this.isNaN()) {
+          return RatPoly.NaN;
+      }
+
+      RatPoly result = new RatPoly();
+
+      for(RatTerm term : this.terms) {
+          result = result.add(new RatPoly(term.differentiate()));
+      }
+
+      return result;
   }
 
   /**
@@ -366,8 +375,16 @@ public final class RatPoly {
    *     some constant.
    */
   public RatPoly antiDifferentiate(RatNum integrationConstant) {
-    // TODO: Fill in this method, then remove the RuntimeException
-    throw new RuntimeException("RatPoly->antiDifferentiate() unimplemented!");
+      if (this.isNaN() || integrationConstant.isNaN()) {
+          return RatPoly.NaN;
+      }
+      RatPoly result = new RatPoly();
+
+      for(RatTerm term : this.terms) {
+          result = result.add(new RatPoly(term.antiDifferentiate()));
+      }
+      result = result.add(new RatPoly(new RatTerm(integrationConstant, 0)));
+      return result;
   }
 
   /**
@@ -384,8 +401,8 @@ public final class RatPoly {
    *     Double.NaN, return Double.NaN.
    */
   public double integrate(double lowerBound, double upperBound) {
-    // TODO: Fill in this method, then remove the RuntimeException
-    throw new RuntimeException("RatPoly->integrate() is not yet implemented");
+      RatPoly antiDifferentiated = this.antiDifferentiate(RatNum.ZERO);
+      return antiDifferentiated.eval(upperBound) - antiDifferentiated.eval(lowerBound);
   }
 
   /**
@@ -396,8 +413,14 @@ public final class RatPoly {
    *     is 5, and "x^2-x" evaluated at 3 is 6. if (this.isNaN() == true), return Double.NaN
    */
   public double eval(double d) {
-    // TODO: Fill in this method, then remove the RuntimeException
-    throw new RuntimeException("RatPoly->eval() is not yet implemented");
+      if(this.isNaN()) {
+          return Double.NaN;
+      }
+      double result = 0.0;
+      for(RatTerm term : this.terms) {
+          result += term.eval(d);
+      }
+      return result;
   }
 
   /**

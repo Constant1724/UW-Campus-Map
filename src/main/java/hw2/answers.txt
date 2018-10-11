@@ -18,7 +18,7 @@ Problem 0.
     r = p / q:
     create variable remainder = p by making a term-by-term copy of all terms in p to remainder.
     create variable quotient and initialize it to be empty
-    while ( highest degree of remainder >= highest degree of q):
+    while ( highest degree of remainder >= highest degree of q) and remainder is not zero:
         create variable temp, whose coefficient is the coefficient of the highest degree term in remainder /
         the coefficient of the highest degree term in q, whose degree is highest degree of remainder - highest degree of
         q.
