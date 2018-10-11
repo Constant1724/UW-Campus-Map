@@ -328,8 +328,7 @@ public final class RatPoly {
           return RatPoly.NaN;
       }
 
-      RatPoly remainder = new RatPoly();
-      remainder.terms.addAll(this.terms);
+      RatPoly remainder = this;
       RatPoly result = new RatPoly();
       while (remainder.degree() >= p.degree() && !remainder.equals(RatPoly.ZERO)) {
           RatTerm remainderHighestOrderTerm = remainder.getTerm(remainder.degree());
