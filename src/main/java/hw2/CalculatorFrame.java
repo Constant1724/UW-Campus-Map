@@ -1,10 +1,9 @@
 package hw2;
 
-import java.util.logging.Logger;
-import java.util.logging.Level;
-
 import java.awt.*;
 import java.awt.event.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.*;
 import javax.swing.border.BevelBorder;
 import javax.swing.border.Border;

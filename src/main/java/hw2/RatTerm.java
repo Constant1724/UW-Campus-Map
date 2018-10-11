@@ -69,7 +69,7 @@ public final class RatTerm {
    * @return the coefficient of this RatTerm.
    */
   public RatNum getCoeff() {
-      return this.coeff;
+    return this.coeff;
   }
 
   /**
@@ -78,7 +78,7 @@ public final class RatTerm {
    * @return the exponent of this RatTerm.
    */
   public int getExpt() {
-      return this.expt;
+    return this.expt;
   }
 
   /**
@@ -87,7 +87,7 @@ public final class RatTerm {
    * @return true if and only if this has NaN as a coefficient.
    */
   public boolean isNaN() {
-      return this.coeff.equals(RatNum.NaN);
+    return this.coeff.equals(RatNum.NaN);
   }
 
   /**
@@ -96,7 +96,7 @@ public final class RatTerm {
    * @return true if and only if this has zero as a coefficient.
    */
   public boolean isZero() {
-      return this.coeff.equals(RatNum.ZERO);
+    return this.coeff.equals(RatNum.ZERO);
   }
 
   /**
@@ -107,10 +107,10 @@ public final class RatTerm {
    *     is 12. if (this.isNaN() == true), return Double.NaN
    */
   public double eval(double d) {
-      if (this.isNaN()) {
-          return Double.NaN;
-      }
-      return this.coeff.doubleValue() * Math.pow(d, this.expt);
+    if (this.isNaN()) {
+      return Double.NaN;
+    }
+    return this.coeff.doubleValue() * Math.pow(d, this.expt);
     // Hint: You may find java.lang.Math's pow() method useful.
   }
 
@@ -136,20 +136,20 @@ public final class RatTerm {
    *     NaN.
    */
   public RatTerm add(RatTerm arg) {
-      if (arg.isNaN() || this.isNaN()) {
-          return RatTerm.NaN;
-      }
-      if (this.expt != arg.expt && !this.isZero() && !arg.isZero()) {
-          throw new IllegalArgumentException();
-      }
+    if (arg.isNaN() || this.isNaN()) {
+      return RatTerm.NaN;
+    }
+    if (this.expt != arg.expt && !this.isZero() && !arg.isZero()) {
+      throw new IllegalArgumentException();
+    }
 
-      if (this.isZero()) {
-          return arg;
-      } else if (arg.isZero()) {
-          return this;
-      } else {
-          return new RatTerm(this.coeff.add(arg.coeff), this.expt);
-      }
+    if (this.isZero()) {
+      return arg;
+    } else if (arg.isZero()) {
+      return this;
+    } else {
+      return new RatTerm(this.coeff.add(arg.coeff), this.expt);
+    }
   }
 
   /**
@@ -173,14 +173,14 @@ public final class RatTerm {
    * @return a RatTerm equals to (this * arg). If either argument is NaN, then returns NaN.
    */
   public RatTerm mul(RatTerm arg) {
-      if (this.isNaN() || arg.isNaN()) {
-          return RatTerm.NaN;
-      }
-      if (this.isZero() || arg.isZero()) {
-          return RatTerm.ZERO;
-      }
+    if (this.isNaN() || arg.isNaN()) {
+      return RatTerm.NaN;
+    }
+    if (this.isZero() || arg.isZero()) {
+      return RatTerm.ZERO;
+    }
 
-      return new RatTerm(this.coeff.mul(arg.coeff), this.expt + arg.expt);
+    return new RatTerm(this.coeff.mul(arg.coeff), this.expt + arg.expt);
   }
 
   /**
@@ -192,14 +192,13 @@ public final class RatTerm {
    *     returns NaN.
    */
   public RatTerm div(RatTerm arg) {
-      if (arg.isZero() || this.isNaN() || arg.isNaN()) {
-          return RatTerm.NaN;
-      }
-      if (this.isZero()) {
-          return RatTerm.ZERO;
-      }
-      return new RatTerm(this.coeff.div(arg.coeff), this.expt - arg.expt);
-
+    if (arg.isZero() || this.isNaN() || arg.isNaN()) {
+      return RatTerm.NaN;
+    }
+    if (this.isZero()) {
+      return RatTerm.ZERO;
+    }
+    return new RatTerm(this.coeff.div(arg.coeff), this.expt - arg.expt);
   }
 
   /**
@@ -212,14 +211,13 @@ public final class RatTerm {
    *     RatPoly, contains a rep. invariant stating that b is never less than 0.)
    */
   public RatTerm differentiate() {
-      if(this.isNaN()) {
-          return RatTerm.NaN;
-      }
-      if (this.isZero()) {
-          return RatTerm.ZERO;
-      }
-      return new RatTerm(this.coeff.mul(new RatNum(this.expt)), this.expt - 1);
-
+    if (this.isNaN()) {
+      return RatTerm.NaN;
+    }
+    if (this.isZero()) {
+      return RatTerm.ZERO;
+    }
+    return new RatTerm(this.coeff.mul(new RatNum(this.expt)), this.expt - 1);
   }
 
   /**
@@ -233,13 +231,13 @@ public final class RatTerm {
    *     function, RatPoly, contains a rep. invariant stating that b is never less than 0.)
    */
   public RatTerm antiDifferentiate() {
-      if (this.isNaN()) {
-          return RatTerm.NaN;
-      }
-      if (this.isZero()) {
-          return RatTerm.ZERO;
-      }
-      return new RatTerm(this.coeff.div(new RatNum(this.expt + 1)), this.expt + 1);
+    if (this.isNaN()) {
+      return RatTerm.NaN;
+    }
+    if (this.isZero()) {
+      return RatTerm.ZERO;
+    }
+    return new RatTerm(this.coeff.div(new RatNum(this.expt + 1)), this.expt + 1);
   }
 
   /**
