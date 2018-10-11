@@ -90,7 +90,6 @@ public final class RatNum extends Number implements Comparable<RatNum> {
   /** Checks that the representation invariant holds (if any). */
   private void checkRep() {
     assert (denom >= 0) : "Denominator of a RatNum cannot be less than zero";
-
     if (denom > 0) {
       int thisGcd = gcd(numer, denom);
       assert (thisGcd == 1 || thisGcd == -1) : "RatNum not in lowest form";

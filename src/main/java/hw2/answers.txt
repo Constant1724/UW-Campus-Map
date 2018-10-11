@@ -97,12 +97,19 @@ Any attempts will cause compile-time error, since fields are declared as final.
 Problem 2.
 
 (a)
+I call the checkRep at the end of the constructor, the reason is similar to P1 part(c): the RatTerm class is immutable,
+there is no way for client to change it. Any attempts will cause compile-time error, as fields are declared as final.
 
 
 (b)
-
+HashCode, equals and toString need to be changed. Specifically, we need to insert code that checks if a ratTerm is
+mathematically zero and if it is mathematically zero, use ratTerm.ZERO in the following code. It will add a little extra
+code and will run a little bit slower, since it has more things to check for now.
 
 (c)
+Actually nothing have to be changed, because a stronger spec can be substituted with a weaker one.
+I think the second is better: according to spec, it is required that ratTerm with 0 coefficient should have 0 expt,
+however, spec does not say anything about expt of Nan, so the first will be redundant and unnecessary.
 
 
 Problem 5.

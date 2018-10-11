@@ -87,7 +87,7 @@ public final class RatTerm {
    * @return true if and only if this has NaN as a coefficient.
    */
   public boolean isNaN() {
-      return this.equals(this.NaN);
+      return this.coeff.equals(RatNum.NaN);
   }
 
   /**
@@ -96,7 +96,7 @@ public final class RatTerm {
    * @return true if and only if this has zero as a coefficient.
    */
   public boolean isZero() {
-      return this.equals(this.ZERO);
+      return this.coeff.equals(RatNum.ZERO);
   }
 
   /**
@@ -120,8 +120,10 @@ public final class RatTerm {
    * @return a RatTerm equals to (-this). If this is NaN, then returns NaN.
    */
   public RatTerm negate() {
-    // TODO: Fill in this method, then remove the RuntimeException
-    throw new RuntimeException("RatTerm->negate() is not yet implemented");
+    if (this.isNaN()) {
+      return RatTerm.NaN;
+    }
+    return new RatTerm(this.coeff.negate(), this.expt);
   }
 
   /**
@@ -134,8 +136,20 @@ public final class RatTerm {
    *     NaN.
    */
   public RatTerm add(RatTerm arg) {
-    // TODO: Fill in this method, then remove the RuntimeException
-    throw new RuntimeException("RatTerm->add() is not yet implemented");
+      if (arg.isNaN() || this.isNaN()) {
+          return RatTerm.NaN;
+      }
+      if (this.expt != arg.expt && !this.isZero() && !arg.isZero()) {
+          throw new IllegalArgumentException();
+      }
+
+      if (this.isZero()) {
+          return arg;
+      } else if (arg.isZero()) {
+          return this;
+      } else {
+          return new RatTerm(this.coeff.add(arg.coeff), this.expt);
+      }
   }
 
   /**
@@ -148,8 +162,7 @@ public final class RatTerm {
    *     NaN.
    */
   public RatTerm sub(RatTerm arg) {
-    // TODO: Fill in this method, then remove the RuntimeException
-    throw new RuntimeException("RatTerm->sub() is not yet implemented");
+    return this.add(arg.negate());
   }
 
   /**
@@ -160,8 +173,14 @@ public final class RatTerm {
    * @return a RatTerm equals to (this * arg). If either argument is NaN, then returns NaN.
    */
   public RatTerm mul(RatTerm arg) {
-    // TODO: Fill in this method, then remove the RuntimeException
-    throw new RuntimeException("RatTerm->mul() is not yet implemented");
+      if (this.isNaN() || arg.isNaN()) {
+          return RatTerm.NaN;
+      }
+      if (this.isZero() || arg.isZero()) {
+          return RatTerm.ZERO;
+      }
+
+      return new RatTerm(this.coeff.mul(arg.coeff), this.expt + arg.expt);
   }
 
   /**
@@ -173,8 +192,14 @@ public final class RatTerm {
    *     returns NaN.
    */
   public RatTerm div(RatTerm arg) {
-    // TODO: Fill in this method, then remove the RuntimeException
-    throw new RuntimeException("RatTerm->div() is not yet implemented");
+      if (arg.isZero() || this.isNaN() || arg.isNaN()) {
+          return RatTerm.NaN;
+      }
+      if (this.isZero()) {
+          return RatTerm.ZERO;
+      }
+      return new RatTerm(this.coeff.div(arg.coeff), this.expt - arg.expt);
+
   }
 
   /**
@@ -187,8 +212,14 @@ public final class RatTerm {
    *     RatPoly, contains a rep. invariant stating that b is never less than 0.)
    */
   public RatTerm differentiate() {
-    // TODO: Fill in this method, then remove the RuntimeException
-    throw new RuntimeException("RatTerm->differentiate() is not yet implemented");
+      if(this.isNaN()) {
+          return RatTerm.NaN;
+      }
+      if (this.isZero()) {
+          return RatTerm.ZERO;
+      }
+      return new RatTerm(this.coeff.mul(new RatNum(this.expt)), this.expt - 1);
+
   }
 
   /**
@@ -202,8 +233,13 @@ public final class RatTerm {
    *     function, RatPoly, contains a rep. invariant stating that b is never less than 0.)
    */
   public RatTerm antiDifferentiate() {
-    // TODO: Fill in this method, then remove the RuntimeException
-    throw new RuntimeException("RatTerm->antiDifferentiate() unimplemented!");
+      if (this.isNaN()) {
+          return RatTerm.NaN;
+      }
+      if (this.isZero()) {
+          return RatTerm.ZERO;
+      }
+      return new RatTerm(this.coeff.div(new RatNum(this.expt + 1)), this.expt + 1);
   }
 
   /**
