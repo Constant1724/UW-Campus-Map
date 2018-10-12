@@ -7,7 +7,11 @@ import java.util.Random;
  * of five languages and print out 'Hello World' in that language.
  */
 public class RandomHello {
-  /** Prints a random greeting to the console. */
+  /**
+   * Prints a random greeting to the console.
+   *
+   * @param argv the command line parameters
+   */
   public static void main(String[] argv) {
     RandomHello randomHello = new RandomHello();
     System.out.println(randomHello.getGreeting());
