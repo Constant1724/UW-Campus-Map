@@ -156,9 +156,10 @@ public final class RatPoly {
     if (scalar.equals(RatNum.ZERO)) {
       lst.clear();
     } else {
-      for (int i = 0; i < lst.size(); i++) {
-        RatTerm term = lst.get(i);
+        int i = 0;
+      for (RatTerm term : lst) {
         lst.set(i, new RatTerm(term.getCoeff().mul(scalar), term.getExpt()));
+        i++;
       }
     }
   }
@@ -212,7 +213,7 @@ public final class RatPoly {
     for (int i = 0; i < lst.size(); i++) {
         if (lst.get(i).getExpt() == newTerm.getExpt()) {
             RatTerm term = lst.get(i);
-            RatTerm sumTerm = new RatTerm(term.getCoeff().add(newTerm.getCoeff()), term.getExpt());
+            RatTerm sumTerm = term.add(newTerm);
             if (sumTerm.isZero()) {
                 lst.remove(i);
             } else {
@@ -225,6 +226,7 @@ public final class RatPoly {
         }
 
     }
+    // if All terms in lst has a higher degree than newTerm, add newTerm at the end.
     lst.add(newTerm);
 }
 
@@ -259,6 +261,7 @@ public final class RatPoly {
     for (RatTerm term : p.terms) {
       sortedInsert(newTerms, term);
     }
+    checkRep();
     return new RatPoly(newTerms);
 
   }
@@ -291,6 +294,7 @@ public final class RatPoly {
       incremExpt(newTerms, term.getExpt());
       result = result.add(new RatPoly(newTerms));
     }
+    checkRep();
     return result;
   }
 

@@ -73,7 +73,7 @@ Problem 0.
             [let remainder be the sum of temp2 and remainder, by polynomial addition algorithm.] remainder =
             (2x - 1) + (-2x - 1) = -2
 
-        Iteration3: while loop is NO,since 0 >= 1 is wrong. remainder = (-2), quotient = x^2 - x + 2
+        Iteration4: while loop is NO,since 0 >= 1 is wrong. remainder = (-2), quotient = x^2 - x + 2
 
     We are done, so quotient = x^2 - x + 2
 
@@ -85,14 +85,15 @@ For hashCode and equals and toString, we have to turn numer and denom into reduc
 complex for reading the code. Moreover, running will be slower, since it needs to do more work (turn fields into reduce
 form by finding gcd).
 
-For checkRep, we can just remove the part check if it is in reduced form. Code will run faster, since it does less work.
+For checkRep and constructor, we can just remove the part check if it is in reduced form and the part that finds the
+reduced form. Code will run faster, since it does less work.
 
 (b)
 It violates the immutability property of the ratNum class, which says all operation should create new instance instead
 of modifying existing one.
 
 Moreover, the implementation behavior is different from spec. Particularly, according to spec, the behavior should not
-have any side effects, while the implementation does modify this. Moreover, representation invariant may not hold.
+have any side effects, while the implementation does modify this. In addition, representation invariant may not hold.
 
 (c)
 The reason is that the ratNum class is immutable. Once the instance is created, the fields can no longer be changed.
@@ -111,7 +112,8 @@ HashCode, equals and toString need to be changed. Specifically, we need to inser
 mathematically zero and if it is mathematically zero, use ratTerm.ZERO in the following code. It will add a little extra
 code and will run a little bit slower, since it has more things to check for now.
 
-For checkRep, we can just remove the part check if RatTerms with zero coefficients have zero exponents.
+For checkRep and Constructor, we can just remove the part check if RatTerms with zero coefficients have zero exponents
+and the part that sets zero exponents if given zero coefficients.
 Code will run faster, since it does less work.
 
 (c)
