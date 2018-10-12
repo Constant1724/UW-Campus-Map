@@ -156,7 +156,7 @@ public final class RatPoly {
     if (scalar.equals(RatNum.ZERO)) {
       lst.clear();
     } else {
-        int i = 0;
+      int i = 0;
       for (RatTerm term : lst) {
         lst.set(i, new RatTerm(term.getCoeff().mul(scalar), term.getExpt()));
         i++;
@@ -204,32 +204,30 @@ public final class RatPoly {
    */
   private static void sortedInsert(List<RatTerm> lst, RatTerm newTerm) {
     if (newTerm.isZero()) {
-        return;
+      return;
     }
     if (lst.isEmpty()) {
-        lst.add(newTerm);
-        return;
+      lst.add(newTerm);
+      return;
     }
     for (int i = 0; i < lst.size(); i++) {
-        if (lst.get(i).getExpt() == newTerm.getExpt()) {
-            RatTerm term = lst.get(i);
-            RatTerm sumTerm = term.add(newTerm);
-            if (sumTerm.isZero()) {
-                lst.remove(i);
-            } else {
-                lst.set(i, sumTerm);
-            }
-            return;
-        } else if (lst.get(i).getExpt() < newTerm.getExpt()) {
-            lst.add(i, newTerm);
-            return;
+      if (lst.get(i).getExpt() == newTerm.getExpt()) {
+        RatTerm term = lst.get(i);
+        RatTerm sumTerm = term.add(newTerm);
+        if (sumTerm.isZero()) {
+          lst.remove(i);
+        } else {
+          lst.set(i, sumTerm);
         }
-
+        return;
+      } else if (lst.get(i).getExpt() < newTerm.getExpt()) {
+        lst.add(i, newTerm);
+        return;
+      }
     }
     // if All terms in lst has a higher degree than newTerm, add newTerm at the end.
     lst.add(newTerm);
-}
-
+  }
 
   /**
    * Return the additive inverse of this RatPoly.
@@ -263,7 +261,6 @@ public final class RatPoly {
     }
     checkRep();
     return new RatPoly(newTerms);
-
   }
 
   /**
@@ -289,7 +286,7 @@ public final class RatPoly {
   public RatPoly mul(RatPoly p) {
     RatPoly result = new RatPoly();
     for (RatTerm term : p.terms) {
-        List<RatTerm> newTerms = new ArrayList<RatTerm>(this.terms);
+      List<RatTerm> newTerms = new ArrayList<RatTerm>(this.terms);
       scaleCoeff(newTerms, term.getCoeff());
       incremExpt(newTerms, term.getExpt());
       result = result.add(new RatPoly(newTerms));

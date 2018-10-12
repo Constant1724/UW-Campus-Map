@@ -110,7 +110,7 @@ public final class RatTerm {
     if (this.isNaN()) {
       return Double.NaN;
     }
-      return this.coeff.doubleValue() * Math.pow(d, this.expt);
+    return this.coeff.doubleValue() * Math.pow(d, this.expt);
     // Hint: You may find java.lang.Math's pow() method useful.
   }
 
@@ -120,7 +120,7 @@ public final class RatTerm {
    * @return a RatTerm equals to (-this). If this is NaN, then returns NaN.
    */
   public RatTerm negate() {
-    if(this.isNaN()) {
+    if (this.isNaN()) {
       return RatTerm.NaN;
     }
     return new RatTerm(this.coeff.negate(), this.expt);
@@ -140,10 +140,10 @@ public final class RatTerm {
       return RatTerm.NaN;
     }
     if (this.isZero()) {
-        return arg;
+      return arg;
     }
     if (arg.isZero()) {
-        return this;
+      return this;
     }
     if (this.expt != arg.expt) {
       throw new IllegalArgumentException();

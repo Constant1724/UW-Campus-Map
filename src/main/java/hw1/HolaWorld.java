@@ -8,6 +8,7 @@ public class HolaWorld extends HelloWorld {
 
   /**
    * Shows what happens when the getGreeting() method of both HelloWorld and HolaWorld are invoked
+   *
    * @param argv the command line parameters
    */
   public static void main(String[] argv) {
