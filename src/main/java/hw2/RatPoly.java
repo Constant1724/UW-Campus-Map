@@ -202,32 +202,32 @@ public final class RatPoly {
    *     cofind(lst,newTerm.getExpt()) + newTerm.getCoeff())
    */
   private static void sortedInsert(List<RatTerm> lst, RatTerm newTerm) {
-    if (!newTerm.isZero()) {
-      int index =
-          Collections.binarySearch(
-              lst,
-              newTerm,
-              new Comparator<RatTerm>() {
-                @Override
-                public int compare(RatTerm o1, RatTerm o2) {
-                  return o2.getExpt() - o1.getExpt();
-                }
-              });
-
-      if (index < 0) {
-        int insertionPoint = -(index + 1);
-        lst.add(insertionPoint, newTerm);
-      } else {
-        RatTerm term = lst.get(index);
-        RatTerm sumTerm = new RatTerm(term.getCoeff().add(newTerm.getCoeff()), term.getExpt());
-        if (sumTerm.isZero()) {
-          lst.remove(term);
-        } else {
-          lst.set(index, sumTerm);
-        }
-      }
+    if (newTerm.isZero()) {
+        return;
     }
-  }
+    if (lst.isEmpty()) {
+        lst.add(newTerm);
+        return;
+    }
+    for (int i = 0; i < lst.size(); i++) {
+        if (lst.get(i).getExpt() == newTerm.getExpt()) {
+            RatTerm term = lst.get(i);
+            RatTerm sumTerm = new RatTerm(term.getCoeff().add(newTerm.getCoeff()), term.getExpt());
+            if (sumTerm.isZero()) {
+                lst.remove(i);
+            } else {
+                lst.set(i, sumTerm);
+            }
+            return;
+        } else if (lst.get(i).getExpt() < newTerm.getExpt()) {
+            lst.add(i, newTerm);
+            return;
+        }
+
+    }
+    lst.add(newTerm);
+}
+
 
   /**
    * Return the additive inverse of this RatPoly.
@@ -238,12 +238,9 @@ public final class RatPoly {
     if (this.isNaN()) {
       return RatPoly.NaN;
     }
-
-    RatPoly newPoly = new RatPoly();
-    newPoly.terms.addAll(this.terms);
-    this.scaleCoeff(newPoly.terms, new RatNum(-1));
-    checkRep();
-    return newPoly;
+    List<RatTerm> newTerms = new ArrayList<RatTerm>(this.terms);
+    this.scaleCoeff(newTerms, new RatNum(-1));
+    return new RatPoly(newTerms);
   }
 
   /**
@@ -258,14 +255,12 @@ public final class RatPoly {
     if (this.isNaN() || p.isNaN()) {
       return RatPoly.NaN;
     }
-    RatPoly result = new RatPoly();
-    result.terms.addAll(this.terms);
-
+    List<RatTerm> newTerms = new ArrayList<RatTerm>(this.terms);
     for (RatTerm term : p.terms) {
-      sortedInsert(result.terms, term);
+      sortedInsert(newTerms, term);
     }
-    checkRep();
-    return result;
+    return new RatPoly(newTerms);
+
   }
 
   /**
@@ -277,7 +272,6 @@ public final class RatPoly {
    *     such that r.isNaN()
    */
   public RatPoly sub(RatPoly p) {
-    checkRep();
     return this.add(p.negate());
   }
 
@@ -292,11 +286,10 @@ public final class RatPoly {
   public RatPoly mul(RatPoly p) {
     RatPoly result = new RatPoly();
     for (RatTerm term : p.terms) {
-      RatPoly temp = new RatPoly();
-      temp.terms.addAll(this.terms);
-      scaleCoeff(temp.terms, term.getCoeff());
-      incremExpt(temp.terms, term.getExpt());
-      result = result.add(temp);
+        List<RatTerm> newTerms = new ArrayList<RatTerm>(this.terms);
+      scaleCoeff(newTerms, term.getCoeff());
+      incremExpt(newTerms, term.getExpt());
+      result = result.add(new RatPoly(newTerms));
     }
     return result;
   }

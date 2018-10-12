@@ -107,10 +107,7 @@ public final class RatTerm {
    *     is 12. if (this.isNaN() == true), return Double.NaN
    */
   public double eval(double d) {
-    if (this.isNaN()) {
-      return Double.NaN;
-    }
-    return this.coeff.doubleValue() * Math.pow(d, this.expt);
+      return this.coeff.doubleValue() * Math.pow(d, this.expt);
     // Hint: You may find java.lang.Math's pow() method useful.
   }
 
@@ -120,9 +117,6 @@ public final class RatTerm {
    * @return a RatTerm equals to (-this). If this is NaN, then returns NaN.
    */
   public RatTerm negate() {
-    if (this.isNaN()) {
-      return RatTerm.NaN;
-    }
     return new RatTerm(this.coeff.negate(), this.expt);
   }
 
@@ -139,17 +133,16 @@ public final class RatTerm {
     if (arg.isNaN() || this.isNaN()) {
       return RatTerm.NaN;
     }
-    if (this.expt != arg.expt && !this.isZero() && !arg.isZero()) {
+    if (this.isZero()) {
+        return arg;
+    }
+    if (arg.isZero()) {
+        return this;
+    }
+    if (this.expt != arg.expt) {
       throw new IllegalArgumentException();
     }
-
-    if (this.isZero()) {
-      return arg;
-    } else if (arg.isZero()) {
-      return this;
-    } else {
-      return new RatTerm(this.coeff.add(arg.coeff), this.expt);
-    }
+    return new RatTerm(this.coeff.add(arg.coeff), this.expt);
   }
 
   /**
@@ -176,10 +169,6 @@ public final class RatTerm {
     if (this.isNaN() || arg.isNaN()) {
       return RatTerm.NaN;
     }
-    if (this.isZero() || arg.isZero()) {
-      return RatTerm.ZERO;
-    }
-
     return new RatTerm(this.coeff.mul(arg.coeff), this.expt + arg.expt);
   }
 
@@ -194,9 +183,6 @@ public final class RatTerm {
   public RatTerm div(RatTerm arg) {
     if (arg.isZero() || this.isNaN() || arg.isNaN()) {
       return RatTerm.NaN;
-    }
-    if (this.isZero()) {
-      return RatTerm.ZERO;
     }
     return new RatTerm(this.coeff.div(arg.coeff), this.expt - arg.expt);
   }
@@ -214,9 +200,9 @@ public final class RatTerm {
     if (this.isNaN()) {
       return RatTerm.NaN;
     }
-    if (this.isZero()) {
-      return RatTerm.ZERO;
-    }
+      if (this.isZero()) {
+          return RatTerm.ZERO;
+      }
     return new RatTerm(this.coeff.mul(new RatNum(this.expt)), this.expt - 1);
   }
 

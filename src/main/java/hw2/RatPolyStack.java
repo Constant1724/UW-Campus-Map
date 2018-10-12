@@ -67,7 +67,9 @@ public final class RatPolyStack implements Iterable<RatPoly> {
    */
   public RatPoly pop() {
     checkRep();
-    return this.polys.pop();
+    RatPoly result = this.polys.pop();
+    checkRep();
+    return result;
   }
 
   /**
@@ -120,7 +122,9 @@ public final class RatPolyStack implements Iterable<RatPoly> {
    */
   public RatPoly getNthFromTop(int index) {
     checkRep();
-    return this.polys.get(this.size() - index - 1);
+    RatPoly result = this.polys.get(this.size() - index - 1);
+    checkRep();
+    return result;
   }
 
   /**
@@ -131,6 +135,7 @@ public final class RatPolyStack implements Iterable<RatPoly> {
    * @spec.effects If this = [p1, p2]:S then this_post = [p3]:S where p3 = p1 + p2
    */
   public void add() {
+      checkRep();
     this.polys.push(this.polys.pop().add(this.polys.pop()));
     checkRep();
   }
@@ -144,6 +149,7 @@ public final class RatPolyStack implements Iterable<RatPoly> {
    * @spec.effects If this = [p1, p2]:S then this_post = [p3]:S where p3 = p2 - p1
    */
   public void sub() {
+      checkRep();
     RatPoly first = this.polys.pop();
     RatPoly second = this.polys.pop();
     this.polys.push(second.sub(first));
@@ -158,6 +164,7 @@ public final class RatPolyStack implements Iterable<RatPoly> {
    * @spec.effects If this = [p1, p2]:S then this_post = [p3]:S where p3 = p1 * p2
    */
   public void mul() {
+      checkRep();
     this.polys.push(this.polys.pop().mul(this.polys.pop()));
     checkRep();
   }
@@ -171,6 +178,7 @@ public final class RatPolyStack implements Iterable<RatPoly> {
    * @spec.effects If this = [p1, p2]:S then this_post = [p3]:S where p3 = p2 / p1
    */
   public void div() {
+      checkRep();
     RatPoly first = this.polys.pop();
     RatPoly second = this.polys.pop();
     this.polys.push(second.div(first));
@@ -186,6 +194,7 @@ public final class RatPolyStack implements Iterable<RatPoly> {
    * @spec.effects If this = [p1]:S then this_post = [p2]:S where p2 = derivative of p1
    */
   public void differentiate() {
+      checkRep();
     this.polys.push(this.polys.pop().differentiate());
     checkRep();
   }
@@ -200,6 +209,7 @@ public final class RatPolyStack implements Iterable<RatPoly> {
    *     with integration constant 0
    */
   public void integrate() {
+      checkRep();
     this.polys.push(this.polys.pop().antiDifferentiate(RatNum.ZERO));
     checkRep();
   }

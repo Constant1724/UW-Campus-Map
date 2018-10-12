@@ -35,7 +35,8 @@ Problem 0.
     remainder = copy of p = (x^3 + x - 1)
     quotient = empty
     while [highest degree of remainder >= highest degree of q] :
-        Iteration1: while loop is YES,since 3 >= 1. remainder = (x^3 + x - 1), quotient = empty,
+        Iteration1: while loop is YES,since 3 >= 1 and remainder is not zero. remainder = (x^3 + x - 1),
+        quotient = empty,
             [coefficient = 1 / 1 = 1. Degree = 3 - 1 = 2] temp = x^2.
             [Multiply temp and q by polynomial Multiplication algorithm] temp2 = (x + 1) * (x^2) = x^3 + x^2
             foreach term temp2_ in temp2 :
@@ -47,7 +48,8 @@ Problem 0.
             [let remainder be the sum of temp2 and remainder, by polynomial addition algorithm.] remainder =
             (x^3 + x - 1) + (-x^3 - x^2) = -x^2 + x - 1
 
-        Iteration2: while loop is YES,since 2 >= 1. remainder = (-x^2 + x - 1), quotient = x^2,
+        Iteration2: while loop is YES,since 2 >= 1 and remainder is not zero. remainder = (-x^2 + x - 1),
+        quotient = x^2,
             [coefficient = -1 / 1 = 1. Degree = 2 - 1 = 1] temp = -x.
             [Multiply temp and q by polynomial Multiplication algorithm] temp2 = (x + 1) * (-x) = -x^2 - x
             foreach term temp2_ in temp2 :
@@ -59,7 +61,7 @@ Problem 0.
             [let remainder be the sum of temp2 and remainder, by polynomial addition algorithm.] remainder =
             (-x^2 + x - 1) + (x^2 + x) = 2x - 1
 
-        Iteration3: while loop is YES,since 1 >= 1. remainder = (2x - 1), quotient = x^2 - x,
+        Iteration3: while loop is YES,since 1 >= 1 and remainder is not zero. remainder = (2x - 1), quotient = x^2 - x,
             [coefficient = 2 / 1 = 2. Degree = 1 - 1 = 0] temp = 2.
             [Multiply temp and q by polynomial Multiplication algorithm] temp2 = (x + 1) * (2) = 2x + 1
             foreach term temp2_ in temp2 :
@@ -80,19 +82,22 @@ Problem 1.
 
 (a)
 For hashCode and equals and toString, we have to turn numer and denom into reduced forms first, which adds a little
-complex for reading the code. Moreover, running will be slower, since it needs to do more work (turn into reduce form).
+complex for reading the code. Moreover, running will be slower, since it needs to do more work (turn fields into reduce
+form by finding gcd).
 
 For checkRep, we can just remove the part check if it is in reduced form. Code will run faster, since it does less work.
 
 (b)
 It violates the immutability property of the ratNum class, which says all operation should create new instance instead
 of modifying existing one.
+
 Moreover, the implementation behavior is different from spec. Particularly, according to spec, the behavior should not
-have any side effects, while the implementation does modify this.
+have any side effects, while the implementation does modify this. Moreover, representation invariant may not hold.
 
 (c)
 The reason is that the ratNum class is immutable. Once the instance is created, the fields can no longer be changed.
-Any attempts will cause compile-time error, since fields are declared as final.
+Any attempts will cause compile-time error, since fields are declared as final. Therefor, it is sufficient to only call
+checkRep at the end of the constructor.
 
 Problem 2.
 
@@ -106,10 +111,17 @@ HashCode, equals and toString need to be changed. Specifically, we need to inser
 mathematically zero and if it is mathematically zero, use ratTerm.ZERO in the following code. It will add a little extra
 code and will run a little bit slower, since it has more things to check for now.
 
+For checkRep, we can just remove the part check if RatTerms with zero coefficients have zero exponents.
+Code will run faster, since it does less work.
+
 (c)
-Actually nothing have to be changed, because a stronger spec can be substituted with a weaker one.
+Only checkRep and constructor need to be changed by checking if coeff is Nan, set the expt to 0.
 I think the second is better: according to spec, it is required that ratTerm with 0 coefficient should have 0 expt,
-however, spec does not say anything about expt of Nan, so the first will be redundant and unnecessary.
+however, spec does not say anything about expt of Nan, so the first will be over-strong and thus unnecessary.
 
 
 Problem 5.
+x^2
+x^3
+x^4
+x^5
