@@ -48,9 +48,6 @@ test.dependsOn copyTestScripts
 tasks.withType(Test) {
     enableAssertions = true
 }
-junitPlatformTest {
-    enableAssertions = true
-}
 
 ///
 /// Javadoc
