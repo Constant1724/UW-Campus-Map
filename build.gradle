@@ -30,12 +30,26 @@ dependencies {
 /// Testing
 ///
 
+task copyTestScripts(type: Copy) {
+  from "src/test/java/hw3"
+  include "*.test", "*.expected"
+  into "${buildDir}/classes/java/test/hw3/test"
+}
+
 test {
   // Comment out a line to start work on that homework.
   // exclude 'hw2/**'
   exclude 'hw3/**'
   exclude 'hw4/**'
   exclude 'hw5/**'
+}
+test.dependsOn copyTestScripts
+
+tasks.withType(Test) {
+    enableAssertions = true
+}
+junitPlatformTest {
+    enableAssertions = true
 }
 
 ///
@@ -65,6 +79,13 @@ tasks.withType(Javadoc) {
 ///
 /// Extra code quality checks
 ///
+
+task requireJava8 {
+  if (JavaVersion.current() != JavaVersion.VERSION_1_8) {
+    throw new GradleException("You must use Java 8")
+  }
+}
+build.dependsOn requireJava8
 
 // Creates task `runErrorProne`, which runs the Error Prone linter.
 // For more information: https://errorprone.info
@@ -156,9 +177,11 @@ task reformat(type: Exec, dependsOn: [getCodeFormatScripts, pythonIsInstalled], 
 task checkNoUnpushedCommits {
   description = 'Ensure there are no unpushed commits.'
   doLast {
-    // TODO:  How to do this in grgit?  It doesn't support rev-list: https://github.com/ajoberstar/grgit/issues/41
-    def unpushedCommits = 'git rev-list origin..HEAD'.execute().text
-    assert unpushedCommits.size() == 0 : "There are unpushed commits. Run `git status` for more detail."
+    // Command-line version: git rev-list origin..HEAD
+    def unpushedCommits = grgit.log(includes: ['master'], excludes: ['origin/master'])
+    if (unpushedCommits.size() != 0) {
+      throw new GradleException("There are unpushed commits. Run `git status` for details.")
+    }
   }
 }
 
@@ -166,17 +189,19 @@ task checkNoUnpushedCommits {
 task checkNoUncommittedChanges {
   description = 'Ensure there are no uncommitted changes.'
   doLast {
-    def uncommittedChanges = 'git status --untracked-files=no --porcelain'.execute().text
-    if (uncommittedChanges.size() != 0) {
-      throw new GradleException("There are uncommitted changes. Run `git status` for more detail.")
-    }
+    // Command-line version: git status --untracked-files=no --porcelain
 
-    //TODO: Working on the below.  The Grgit documentation is a bit lacking.
-    /*
-    // command-line version: git status --untracked-files=no --porcelain
     def status = grgit.status()
-    def uncommittedChanges = ...
-    */
+    if (! status.conflicts.isEmpty()) {
+      throw new GradleException("There are conflicts. Run `git status` for details.")
+    }
+    if (! status.staged.allChanges.isEmpty()) {
+      throw new GradleException("There are staged but uncommitted changes. Run `git status` for details.")
+    }
+    // Permit unstaged added files
+    if (! (status.unstaged.modified + status.unstaged.removed).isEmpty()) {
+      throw new GradleException("There are unstaged changes. Run `git status` for details.")
+    }
   }
 }
 
