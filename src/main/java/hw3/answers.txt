@@ -1,12 +1,36 @@
 CSE 331 Homework 3.  Answers to Written questions.
 Edit this file to supply your answers.
 
-Name:  <replace this with your name>
+Name:  Haopeng Zhou
 
 Problem 1. (Written exercises)
 
 (a)
+    IntQueue1:
+        Abstraction function:
+            IntQueue1, q, holds a queue of elements, maintains the order of insertion in entries.
+            Specifically, the i-th element in q.entries should be the i-th element to be returned.
+            For example, q.entries.get(0) should be the first to be returned,
+            and q.entries.get(1) should be the second to be returned.
 
+        Representation Invariant:
+            entries != null &&
+            forall i such that (0 <= i < entries.size()): entries.get(i) != null
+            In other words:
+            entries should not be null and there should not be null elements inside the entries.
+
+    IntQueue2:
+        Abstraction function:
+            IntQueue2, q, holds a queue of elements, maintains the order of insertion in entries.
+            q.size indicates the total number of elements in the IntQueue2.
+            q.front indicates the starting index of the current IntQueue2 in entries.
+            Specifically, the i-th element should be q.entries.[(i + q.front) % q.entries.length], if i < q.size/
+
+        Representation Invariant:
+            entries != null &&
+            0 <= size <= entries.length &&
+            0 <= front < entries.length &&
+            forall i such that (0 <= i < size): entries[(i + q.front) % q.entries.length] != null
 
 (b)
 
