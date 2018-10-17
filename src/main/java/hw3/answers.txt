@@ -48,25 +48,58 @@ Problem 1. (Written exercises)
     Group4: e        Abstract state: [1 2 3 4]
 
 (c)
-    1. Representation exposure should be impossible, since either input or output is int primitive type which is immutable. There is no way to expose.
+    1. Representation exposure should be impossible, since either input or output is int primitive type which is
+    immutable. There is no way to expose.
     
     2. Representation exposure is possible, since the return type is inference type and clients thus have the access. 
     Assume the decoded list of string is used elsewhere in its class: client can modify it and incur unexpected result.
     
-    3. Normally, representation exposure is not possible, even though it returns a pointer, because the method is private, client should not see it.
+    3. Normally, representation exposure is not possible, even though it returns a pointer, because the method is
+    private, client should not see it.
     The only way to expose it is to have other public methods call it and directly return the result.
     
-    4. Representation exposure should be impossible, even though it returns a pointer, because String is immutable. If client modifies it, the client
-    is modifying its copy.
+    4. Representation exposure should be impossible, even though it returns a pointer, because String is immutable.
+    If client modifies it, the client is modifying its copy.
     
-    5. It should not possibly expose the representation, since all methods of iterator only returns the element. Moreover, the element in this case, 
+    5. It should not possibly expose the representation, since all methods of iterator only returns the element.
+    Moreover, the element in this case,
     is Integer, which is immutable, so client cannot change it.
     
-    6. Representation exposure is possible, if the constructor does not create a shallow copy of the list or if Card is a mutable ADT. In either way, 
-    client may hold the referrence to the list or card inside the list and any change may incur unexpected result.
+    6. Representation exposure is possible, if the constructor does not create a shallow copy of the list or if Card is
+    a mutable ADT. In either way, client may hold the reference to the list or card inside the list and any change may
+    incur unexpected result.
 
 
 Problem 2.  (Graph interface/operations)
+    My design of ADT consists of 3 class, Node, Edge and Graph.
+    Node is a class holding some information about the vertex in graph. Even though we only have string representation
+    in HW3, it the future we may require more data than a string to describe the vertex. Class will be a good choice.
+
+    Even though we could make a cost field in Node, it makes the Node class less coherent. Therefore I choose to create
+    a separated class to represent the edge, which enables further developing.
+
+    The Graph class provides the basic functionality for client to create and modify a graph.
+        Operation1: getNodes/getEdges. Client may want to have an overview of Nodes/Edges already in the graph.
+
+        Operation2: containNode/containEdge. It provides a faster way to check if a certain Node/Edge is in the graph.
+
+        Operation3: addNode/addEdge. It is the most basic way to add a Node/Edge to the graph.
+        Later on, other method may be provided, like: method that takes collection as parameter and add every element
+        in the collection to the graph.
+        But add a single Node/Edge is enough for the most basic design, for now.
+
+        Operation4: removeNode/removeEdge. It is the most basic way to remove a certain Node/Edge from the graph.
+        Later on, other method may be provided, like: method that takes collection as parameter and remove every element
+        in the collection from the graph.
+        But remove a single Node/Edge is enough for the most basic design, for now.
+
+        Operation5: findPath. The most basic functionality the client want from the graph would probably find a shortest
+        path from A to B. Therefore, I include this operation.
+
+        Operation6: equals/hashCode. The standard override methods, to provide consistent equality behavior with the
+        spec.
+
+
 
 
 

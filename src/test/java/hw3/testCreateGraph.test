@@ -1,0 +1,4 @@
+# test an empty graph can be created.
+
+# Create a graph
+CreateGraph graph1

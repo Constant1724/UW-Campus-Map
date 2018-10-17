@@ -1,26 +1,47 @@
 package hw3;
 
 /**
- * Edge represents a immutable edge in a graph that consists of a start Node and an end Node.
- * Note that the edge will also have a cost, which is the cost from start Node to end Node.
+ * Edge represents a immutable, directed, weighted edge in a graph
+ *
+ * Specification fields:
+ *  @spec.specified start   : Node   // The start node of this edge.
+ *  @spec.specified end     : Node   // The end node of this edge.
+ *  @spec.specified cost    : Number // The cost of this edge.
+ *
+ * Abstract Invariant:
+ *  All edges should have a start and an end, with a cost.
+ *  Equality means two Edges are equal iff they have the same start, end and cost.
  */
 public class Edge {
-    public final Node start;
-    public final Node end;
-    public final int cost;
 
     /**
-     * @spec.requires start != Null && end != Null && cost >= 0
-     * @spec.effecs creates a new edge from start to end with cost.
+     * It should take parameter to take the given start and end Node, together with the cost
+     *  to create a new Edge.
      *
-     * @param start start of the edge
-     * @param end end of the edge
-     * @param cost cost of the edge
+     * @spec.effecs creates a new edge from start to end with cost.
      */
-    public Edge(Node start, Node end, int cost) {
-        this.start = start;
-        this.end = end;
-        this.cost = cost;
+    public Edge() {
+        throw new RuntimeException("Edge->constructor() is not yet implemented");
     }
 
+    /**
+     * Standard hashCode function.
+     *
+     * @return an int that all objects equal to this will also return.
+     */
+    @Override
+    public int hashCode() {
+        throw new RuntimeException("Edge->hashCode() is not yet implemented");
+    }
+
+    /**
+     * Standard equality operation.
+     *
+     * @param obj The object to be compared for equality.
+     * @return true if and only if 'this' and 'obj' represent the same Edge.
+     */
+    @Override
+    public boolean equals(Object obj) {
+        throw new RuntimeException("Edge->equals() is not yet implemented");
+    }
 }

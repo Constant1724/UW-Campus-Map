@@ -1,0 +1,9 @@
+# test if we can add Node with data to the graph.
+
+# Create a graph
+CreateGraph graph1
+
+# Add single nodes
+AddNode graph1 ""
+AddNode graph1 " "
+AddNode graph1 "Content"
