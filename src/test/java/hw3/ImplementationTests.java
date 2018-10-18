@@ -11,7 +11,7 @@ import org.junit.runners.Suite.SuiteClasses;
  * <p>For instance, unit tests for your individual methods would go here.
  */
 @RunWith(Suite.class)
-@SuiteClasses({CheckAsserts.class /* list classes here */})
+@SuiteClasses({CheckAsserts.class, EdgeTest.class, NodeTest.class, GraphTest.class})
 public final class ImplementationTests {
   // this class is a placeholder for the suite, so it has no members.
 }

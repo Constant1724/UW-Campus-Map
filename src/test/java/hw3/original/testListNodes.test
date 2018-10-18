@@ -1,7 +1,7 @@
 # START_TEST
+# NAME MultipleNodes
 # test if we can listNode in the graph.
 
-#List multiple Nodes
 # Create a graph
 CreateGraph graph1
 
@@ -14,7 +14,8 @@ ListNodes graph1
 # END_TEST
 
 # START_TEST
-# List single Node listNode in the graph
+# NAME SingleNode
+# test if we can listNode in the graph.
 # Create a graph
 CreateGraph graph1
 
@@ -26,24 +27,11 @@ ListNodes graph1
 # END_TEST
 
 # START_TEST
-# List empty Node.
+# NAME EmptyNode
 # Create a graph
 CreateGraph graph1
 
 # Add No nodes
-
-# Print the nodes in the graph
-ListNodes graph1
-# END_TEST
-
-# START_TEST
-# List non-duplicate Node.
-# Create a graph
-CreateGraph graph1
-
-# Add duplicate nodes
-AddNode graph1 Content1
-AddNode graph1 Content1
 
 # Print the nodes in the graph
 ListNodes graph1

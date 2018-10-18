@@ -1,5 +1,4 @@
 CSE 331 Homework 3.  Answers to Written questions.
-Edit this file to supply your answers.
 
 Name:  Haopeng Zhou
 
@@ -43,7 +42,7 @@ Problem 1. (Written exercises)
     
     Group2: b, h     Abstract state: [2 3 4]
     
-    Group3: c,f      Abstract state: [3 1 2]
+    Group3: c,f      Abstract state: [1 2 3]
     
     Group4: e        Abstract state: [1 2 3 4]
 
@@ -52,7 +51,8 @@ Problem 1. (Written exercises)
     immutable. There is no way to expose.
     
     2. Representation exposure is possible, since the return type is inference type and clients thus have the access. 
-    Assume the decoded list of string is used elsewhere in its class: client can modify it and incur unexpected result.
+    Assume the decoded list of string is used elsewhere as a field in its class:
+    client can modify it and incur unexpected result.
     
     3. Normally, representation exposure is not possible, even though it returns a pointer, because the method is
     private, client should not see it.
@@ -62,11 +62,11 @@ Problem 1. (Written exercises)
     If client modifies it, the client is modifying its copy.
     
     5. It should not possibly expose the representation, since all methods of iterator only returns the element.
-    Moreover, the element in this case,
-    is Integer, which is immutable, so client cannot change it.
+    Moreover, the element in this case, is Integer, which is immutable, so client cannot change it.
     
-    6. Representation exposure is possible, if the constructor does not create a shallow copy of the list or if Card is
-    a mutable ADT. In either way, client may hold the reference to the list or card inside the list and any change may
+    6. Representation exposure is possible, if the constructor does not create a shallow copy of the list
+    or if Card is a mutable ADT and a deep copy is not being created.
+    In either way, client may hold the reference to the list or card inside the list and any change may
     incur unexpected result.
 
 
@@ -81,7 +81,7 @@ Problem 2.  (Graph interface/operations)
     The Graph class provides the basic functionality for client to create and modify a graph.
         Operation1: getNodes/getEdges. Client may want to have an overview of Nodes/Edges already in the graph.
 
-        Operation2: containNode/containEdge. It provides a faster way to check if a certain Node/Edge is in the graph.
+        Operation2: containNode/containEdge. It provides a faster way to check if a single Node/Edge is in the graph.
 
         Operation3: addNode/addEdge. It is the most basic way to add a Node/Edge to the graph.
         Later on, other method may be provided, like: method that takes collection as parameter and add every element
@@ -96,15 +96,70 @@ Problem 2.  (Graph interface/operations)
         Operation5: findPath. The most basic functionality the client want from the graph would probably find a shortest
         path from A to B. Therefore, I include this operation.
 
-        Operation6: equals/hashCode. The standard override methods, to provide consistent equality behavior with the
-        spec.
-
-
-
 
 
 Problem 3.  (Testing strategy)
+    For Node:
+        First, I test the constructor by passing three kinds of String: empty, space, and strings consist of letters
+        and numbers.
 
+        Next, I test the equals/hashCode method basically by testing two instances with same constant should be
+        equal and two instances with different content should not be equal. (Abstract Invariant should hold)
 
+        Note that, I add a method to call the constructor, since decisions about class fields haven't been made.
+        Putting a mapping here makes life easier in the future.
 
+        Since Specification test does not test against Nodes, there is no way to compare them.
 
+    For Edge:
+        Note that since edge is built on Node, in this test, I assume Node is implemented properly,
+        and focus on the functionality of the edge.
+
+        First, I test the constructor by testing, self-edge is and normal edge like the one from A to B
+         with 0/non-0 cost should be allowed.
+
+        Next, I test the equals/hashCode method basically by testing two instances with same start, end and cost should
+        be equal. Specially, if two edges have the same cost, but start and end are swapped, they should not be equal to
+        each other. Two instances with different start or end or cost should not be equal.
+
+        Note that, I add a separate method to call the constructor,
+        since decisions about class fields haven't been made.
+        Putting a mapping here makes life easier in the future.
+
+        Since Specification test does not test against Nodes, there is no way to compare them.
+
+    For Graph:
+        Since graph is build on Nodes and Edges, in this test, i will assume Nodes and Edges are implemented properly,
+        and focus on test on the functionality of the graph.
+
+        Even though I try to design test for each method independently, there will be some interdependency, since fields
+        are private and I have no access to them.
+
+        I make a list of Nodes, and create a list of edges that fully connected these Nodes. Then in each test method,
+        I gradually add them one at a time, to the graph. This should certainly cover, the 0, 1, 2 case, mentioned in
+        the HW3 spec.
+
+        For add functionality (addNode/addEdge), the workflow is to make sure that before add, the element should not
+        exist in the graph, the add operation should be successful and after add, the element should be in the graph.
+        Moreover, it should make sure that adding duplicate elements should fail. If either start/end of the edge is not
+        in the graph, the add should fail.
+
+        For contain functionality (containNode/containEdge), the workflow is to first make sure that empty graph does
+        not contain anything. After adding elements to the graph, the contain method should return True upon testing
+        those elements.
+
+        For remove functionality (removeNode/removeEdge), the workflow is the opposite of add. Before remove,
+        the elements should be in the graph, the remove operation should be successful, after remove the elements
+        should not be in the graph. Elements should not be removed twice. Moreover, it test if remove Node, removes
+        any edges contain that node, and if remove Edge, no nodes should be removed.
+
+        For view functionality (getNodes/getEdges), the workflow is to check if every element in the graph is in the
+        returned set, a view to client. Empty graph should return empty set.
+
+        For findPath method, it tests if self-edge path, empty path, normal path and shortest path can be found.
+
+        Note that the commands given in spec test are simpler than implementation, since they do not involve remove nor
+        findPath. One difference between my implementation unit test and spec test is that: everywhere the spec
+        says undefined output, my implementation define the exact behavior. Therefore, I add test to check these
+        situations, like adding duplicates. Moreover, spec test the Graph ADT from a higher level, and treat the graph
+        as an entity, while implementation test focus on test single method separately.

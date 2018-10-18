@@ -160,26 +160,5 @@ public class Graph {
         throw new RuntimeException("Graph->findPath() is not yet implemented");
     }
 
-    /**
-     * Standard hashCode function.
-     *
-     * @return an int that all objects equal to this will also return.
-     */
-    @Override
-    public int hashCode() {
-        throw new RuntimeException("Edge->hashCode() is not yet implemented");
-    }
-
-    /**
-     * Standard equality operation.
-     *
-     * @param obj The object to be compared for equality.
-     * @return true if and only if 'this' and 'obj' represent the same Graph.
-     */
-    @Override
-    public boolean equals(Object obj) {
-        throw new RuntimeException("Edge->equals() is not yet implemented");
-    }
-
 
 }

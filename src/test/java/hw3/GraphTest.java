@@ -114,7 +114,7 @@ public class GraphTest {
             assertTrue(graph.removeNode(node));
             // After remove, the graph should not contain the node.
             assertFalse(graph.containNode(node));
-            // Node should not be able to remove twice.
+            // Node should not be able to be removed twice.
             assertFalse(graph.removeNode(node));
         }
 
@@ -232,7 +232,7 @@ public class GraphTest {
             assertTrue(graph.removeEdge(edge));
             // After remove, the graph should not contain the edge.
             assertFalse(graph.containEdge(edge));
-            // Edge should not be able to remove twice.
+            // Edge should not be able to be removed twice.
             assertFalse(graph.removeEdge(edge));
         }
 
@@ -312,6 +312,5 @@ public class GraphTest {
         assertEquals(list.get(0), aToB);
         assertEquals(list.get(0), bToD);
     }
-
 
 }

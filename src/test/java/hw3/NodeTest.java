@@ -7,11 +7,6 @@ import static org.junit.Assert.*;
 
 public class NodeTest {
 
-    @Before
-    public void initialize() {
-
-    }
-
     /**
      * Place holder for constructor.
      *
@@ -31,7 +26,7 @@ public class NodeTest {
     @Test
     public void testConstructor() {
         create("");
-        create("Content");
+        create("Content1");
         create(" ");
     }
 
@@ -41,12 +36,12 @@ public class NodeTest {
     @Test
     public void testHashCode() {
         assertSame(create("").hashCode(), create("").hashCode());
-        assertSame(create("Content").hashCode(), create("Content").hashCode());
+        assertSame(create("Content1").hashCode(), create("Content1").hashCode());
         assertSame(create(" ").hashCode(), create(" ").hashCode());
 
         assertNotSame(create("").hashCode(), create(" ").hashCode());
-        assertNotSame(create("").hashCode(), create("Content").hashCode());
-        assertNotSame(create("Content").hashCode(), create(" ").hashCode());
+        assertNotSame(create("").hashCode(), create("Content2").hashCode());
+        assertNotSame(create("Content2").hashCode(), create(" ").hashCode());
     }
     
     /**
@@ -55,12 +50,12 @@ public class NodeTest {
     @Test
     public void testEquals() {
         assertEquals(create(""), create(""));
-        assertEquals(create("Content"), create("Content"));
+        assertEquals(create("Content1"), create("Content1"));
         assertEquals(create(" ").hashCode(), create(" ").hashCode());
 
         assertNotEquals(create(""), create(" ").hashCode());
-        assertNotEquals(create(""), create("Content"));
-        assertNotEquals(create("Content"), create(" ").hashCode());
+        assertNotEquals(create(""), create("Content2"));
+        assertNotEquals(create("Content2"), create(" ").hashCode());
     }
 
 }
