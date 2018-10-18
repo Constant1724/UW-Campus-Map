@@ -17,7 +17,7 @@ public class Edge {
     /**
      * It should take parameter to take the given start and end Node, together with the cost
      *  to create a new Edge.
-     *
+     * @spec.requires Neither of the parameter should be null, and cost should be non-negative.
      * @spec.effecs creates a new edge from start to end with cost.
      */
     public Edge() {

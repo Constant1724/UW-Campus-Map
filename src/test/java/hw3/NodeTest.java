@@ -6,18 +6,28 @@ import static org.junit.Assert.*;
 
 
 public class NodeTest {
-    public static final Node emptyNode = create("");
-    public static final Node nonEmptyNode = create("Content");
-    public static final Node spaceNode = create(" ");
 
     @Before
     public void initialize() {
 
     }
+
+    /**
+     * Place holder for constructor.
+     *
+     * When the fields are decided at implementation time, and constructor parameter is set,
+     * modify the following properly.
+     *
+     * @param content content of a Node.
+     * @return a new Node with content as its description.
+     */
     public static Node create(String content) {
         return new Node();
     }
 
+    /**
+     * try to create Node with empty, space and character content.
+     */
     @Test
     public void testConstructor() {
         create("");
@@ -30,26 +40,27 @@ public class NodeTest {
      */
     @Test
     public void testHashCode() {
-        assertSame(emptyNode.hashCode(), create("").hashCode());
-        assertSame(nonEmptyNode.hashCode(), create("Content").hashCode());
-        assertSame(spaceNode.hashCode(), create(" ").hashCode());
+        assertSame(create("").hashCode(), create("").hashCode());
+        assertSame(create("Content").hashCode(), create("Content").hashCode());
+        assertSame(create(" ").hashCode(), create(" ").hashCode());
 
-        assertNotSame(emptyNode, spaceNode);
-        assertNotSame(emptyNode, nonEmptyNode);
-        assertNotSame(nonEmptyNode, spaceNode);
+        assertNotSame(create("").hashCode(), create(" ").hashCode());
+        assertNotSame(create("").hashCode(), create("Content").hashCode());
+        assertNotSame(create("Content").hashCode(), create(" ").hashCode());
     }
+    
     /**
      * Test Nodes with same content should be equal.
      */
     @Test
     public void testEquals() {
-        assertEquals(emptyNode.hashCode(), create("").hashCode());
-        assertEquals(nonEmptyNode.hashCode(), create("Content").hashCode());
-        assertEquals(spaceNode.hashCode(), create(" ").hashCode());
+        assertEquals(create(""), create(""));
+        assertEquals(create("Content"), create("Content"));
+        assertEquals(create(" ").hashCode(), create(" ").hashCode());
 
-        assertNotEquals(emptyNode, spaceNode);
-        assertNotEquals(emptyNode, nonEmptyNode);
-        assertNotEquals(nonEmptyNode, spaceNode);
+        assertNotEquals(create(""), create(" ").hashCode());
+        assertNotEquals(create(""), create("Content"));
+        assertNotEquals(create("Content"), create(" ").hashCode());
     }
 
 }

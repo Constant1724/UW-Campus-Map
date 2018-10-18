@@ -17,6 +17,8 @@ public class Node {
     /**
      * It should have parameters to take the given description as its content.
      *
+     * @spec.requires input description should not be null.
+     *
      * @spec.effects creates a new Node with the given description.
      *
      */

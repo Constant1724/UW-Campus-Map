@@ -18,7 +18,7 @@ import java.util.Set;
  *
  * Abstract Invariant:
  *  Equality means two Edges are equal iff they have the same set of Nodes and Edges.
- *
+ *  The two nodes of any Edge must be in Graph.Nodes.
  */
 public class Graph {
 
@@ -32,20 +32,20 @@ public class Graph {
     }
 
     /**
-     * Return an unmodifiable view of all nodes in the graph.
+     * Return a view of all nodes in the graph.
      * Note that if the graph does not contain any Nodes, it will an empty set
      *
-     * @return an unmodifiable set of all nodes in the graph.
+     * @return a set of all nodes in the graph.
      */
     public Set<Node> getNodes() {
         throw new RuntimeException("Graph->getNodes() is not yet implemented");
     }
 
     /**
-     * Return an unmodifiable view of all edges in the graph.
+     * Return a view of all edges in the graph.
      * Note that if the graph does not contain any Edges, it will an empty set
      *
-     * @return an unmodifiable set of all edges in the graph.
+     * @return a set of all edges in the graph.
      */
     public Set<Edge> getEdges() {
         throw new RuntimeException("Graph->getEdges() is not yet implemented");
@@ -63,37 +63,38 @@ public class Graph {
     }
 
     /**
-     * Add the node to the graph.
-     * If the node is already in the graph, the behavior is unexpected.
+     * Add the node to the graph, if the node is not in the graph.
+     * If the node is already in the graph, modify nothing.
      *
-     * @spec.requires node != Null && graph.containNode(node)
-     * @spec.modifies this.Nodes
+     * @spec.requires node != Null
+     * @spec.modifies this.Nodes if the graph does not contain the node.
      * @spec.effect if this.Nodes = S, this_post.Nodes = S ∪ node, iff node is not in S.
      *
      * @param node to be added to the graph
+     * @return True iff node is not in graph, False otherwise.
      */
-    public void addNode(Node node) {
+    public boolean addNode(Node node) {
         throw new RuntimeException("Graph->addNode() is not yet implemented");
     }
 
     /**
-     * Remove the node from the graph.
-     *
-     * If the node is not in the graph, the behavior is unexpected.
-     *
+     * Remove the node from the graph, if the node is in the graph.
      * Note that this will also remove any edge that contain the node.
+     *
+     * If the node is not in the graph, modify nothing.
      *
      *
      * @spec.requires node != Null
-     * @spec.modifies this.Nodes
-     *                this.Edges if any edge contain the node
+     * @spec.modifies this.Nodes if the node is in the graph.
+     *                this.Edges if any edge contain the node.
      * @spec.effect if this.Nodes = S, this_post.Nodes = S - node, iff node is in S.
-     *              if this.Edges = E, this_post.Edges = E - any edge that contains the node,
+     *              if this.Edges = E, this_post.Edges = E - any edges that contain the node,
      *                  iff any edge contain the node
      *
      * @param node to be removed from the graph
+     * @return True iff node is in graph, False otherwise.
      */
-    public void removeNode(Node node) {
+    public boolean removeNode(Node node) {
         throw new RuntimeException("Graph->removeNode() is not yet implemented");
     }
 
@@ -104,47 +105,51 @@ public class Graph {
      * @param edge to be checked if in the graph
      * @return True iff edge is in graph
      */
-    public boolean containEdge(Node edge) {
+    public boolean containEdge(Edge edge) {
         throw new RuntimeException("Graph->containEdge() is not yet implemented");
     }
 
     /**
      * Add the edge to the graph.
      *
-     * If the edge is already in the graph, or edge.start/edge.end is not in the graph,
-     * the behavior is unexpected.
+     * If the edge is already in the graph, or edge.start/edge.end is not in the graph, modify nothing.
      *
-     * @spec.requires edge != Null && graph.containNode(edge.start) && graph.containNode(edge.end)
-     * @spec.modifies this.Edges
+     *
+     * @spec.requires edge != Null
+     * @spec.modifies this.Edges iff edge is not in the graph
+     *  && graph.containNode(edge.start) && graph.containNode(edge.end)
      * @spec.effect if this.Edges = E, this_post.Edges = E ∪ edge, iff edge is not in E.
      *
      * @param edge to be added to the graph
+     * @return True iff edge is not in graph, False otherwise.
      */
-    public void addEdge(Edge edge) {
+    public boolean addEdge(Edge edge) {
         throw new RuntimeException("Graph->addEdge() is not yet implemented");
     }
     
     /**
-     * Remove the edge in the graph.
+     * Remove the edge in the graph, if the edge is in the graph.
+     * If the edge is not in the graph, modify nothing
      *
-     * If the edge is not in the graph, the behavior is unexpected.
-     *
-     * @spec.requires edge != Null && graph.containEdge(edge)
-     * @spec.modifies this.Edges
+     * @spec.requires edge != Null
+     * @spec.modifies this.Edges if the edge is in the graph
      * @spec.effect if this.Edges = E, this_post.Edges = E - edge, iff edge is in E.
      *
      * @param edge to be removed from the graph
+     * @return True iff edge is in graph, False otherwise.
      */
-    public void removeEdge(Edge edge) {
+    public boolean removeEdge(Edge edge) {
         throw new RuntimeException("Graph->removeEdge() is not yet implemented");
     }
 
     /**
      * Find a path consists of edges connecting start and end, with the lowest cost.
      * If multiple shortest paths exist, this method may return any one.
-     * If there does not exist a path from start to end, it will return an empty list.
      *
-     * @spec.requires start != Null && end != Null
+     * If there does not exist a path from start to end, it will return an empty list.
+     * start and end should not be the same node.
+     *
+     * @spec.requires start != Null && end != Null && !start.equals(end)
      *
      * @param start the start of the path
      * @param end the end of the path

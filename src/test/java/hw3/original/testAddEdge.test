@@ -1,3 +1,4 @@
+# START_TEST
 # test if we can add single edge to the graph.
 
 # Create a graph
@@ -9,8 +10,9 @@ AddNode graph1 ValidNode2
 
 # Add an edge
 AddEdge graph1 ValidNode1 ValidNode2 label1
+# END_TEST
 
-
+# START_TEST
 # test if we can add multiple edge to the graph
 # Create a graph
 CreateGraph graph1
@@ -22,8 +24,10 @@ AddNode graph1 ValidNode2
 # Add an edge
 AddEdge graph1 ValidNode1 ValidNode2 label1
 AddEdge graph1 ValidNode2 ValidNode1 label2
+# END_TEST
 
 
+# START_TEST
 # test if we can add self edge (start == end) to the graph
 # Create a graph
 CreateGraph graph1
@@ -33,8 +37,10 @@ AddNode graph1 ValidNode1
 
 # Add an edge
 AddEdge graph1 ValidNode1 ValidNode1 label1
+# END_TEST
 
 
+# START_TEST
 # test if we can add duplicate edges to the graph
 # Create a graph
 CreateGraph graph1
@@ -46,18 +52,18 @@ AddNode graph1 ValidNode2
 # Add an edge
 AddEdge graph1 ValidNode1 ValidNode2 label1
 AddEdge graph1 ValidNode1 ValidNode2 label1
+# END_TEST
 
 
-
-# test if we can add duplicate edge-label to the graph
+# START_TEST
+# test if we can add duplicate edge that either start or end is not in the graph
 # Create a graph
 CreateGraph graph1
 
 # Add a pair of nodes
 AddNode graph1 ValidNode1
-AddNode graph1 ValidNode2
 
 # Add an edge
 AddEdge graph1 ValidNode1 ValidNode2 label1
 AddEdge graph1 ValidNode2 ValidNode1 label1
-
+# END_TEST
