@@ -1,0 +1,8 @@
+# START_TEST
+# NAME SingleGraph
+# test an empty graph can be created.
+
+# Create a graph
+created graph graph1
+
+# END_TEST

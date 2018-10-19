@@ -7,8 +7,8 @@ import static org.junit.Assert.*;
 public class EdgeTest {
     private static final Node A = NodeTest.create("start");
     private static final Node B = NodeTest.create("end");
-    private static final int ZERO_COST = 0;
-    private static final int NON_ZERO_COST = 1;
+    private static final String LABEL = "0";
+    private static final String LABEL1 = "";
 
     /**
      * Place holder for constructor.
@@ -18,52 +18,84 @@ public class EdgeTest {
      *
      * @param start start of the Edge.
      * @param end   end of the Edge.
-     * @param cost  cost of the Edge.
+     * @param label  cost of the Edge.
      * @return a new Node with content as its description.
      */
-    public static Edge create(Node start, Node end, int cost) {
+    public static Edge create(Node start, Node end, String label) {
 
         return new Edge();
     }
 
     @Test
     public void testConstructor() {
-        create(A, B, ZERO_COST);
-        create(A, B, NON_ZERO_COST);
-        create(A, A, ZERO_COST);
-        create(A, A, NON_ZERO_COST);
+        create(A, B, LABEL);
+        create(A, B, LABEL1);
+        create(A, A, LABEL);
+        create(A, A, LABEL1);
     }
+
     /**
      * Test Edges with same content should have the same hashCode.
      */
     @Test
     public void testHashCode() {
-        Edge aToB = create(A, B, ZERO_COST);
-        Edge bToA = create(B, A, ZERO_COST);
-        Edge aToA = create(A, A, ZERO_COST);
+        Edge aToB = create(A, B, LABEL);
+        Edge bToA = create(B, A, LABEL);
+        Edge aToA = create(A, A, LABEL);
         
-        assertSame(aToB.hashCode(), create(A, B, ZERO_COST).hashCode());
-        assertSame(bToA.hashCode(), create(B, A, ZERO_COST).hashCode());
-        assertSame(aToA.hashCode(), create(A, A, ZERO_COST).hashCode());
+        assertSame(aToB.hashCode(), create(A, B, LABEL).hashCode());
+        assertSame(bToA.hashCode(), create(B, A, LABEL).hashCode());
+        assertSame(aToA.hashCode(), create(A, A, LABEL).hashCode());
         
         assertNotSame(aToB.hashCode(), bToA.hashCode());
         assertNotSame(aToA.hashCode(), aToB.hashCode());
     }
+
     /**
      * Test Edges with same content should be equal.
      */
     @Test
     public void testEquals() {
-        Edge aToB = create(A, B, ZERO_COST);
-        Edge bToA = create(B, A, ZERO_COST);
-        Edge aToA = create(A, A, ZERO_COST);
+        Edge aToB = create(A, B, LABEL);
+        Edge bToA = create(B, A, LABEL);
+        Edge aToA = create(A, A, LABEL);
 
-        assertEquals(aToB, create(A, B, ZERO_COST).hashCode());
-        assertEquals(bToA, create(B, A, ZERO_COST).hashCode());
-        assertEquals(aToA, create(A, A, ZERO_COST).hashCode());
+        assertEquals(aToB, create(A, B, LABEL).hashCode());
+        assertEquals(bToA, create(B, A, LABEL).hashCode());
+        assertEquals(aToA, create(A, A, LABEL).hashCode());
 
         assertNotEquals(aToB, bToA.hashCode());
         assertNotEquals(aToA, aToB.hashCode());
 
+    }
+
+    /**
+     * Test getStart is implemented properly
+     */
+    @Test
+    public void testGetStart() {
+        assertEquals(create(A, B, LABEL).getStart(), A);
+        assertEquals(create(A, A, LABEL).getStart(), A);
+        assertEquals(create(B, A, LABEL).getStart(), LABEL);
+    }
+
+    /**
+     * Test getStart is implemented properly
+     */
+    @Test
+    public void testGetEnd() {
+        assertEquals(create(A, B, LABEL).getEnd(), B);
+        assertEquals(create(A, A, LABEL).getEnd(), A);
+        assertEquals(create(B, A, LABEL).getEnd(), A);
+    }
+
+    /**
+     * Test getStart is implemented properly
+     */
+    @Test
+    public void testGetLabel() {
+        assertEquals(create(A, B, LABEL).getLabel(), LABEL);
+        assertEquals(create(A, A, LABEL1).getLabel(), LABEL1);
+        assertEquals(create(B, A, LABEL).getLabel(), LABEL);
     }
 }

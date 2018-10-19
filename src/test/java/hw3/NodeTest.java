@@ -58,4 +58,15 @@ public class NodeTest {
         assertNotEquals(create("Content2"), create(" ").hashCode());
     }
 
+    /**
+     * Test get content method is implemented properly.
+     */
+    @Test
+    public void testGetContent() {
+        assertEquals(create("A").getContent(), "A");
+        assertEquals(create(" ").getContent(), " ");
+        assertEquals(create("1").getContent(), "1");
+    }
+
+
 }

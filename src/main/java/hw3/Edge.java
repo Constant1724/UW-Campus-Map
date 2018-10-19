@@ -4,9 +4,9 @@ package hw3;
  * Edge represents a immutable, directed, weighted edge in a graph
  *
  * Specification fields:
- *  @spec.specified start   : Node   // The start node of this edge.
- *  @spec.specified end     : Node   // The end node of this edge.
- *  @spec.specified cost    : Number // The cost of this edge.
+ *  @spec.specified start   : Node      // The start node of this edge.
+ *  @spec.specified end     : Node      // The end node of this edge.
+ *  @spec.specified label    : String   // The label of this edge.
  *
  * Abstract Invariant:
  *  All edges should have a start and an end, with a cost.
@@ -22,6 +22,33 @@ public class Edge {
      */
     public Edge() {
         throw new RuntimeException("Edge->constructor() is not yet implemented");
+    }
+
+    /**
+     * get the start Node of this Edge
+     *
+     * @return the start Node of this Edge
+     */
+    public Node getStart() {
+        throw new RuntimeException("Edge->getStart() is not yet implemented");
+    }
+
+    /**
+     * get the end Node of this Edge
+     *
+     * @return the end Node of this Edge
+     */
+    public Node getEnd() {
+        throw new RuntimeException("Edge->getEnd() is not yet implemented");
+    }
+
+    /**
+     * get the label of this Edge
+     *
+     * @return the label of this Edge
+     */
+    public String getLabel() {
+        throw new RuntimeException("Edge->getLabel() is not yet implemented");
     }
 
     /**
@@ -44,4 +71,6 @@ public class Edge {
     public boolean equals(Object obj) {
         throw new RuntimeException("Edge->equals() is not yet implemented");
     }
+
+
 }

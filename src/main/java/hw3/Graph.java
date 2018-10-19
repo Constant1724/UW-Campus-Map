@@ -18,7 +18,7 @@ import java.util.Set;
  *
  * Abstract Invariant:
  *  Equality means two Edges are equal iff they have the same set of Nodes and Edges.
- *  The two nodes of any Edge must be in Graph.Nodes.
+ *  The two nodes of any Edge in Graph.Edges must be in Graph.Nodes.
  */
 public class Graph {
 

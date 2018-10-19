@@ -1,0 +1,10 @@
+# START_TEST
+# NAME EmptyNode
+# Create a graph
+CreateGraph graph1
+
+# Add No nodes
+
+# Print the nodes in the graph
+ListNodes graph1
+# END_TEST

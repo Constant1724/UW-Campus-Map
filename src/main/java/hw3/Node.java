@@ -9,7 +9,7 @@ package hw3;
  * @spec.specified content : words // The description about this Node.
  *
  * Abstract Invariant:
- *  Any Node should have a unique description.
+ *  Any Node should have a unique, non Null description.
  *  Equality means two Nodes are equal iff they have the same content.
  */
 public class Node {
@@ -25,6 +25,16 @@ public class Node {
     public Node() {
         throw new RuntimeException("Node->constructor() is not yet implemented");
     }
+
+    /**
+     * return the content of the Node
+     *
+     * @return content of the Node
+     */
+    public String getContent() {
+        throw new RuntimeException("Node->getContent() is not yet implemented");
+    }
+
 
     /**
      * Standard hashCode function.

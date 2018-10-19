@@ -1,0 +1,19 @@
+# START_TEST
+# NAME NoChildren
+# test if we can correctly listChildren for a Node in the graph.
+# Create a graph
+CreateGraph graph1
+
+# Add a pair of nodes
+AddNode graph1 ValidNode1
+AddNode graph1 ValidNode2
+AddNode graph1 ValidNode3
+
+# Add an edge
+AddEdge graph1 ValidNode1 ValidNode2 Edge1
+AddEdge graph1 ValidNode1 ValidNode3 Edge1
+
+# Print outgoing edges from ValidNode2 and ValidNode3
+ListChildren graph1 ValidNode2
+ListChildren graph1 ValidNode3
+# END_TEST

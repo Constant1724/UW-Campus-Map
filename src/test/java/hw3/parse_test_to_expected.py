@@ -9,15 +9,24 @@ def split_file():
         with open('original/' + file_name) as file:
             content = file.read()
         content = content.splitlines()
-        while content:
+        while ''.join(content):
+
             start = content.index("# START_TEST")
             end = content.index("# END_TEST")  + 1 # In python indexing: end index is exclusive & start index is inclusive.
-            content_to_write = '\n'.join(content[start : end ])
+            cur_content = content[start : end]
+            content_to_write = '\n'.join(cur_content)
+            temp = cur_content[1].split()
 
-            with open("{}{}{}".format(os.path.splitext(file_name)[0], count, ".test"), mode = 'w+') as file:
+            if temp[0] == '#' and temp[1] == 'NAME':
+                branch = temp[2]
+            else:
+                branch = count
+                count += 1
+            with open("{}_{}{}".format(os.path.splitext(file_name)[0], branch, ".test"), mode = 'w+') as file:
                 file.write(content_to_write)
-            count += 1
+
             content = content[end:]
+
 
 
 def create_expect_file():

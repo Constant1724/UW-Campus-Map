@@ -1,0 +1,12 @@
+# START_TEST
+# NAME MultipleNodes
+# test if we can add multiuple Node with data to the graph.
+
+# Create a graph
+created graph graph1
+
+# Add multiple nodes
+added node 1 to graph1
+added node 1Content to graph1
+added node Content to graph1
+# END_TEST

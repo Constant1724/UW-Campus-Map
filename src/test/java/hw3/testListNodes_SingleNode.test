@@ -1,0 +1,12 @@
+# START_TEST
+# NAME SingleNode
+# test if we can listNode in the graph.
+# Create a graph
+CreateGraph graph1
+
+# Add single node
+AddNode graph1 Content1
+
+# Print the nodes in the graph
+ListNodes graph1
+# END_TEST

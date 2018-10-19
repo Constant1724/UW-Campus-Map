@@ -24,7 +24,7 @@ Problem 1. (Written exercises)
             IntQueue2, q, holds a queue of elements, maintains the order of insertion in entries.
             q.size indicates the total number of elements in the IntQueue2.
             q.front indicates the starting index of the current IntQueue2 in entries.
-            Specifically, the i-th element should be q.entries.[(i + q.front) % q.entries.length], if i < q.size.
+            Specifically, the i-th element should be q.entries.[(i + q.front) % q.entries.length], if 0 <= i < q.size.
 
         Representation Invariant:
             entries != null &&
@@ -78,6 +78,9 @@ Problem 2.  (Graph interface/operations)
     Even though we could make a cost field in Node, it makes the Node class less coherent. Therefore I choose to create
     a separated class to represent the edge, which enables further developing.
 
+    The Node and Edge class provide basic getter and override equality related methods to keep
+    consistent with Abstract equality
+
     The Graph class provides the basic functionality for client to create and modify a graph.
         Operation1: getNodes/getEdges. Client may want to have an overview of Nodes/Edges already in the graph.
 
@@ -99,12 +102,16 @@ Problem 2.  (Graph interface/operations)
 
 
 Problem 3.  (Testing strategy)
+    The main idea of the test strategy is to test 0, 1 ,2 cases on each method and input.
+
     For Node:
         First, I test the constructor by passing three kinds of String: empty, space, and strings consist of letters
         and numbers.
 
         Next, I test the equals/hashCode method basically by testing two instances with same constant should be
         equal and two instances with different content should not be equal. (Abstract Invariant should hold)
+
+        For getter methods, I just check if it returns the correct element.
 
         Note that, I add a method to call the constructor, since decisions about class fields haven't been made.
         Putting a mapping here makes life easier in the future.
@@ -122,11 +129,13 @@ Problem 3.  (Testing strategy)
         be equal. Specially, if two edges have the same cost, but start and end are swapped, they should not be equal to
         each other. Two instances with different start or end or cost should not be equal.
 
+        For getter methods, I just check if it returns the correct element.
+
         Note that, I add a separate method to call the constructor,
         since decisions about class fields haven't been made.
         Putting a mapping here makes life easier in the future.
 
-        Since Specification test does not test against Nodes, there is no way to compare them.
+        Since Specification test does not test against Edges, there is no way to compare them.
 
     For Graph:
         Since graph is build on Nodes and Edges, in this test, i will assume Nodes and Edges are implemented properly,

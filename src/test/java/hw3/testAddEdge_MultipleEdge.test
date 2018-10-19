@@ -1,0 +1,16 @@
+# START_TEST
+# NAME MultipleEdge
+# test if we can add edge to the graph
+# Create a graph
+CreateGraph graph1
+
+# Add a pair of nodes
+AddNode graph1 ValidNode1
+AddNode graph1 ValidNode2
+AddNode graph1 ValidNode3
+
+# Add an edge
+AddEdge graph1 ValidNode1 ValidNode2 label1
+AddEdge graph1 ValidNode1 ValidNode3 label2
+AddEdge graph1 ValidNode2 ValidNode1 label3
+# END_TEST

@@ -1,0 +1,10 @@
+# START_TEST
+# NAME SingleNode
+# test if we can add single Node with data to the graph.
+
+# Create a graph
+CreateGraph graph1
+
+# Add single node
+AddNode graph1 1
+# END_TEST

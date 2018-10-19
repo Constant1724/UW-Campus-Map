@@ -1,0 +1,18 @@
+# START_TEST
+# NAME MultipleChildren
+# test if we can correctly listChildren for a Node in the graph.
+# Create a graph
+created graph graph1
+
+# Add a pair of nodes
+added node ValidNode1 to graph1
+added node ValidNode2 to graph1
+added node ValidNode3 to graph1
+
+# Add an edge
+added edge Edge1 from ValidNode1 to ValidNode2 in graph1
+added edge Edge1 from ValidNode1 to ValidNode3 in graph1
+
+# Print outgoing edges from ValidNode1
+the children of ValidNode1 in graph1 are: ValidNode2(Edge1) ValidNode3(Edge1)
+# END_TEST

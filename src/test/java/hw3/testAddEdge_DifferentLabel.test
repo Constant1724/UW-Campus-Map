@@ -1,0 +1,15 @@
+# START_TEST
+# NAME DifferentLabel
+# test if we can add edges to the graph.
+# Edges will have same start and end but different labels.
+# Create a graph
+CreateGraph graph1
+
+# Add a pair of nodes
+AddNode graph1 ValidNode1
+AddNode graph1 ValidNode2
+
+# Add an edge
+AddEdge graph1 ValidNode1 ValidNode2 label1
+AddEdge graph1 ValidNode1 ValidNode2 label2
+# END_TEST

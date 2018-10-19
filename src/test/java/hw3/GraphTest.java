@@ -15,11 +15,11 @@ public class GraphTest {
     private static final Node C = NodeTest.create("C");
     private static final Node D = NodeTest.create("D");
 
-    private static final int ZERO_COST = 0;
+    private static final String LABEL = "AHHh";
 
-    private static final Edge A_TO_B = EdgeTest.create(A, B, ZERO_COST);
+    private static final Edge A_TO_B = EdgeTest.create(A, B, LABEL);
 
-    private static final Edge A_TO_A = EdgeTest.create(A, A, ZERO_COST);
+    private static final Edge A_TO_A = EdgeTest.create(A, A, LABEL);
 
     private List<Node> Nodes;
     private List<Edge> Edges;
@@ -37,7 +37,7 @@ public class GraphTest {
     }
 
     @Before
-    private void initialize() {
+    public void initialize() {
 
         this.Nodes = new ArrayList<Node>();
         this.Nodes.add(A);
@@ -52,7 +52,7 @@ public class GraphTest {
         this.Edges = new ArrayList<Edge>();
         for (Node start : this.Nodes) {
             for (Node end : this.Nodes) {
-                this.Edges.add(EdgeTest.create(start, end, ZERO_COST));
+                this.Edges.add(EdgeTest.create(start, end, LABEL));
             }
         }
     }
@@ -125,9 +125,11 @@ public class GraphTest {
 
         for(Node node : this.Nodes) {
             graph.removeNode(node);
+            // if any edge contain the node, check if the edge is removed
             for(Edge edge : this.Edges) {
-                // TODO add code to check if edge.start.equals(node) or edge.end.equals(node)
-                // TODO assertFalse(graph.containEdge(edge));
+                if (edge.getStart().equals(node) || edge.getEnd().equals(node)) {
+                    assertFalse(graph.containEdge(edge));
+                }
             }
         }
     }
@@ -185,10 +187,11 @@ public class GraphTest {
 
         // make sure that any edge with only one node in graph, could not be added to the graph.
         for (Node node : this.Nodes) {
+            graph.addNode(node);
             for (Edge edge : this.Edges) {
-                // TODO add code to check if either edge.start is in the graph or edge.end is in the graph
-                // TODO (exclusive or), then assertFalse(graph.addEdge(edge))
-
+                if (graph.containNode(edge.getStart()) ^ graph.containNode(edge.getEnd())) {
+                    assertFalse(graph.addEdge(edge));
+                }
             }
 
         }
@@ -300,10 +303,10 @@ public class GraphTest {
         graph.addNode(B);
         graph.addNode(C);
         graph.addNode(D);
-        Edge aToB = EdgeTest.create(A, B, 2);
-        Edge bToD = EdgeTest.create(B, D, 1);
-        Edge aToC = EdgeTest.create(A, C, 3);
-        Edge cToD = EdgeTest.create(C, D, 4);
+        Edge aToB = EdgeTest.create(A, B, "2");
+        Edge bToD = EdgeTest.create(B, D, "1");
+        Edge aToC = EdgeTest.create(A, C, "3");
+        Edge cToD = EdgeTest.create(C, D, "4");
         graph.addEdge(aToB);
         graph.addEdge(bToD);
         graph.addEdge(aToC);
