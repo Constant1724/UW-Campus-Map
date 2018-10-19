@@ -1,4 +1,5 @@
 .gradle
-gradlew/
-build/
 .idea/
+.run-google-java-format/
+build/
+gradlew/
