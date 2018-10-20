@@ -33,7 +33,7 @@ dependencies {
 task copyTestScripts(type: Copy) {
   from "src/test/java/hw3"
   include "*.test", "*.expected"
-  into "${buildDir}/classes/java/test/hw3/test"
+  into "${buildDir}/classes/java/test/hw3/"
 }
 
 test {
@@ -72,6 +72,10 @@ tasks.withType(Javadoc) {
     tagletPath(configurations.taglet.files as File[])
   }
 }
+tasks.withType(Javadoc) {
+  options.addStringOption('Xwerror', '-quiet')
+}
+
 
 ///
 /// Extra code quality checks
@@ -219,6 +223,7 @@ task validateWorkingCopy(group: 'Validation') {
 }
 validateWorkingCopy.dependsOn clean
 validateWorkingCopy.dependsOn build
+// validateWorkingCopy.dependsOn checkFormat
 
 task validateLocalRepo(type: GradleBuild, group: 'Validation') {
   description = 'Validates the local repository.  Runs validateWorkingCopy on a fresh clone of it.  Fails if there are uncommitted changes.'
@@ -257,6 +262,24 @@ validateRemote.dependsOn checkNoUnpushedCommits
 task validate {
   dependsOn validateRemote
 }
+
+///
+/// Other targets
+///
+
+task cleanByRenaming {
+  description = 'Use this when the "clean" target fails due to "unable to delete file" "device or resource busy".'
+  doLast {
+    File destinationDir = new File("${buildDir}", 'deleteme-' + new Random().nextInt(1000000))
+    mkdir destinationDir
+    println "destinationDir = " + destinationDir
+    buildDir.eachFile { f ->
+      println "Processing " + f
+      f.renameTo(new File(destinationDir, f.getName()))
+    }
+  }
+}
+
 
 ///
 /// Targets for course staff use
