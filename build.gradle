@@ -39,7 +39,7 @@ task copyTestScripts(type: Copy) {
 test {
   // Comment out a line to start work on that homework.
   // exclude 'hw2/**'
-  exclude 'hw3/**'
+  // exclude 'hw3/**'
   exclude 'hw4/**'
   exclude 'hw5/**'
 }
