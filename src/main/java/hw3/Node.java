@@ -7,21 +7,36 @@ package hw3;
  *
  * <p>Specification fields:
  *
- * @spec.specfield content : words // The description about this Node.
+ * @spec.specfield content : String // The description about this Node.
  *     <p>Abstract Invariant: Any Node should have a unique, non Null description. Equality means
  *     two Nodes are equal iff they have the same content.
  */
 public class Node {
+    /** the description(content) of this node */
+  private String content;
+
+    // Abstraction Function:
+    // content is the description of this Node. It is also a unique identifier of the Node.
+
+    // Representation Invariant:
+    //      content != Null (Node should always have valid content)
 
   /**
-   * It should have parameters to take the given description as its content.
    *
-   * @spec.requires input description should not be null.
-   * @spec.effects creates a new Node with the given description.
+   * @param content the content of the Node.
+   *
+   * @spec.requires content != Null
+   * @spec.effects creates a new Node with the given content as description.
    */
-  public Node() {
-    throw new RuntimeException("Node->constructor() is not yet implemented");
+  public Node(String content) {
+      this.content = content;
+      checkRep();
   }
+
+    /** Checks that the representation invariant holds (if any). */
+    private void checkRep() {
+      assert (content != null);
+    }
 
   /**
    * return the content of the Node
@@ -29,7 +44,7 @@ public class Node {
    * @return content of the Node
    */
   public String getContent() {
-    throw new RuntimeException("Node->getContent() is not yet implemented");
+    return this.content;
   }
 
   /**
@@ -39,7 +54,7 @@ public class Node {
    */
   @Override
   public int hashCode() {
-    throw new RuntimeException("Edge->hashCode() is not yet implemented");
+    return this.content.hashCode();
   }
 
   /**
@@ -50,6 +65,10 @@ public class Node {
    */
   @Override
   public boolean equals(Object obj) {
-    throw new RuntimeException("Edge->equals() is not yet implemented");
+    if (!(obj instanceof Node)) {
+        return false;
+    }
+
+    return this.content.equals(((Node) obj).content);
   }
 }

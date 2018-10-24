@@ -1,10 +1,15 @@
 package hw3;
 
+import org.junit.Rule;
+import org.junit.rules.Timeout;
 import static org.junit.Assert.*;
 
 import org.junit.Test;
 
+
 public class EdgeTest {
+  @Rule public Timeout globalTimeout = Timeout.seconds(10); // 10 seconds max per method tested
+
   private static final Node A = NodeTest.create("start");
   private static final Node B = NodeTest.create("end");
   private static final String LABEL = "0";
@@ -23,7 +28,7 @@ public class EdgeTest {
    */
   public static Edge create(Node start, Node end, String label) {
 
-    return new Edge();
+    return new Edge(start, end, label);
   }
 
   @Test

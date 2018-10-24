@@ -1,5 +1,7 @@
 package hw3;
 
+import org.junit.Rule;
+import org.junit.rules.Timeout;
 import static org.junit.Assert.*;
 
 import java.util.ArrayList;
@@ -8,6 +10,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 public class GraphTest {
+  @Rule public Timeout globalTimeout = Timeout.seconds(10); // 10 seconds max per method tested
 
   private static final Node A = NodeTest.create("A");
   private static final Node B = NodeTest.create("B");

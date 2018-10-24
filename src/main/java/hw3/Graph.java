@@ -1,7 +1,6 @@
 package hw3;
 
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Graph represents a mutable, directed and cyclic graph. Duplicate of nodes and edges in graph is
@@ -16,10 +15,43 @@ import java.util.Set;
  *
  * @spec.specfield Nodes : a set of Nodes // Represent all Nodes in this Graph.
  * @spec.specfield Edges : a set of Edges // Represent all Edges in this Graph.
- *     <p>Abstract Invariant: Equality means two Edges are equal iff they have the same set of Nodes
- *     and Edges. The two nodes of any Edge in Graph.Edges must be in Graph.Nodes.
+ *     <p>Abstract Invariant: The two nodes of any Edge in Graph.Edges must be in Graph.Nodes.
  */
 public class Graph {
+    //TODO maintains another set of edges.
+    /** map represents the graph */
+  private Map<Node, List<Edge>> map;
+
+    /** edges represents all edges in the graph */
+  private Set<Edge> edges;
+
+    /** Test flag, whether to enable expensive checks. */
+  private static boolean TEST_FLAG = true;
+  // Abstraction Function:
+  //  this.map represents an adjacency list for the graph:
+  //    in which map.keys() are list of nodes and
+  //             map.getKey(Node) returns all children of this Node (out-edges from this Node).
+  //  map.keys()   represents all Nodes in this graph and
+  //  map.values() represents all edges in this graph.
+
+  // Representation Invariant:
+  //  this.map != null
+  //  forall node in map.keys()          -> node!= null
+  //  forall list<edges> in map.values() -> list<edges> != null
+  //  forall edge in allEdges     -> edge != null
+  //
+  //  allEdges.size()     == set(allEdges).size()
+  //
+  //  forall edge in allEdges -> map.contains(edge.start) && map.contains(edge.end)
+  //
+  //  forall all node-list<edge> mapping -> for all edge in node-list<edge> -> edge.start.equals(node)
+  //
+  //  In other words:
+  //    all keys(nodes) and values(list<edges>, mapping of start to its out-edges) and all edges should not be null.
+  //    duplicate edges is not allowed. (No 2 identical edges in this graph)
+  //        (Note that duplicate of nodes is impossible since map does not allow duplicate keys)
+  //    Both nodes of any edge should exist in this graph.
+  //    For any node-list<edge> mapping, the start of any edge in list<edge> must equals node.
 
   /**
    * creates a new empty graph (with no Nodes or Edges).
@@ -27,27 +59,65 @@ public class Graph {
    * @spec.effects creates a new empty graph
    */
   public Graph() {
-    throw new RuntimeException("Graph->constructor() is not yet implemented");
+    this.map = new HashMap<Node, List<Edge>>();
+    this.edges = new
+    checkRep();
   }
 
+    /** Checks that the representation invariant holds (if any). */
+    private void checkRep() {
+      assert this.map != null;
+      if (!TEST_FLAG) {
+          return;
+      }
+
+
+      for (Node node : this.map.keySet()) {
+          assert node != null; // No null nodes
+      }
+
+        List<Edge> checkDuplicateEdge = new LinkedList<Edge>();
+      for (List<Edge> list : this.map.values()) {
+          assert list != null; // no null mapping
+          checkDuplicateEdge.addAll(list);
+          for (Edge edge : list) {
+              assert edge != null; // no null edges
+          }
+      }
+
+      for(Node node : this.map.keySet()) {
+          for (Edge edge : this.map.get(node)) {
+              assert edge.getStart().equals(node);
+              assert this.map.containsKey(edge.getStart()) && this.map.containsKey(edge.getEnd());
+          }
+      }
+        // check duplicate edges do not exist.
+      assert checkDuplicateEdge.size() == new HashSet<Edge>(checkDuplicateEdge).size();
+
+    }
   /**
-   * Return a view of all nodes in the graph. Note that if the graph does not contain any Nodes, it
+   * Return an unmodifiable view of all nodes in the graph. Note that if the graph does not contain any Nodes, it
    * will an empty set
    *
    * @return a set of all nodes in the graph.
    */
   public Set<Node> getNodes() {
-    throw new RuntimeException("Graph->getNodes() is not yet implemented");
+      return Collections.unmodifiableSet(this.map.keySet());
   }
 
   /**
-   * Return a view of all edges in the graph. Note that if the graph does not contain any Edges, it
+   * Return an unmodifiable view of all edges in the graph. Note that if the graph does not contain any Edges, it
    * will an empty set
    *
    * @return a set of all edges in the graph.
    */
   public Set<Edge> getEdges() {
-    throw new RuntimeException("Graph->getEdges() is not yet implemented");
+      Set<Edge> set = new HashSet<Edge>();
+
+      for (List<Edge> list : this.map.values()) {
+          set.addAll(list);
+      }
+      return set;
   }
 
   /**

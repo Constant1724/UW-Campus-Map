@@ -1,10 +1,13 @@
 package hw3;
 
+import org.junit.Rule;
+import org.junit.rules.Timeout;
 import static org.junit.Assert.*;
 
 import org.junit.Test;
 
 public class NodeTest {
+  @Rule public Timeout globalTimeout = Timeout.seconds(10); // 10 seconds max per method tested
 
   /**
    * Place holder for constructor.
@@ -16,7 +19,7 @@ public class NodeTest {
    * @return a new Node with content as its description.
    */
   public static Node create(String content) {
-    return new Node();
+    return new Node(content);
   }
 
   /** try to create Node with empty, space and character content. */

@@ -1,27 +1,54 @@
 package hw3;
 
+import java.util.Objects;
+
 /**
- * Edge represents a immutable, directed, weighted edge in a graph
+ * Edge represents an immutable, directed, weighted edge in a graph
  *
  * <p>Specification fields:
  *
- * @spec.specfield start : Node // The start node of this edge.
- * @spec.specfield end : Node // The end node of this edge.
- * @spec.specfield label : String // The label of this edge.
- *     <p>Abstract Invariant: All edges should have a start and an end, with a cost. Equality means
+ * @spec.specfield start : Node     // The start node of this edge.
+ * @spec.specfield end : Node       // The end node of this edge.
+ * @spec.specfield label : String   // The label of this edge.
+ * <p>
+ *
+ * Abstract Invariant: All edges should have a start and an end, with a label. Equality means
  *     two Edges are equal iff they have the same start, end and cost.
  */
 public class Edge {
+    /** the start of this edge */
+  private Node start;
+    /** the end of this edge */
+  private Node end;
+    /** the label of this edge */
+  private String label;
+
+  // Abstraction Function:
+  //  An edge is defined with this.start  as its starting Node
+  //                      and this.end    as its ending Node
+  //                      and this.label  as its label.
+
+  // Representation Invariant:
+  //      start != null && end != null && label != null (All fields should be valid)
 
   /**
-   * It should take parameter to take the given start and end Node, together with the cost to create
-   * a new Edge.
+   * @param start the start of this Edge.
+   * @param end   the end of this Edge.
+   * @param label the label of this Edge.
    *
-   * @spec.requires Neither of the parameter should be null, and cost should be non-negative.
-   * @spec.effects creates a new edge from start to end with cost.
+   * @spec.requires start != null && end != null && label != null
+   * @spec.effects creates a new edge from start to end with label.
    */
-  public Edge() {
-    throw new RuntimeException("Edge->constructor() is not yet implemented");
+  public Edge(Node start, Node end, String label) {
+    this.start = start;
+    this.end = end;
+    this.label= label;
+    checkRep();
+  }
+
+  /** Checks that the representation invariant holds (if any). */
+  private void checkRep() {
+      assert (this.start != null && this.end != null && this.label != null);
   }
 
   /**
@@ -30,7 +57,7 @@ public class Edge {
    * @return the start Node of this Edge
    */
   public Node getStart() {
-    throw new RuntimeException("Edge->getStart() is not yet implemented");
+    return this.start;
   }
 
   /**
@@ -39,7 +66,7 @@ public class Edge {
    * @return the end Node of this Edge
    */
   public Node getEnd() {
-    throw new RuntimeException("Edge->getEnd() is not yet implemented");
+    return this.end;
   }
 
   /**
@@ -48,7 +75,7 @@ public class Edge {
    * @return the label of this Edge
    */
   public String getLabel() {
-    throw new RuntimeException("Edge->getLabel() is not yet implemented");
+    return this.label;
   }
 
   /**
@@ -58,7 +85,7 @@ public class Edge {
    */
   @Override
   public int hashCode() {
-    throw new RuntimeException("Edge->hashCode() is not yet implemented");
+      return Objects.hash(this.start, this.end, this.label);
   }
 
   /**
@@ -69,6 +96,11 @@ public class Edge {
    */
   @Override
   public boolean equals(Object obj) {
-    throw new RuntimeException("Edge->equals() is not yet implemented");
+    if (!(obj instanceof Edge)) {
+      return false;
+    }
+    Edge other = (Edge) obj;
+
+    return this.start.equals(other.getStart()) && this.end.equals(other.getEnd()) && this.label.equals(other.label);
   }
 }
