@@ -50,8 +50,26 @@ Problem 1. (Choosing a representation)
 
 
 Problem 4.  (Additional tests and changes to specifications)
+TESTS:
+    I add two tests to test if getNodes/getEdges return an unmodifiable review of the nodes/edges. The reason is that
+        I modify the spec to make it stronger by mention the return view of nodes/edges is unmodifiable, and therefore
+        I have to add corresponding test.
 
-Update node/edge construtor and its spec, since its class fields are defined.
-Update getters to emphasize the unmodifiability of return values.
+    In addition, I replace all assertSame with assertEquals, since assertEquals calls equals method.
+
+    By the way, I delete the test part for findPath, since I delete the findPath method, since i realize that
+        we haven't touch it in class.
+
+    Beside this, I feel like the original test is sufficient since other implementations are just as strong as the spec.
+        I did not make a stronger implementation, so the original test against spec should be sufficient.
+
+Changes:
+    First of all, I update the constructor for node & edge classes since class fields are defined for now.
+
+    Secondly, as i mentioned above, I strengthen the spec for getNodes/getEdges by adding the word "unmodifiable"
+        in front of the return type. Because, I would like to explicit tell the client that representation exposure
+        in these two methods are not possible.
+
+    Finally, I delete the findPath method, since i realize that we haven't touch it in class.
 
 

@@ -6,8 +6,12 @@ import static org.junit.Assert.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
+
 import org.junit.Before;
 import org.junit.Test;
+
+import javax.naming.OperationNotSupportedException;
 
 public class GraphTest {
   @Rule public Timeout globalTimeout = Timeout.seconds(10); // 10 seconds max per method tested
@@ -16,12 +20,15 @@ public class GraphTest {
   private static final Node B = NodeTest.create("B");
   private static final Node C = NodeTest.create("C");
   private static final Node D = NodeTest.create("D");
+  private static final Node EXCLUDE = NodeTest.create("EXCLUDE");
+
 
   private static final String LABEL = "AHHh";
+  private static final String ANOTHER_LABEL = "AHHHHHHHHHHHHHH";
 
-  private static final Edge A_TO_B = EdgeTest.create(A, B, LABEL);
+  private static final Edge A_TO_B = EdgeTest.create(A, B, ANOTHER_LABEL);
 
-  private static final Edge A_TO_A = EdgeTest.create(A, A, LABEL);
+  private static final Edge A_TO_A = EdgeTest.create(A, A, ANOTHER_LABEL);
 
   private List<Node> Nodes;
   private List<Edge> Edges;
@@ -139,11 +146,29 @@ public class GraphTest {
     // the set object should not be null.
     assertNotNull(graph.getNodes());
     // size should be equal
-    assertSame(graph.getNodes().size(), this.Nodes.size());
+    assertEquals(graph.getNodes().size(), this.Nodes.size());
 
     for (Node node : this.Nodes) {
       // each node should be available in the graph.
       assertTrue(graph.getNodes().contains(node));
+    }
+  }
+
+  /** Test to check if getNodes returns an unmodifiable view*/
+  @Test(expected = UnsupportedOperationException.class)
+  public void testGetNodesUnmodifiableView() {
+    Graph graph = new Graph();
+
+    addNodesToGraph(graph);
+    Set<Node> view = graph.getNodes();
+
+    for (Node node : view) {
+      // removing should not affect graph.
+      view.remove(node);
+      assertTrue(graph.containNode(node));
+      // adding should not affect graph.
+      view.add(EXCLUDE);
+      assertFalse(graph.containNode(EXCLUDE));
     }
   }
 
@@ -242,7 +267,7 @@ public class GraphTest {
     assertNotNull(graph.getEdges());
 
     // size should be equal
-    assertSame(graph.getEdges().size(), this.Edges.size());
+    assertEquals(graph.getEdges().size(), this.Edges.size());
 
     for (Edge edge : this.Edges) {
       // Each edge should be available in the graph.
@@ -250,48 +275,22 @@ public class GraphTest {
     }
   }
 
-  /** Test to check if findPath actually find a path. */
-  @Test
-  public void testFindPath() {
+  /** Test to check if getEdges returns an unmodifiable view*/
+  @Test(expected = UnsupportedOperationException.class)
+  public void testGetEdgesUnmodifiableView() {
     Graph graph = new Graph();
 
-    // empty graph should not have path.
-    assertSame(graph.findPath(A, B).size(), 0);
-
-    // If either start or end is not in the graph, the path should be empty
-    graph.addNode(A);
-    assertSame(graph.findPath(A, B).size(), 0);
-
-    // If both node exist in graph, but there is not an edge between them, the path should be
-    // empty.\
-    graph.addNode(B);
-    assertSame(graph.findPath(A, B).size(), 0);
-
-    // If edge and both nodes, exist, the method should return the edge.
-    graph.addEdge(A_TO_A);
-    graph.addEdge(A_TO_B);
-    assertEquals(graph.findPath(A, B).get(0), A_TO_B);
+    addNodesToGraph(graph);
+    addEdgesToGraph(graph);
+    Set<Edge> view = graph.getEdges();
+    for(Edge edge : view) {
+      // removing should not affect graph.
+      view.remove(edge);
+      assertTrue(graph.containEdge(edge));
+      // adding should not affect graph.
+      view.add(A_TO_B);
+      assertFalse(graph.containEdge(A_TO_B));
+    }
   }
 
-  /** Test to check if findPath returns the shortest path. */
-  @Test
-  public void testFindShortestPath() {
-    // create a single graph with four Nodes and find the shortest path.
-    Graph graph = new Graph();
-    graph.addNode(A);
-    graph.addNode(B);
-    graph.addNode(C);
-    graph.addNode(D);
-    Edge aToB = EdgeTest.create(A, B, "2");
-    Edge bToD = EdgeTest.create(B, D, "1");
-    Edge aToC = EdgeTest.create(A, C, "3");
-    Edge cToD = EdgeTest.create(C, D, "4");
-    graph.addEdge(aToB);
-    graph.addEdge(bToD);
-    graph.addEdge(aToC);
-    graph.addEdge(cToD);
-    List<Edge> list = graph.findPath(A, D);
-    assertEquals(list.get(0), aToB);
-    assertEquals(list.get(0), bToD);
-  }
 }

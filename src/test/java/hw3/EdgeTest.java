@@ -39,31 +39,31 @@ public class EdgeTest {
     create(A, A, LABEL1);
   }
 
-  /** Test Edges with same content should have the same hashCode. */
+  /** Test Edges with Equals content should have the Equals hashCode. */
   @Test
   public void testHashCode() {
     Edge aToB = create(A, B, LABEL);
     Edge bToA = create(B, A, LABEL);
     Edge aToA = create(A, A, LABEL);
 
-    assertSame(aToB.hashCode(), create(A, B, LABEL).hashCode());
-    assertSame(bToA.hashCode(), create(B, A, LABEL).hashCode());
-    assertSame(aToA.hashCode(), create(A, A, LABEL).hashCode());
+    assertEquals(aToB.hashCode(), create(A, B, LABEL).hashCode());
+    assertEquals(bToA.hashCode(), create(B, A, LABEL).hashCode());
+    assertEquals(aToA.hashCode(), create(A, A, LABEL).hashCode());
 
-    assertNotSame(aToB.hashCode(), bToA.hashCode());
-    assertNotSame(aToA.hashCode(), aToB.hashCode());
+    assertNotEquals(aToB.hashCode(), bToA.hashCode());
+    assertNotEquals(aToA.hashCode(), aToB.hashCode());
   }
 
-  /** Test Edges with same content should be equal. */
+  /** Test Edges with Equals content should be equal. */
   @Test
   public void testEquals() {
     Edge aToB = create(A, B, LABEL);
     Edge bToA = create(B, A, LABEL);
     Edge aToA = create(A, A, LABEL);
 
-    assertEquals(aToB, create(A, B, LABEL).hashCode());
-    assertEquals(bToA, create(B, A, LABEL).hashCode());
-    assertEquals(aToA, create(A, A, LABEL).hashCode());
+    assertEquals(aToB, create(A, B, LABEL));
+    assertEquals(bToA, create(B, A, LABEL));
+    assertEquals(aToA, create(A, A, LABEL));
 
     assertNotEquals(aToB, bToA.hashCode());
     assertNotEquals(aToA, aToB.hashCode());
@@ -74,7 +74,7 @@ public class EdgeTest {
   public void testGetStart() {
     assertEquals(create(A, B, LABEL).getStart(), A);
     assertEquals(create(A, A, LABEL).getStart(), A);
-    assertEquals(create(B, A, LABEL).getStart(), LABEL);
+    assertEquals(create(B, A, LABEL).getStart(), B);
   }
 
   /** Test getStart is implemented properly */

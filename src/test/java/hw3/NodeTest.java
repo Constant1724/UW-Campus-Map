@@ -30,19 +30,19 @@ public class NodeTest {
     create(" ");
   }
 
-  /** Test Nodes with same content should have the same hashCode. */
+  /** Test Nodes with Equals content should have the Equals hashCode. */
   @Test
   public void testHashCode() {
-    assertSame(create("").hashCode(), create("").hashCode());
-    assertSame(create("Content1").hashCode(), create("Content1").hashCode());
-    assertSame(create(" ").hashCode(), create(" ").hashCode());
+    assertEquals(create("").hashCode(), create("").hashCode());
+    assertEquals(create("Content1").hashCode(), create("Content1").hashCode());
+    assertEquals(create(" ").hashCode(), create(" ").hashCode());
 
-    assertNotSame(create("").hashCode(), create(" ").hashCode());
-    assertNotSame(create("").hashCode(), create("Content2").hashCode());
-    assertNotSame(create("Content2").hashCode(), create(" ").hashCode());
+    assertNotEquals(create("").hashCode(), create(" ").hashCode());
+    assertNotEquals(create("").hashCode(), create("Content2").hashCode());
+    assertNotEquals(create("Content2").hashCode(), create(" ").hashCode());
   }
 
-  /** Test Nodes with same content should be equal. */
+  /** Test Nodes with Equals content should be equal. */
   @Test
   public void testEquals() {
     assertEquals(create(""), create(""));

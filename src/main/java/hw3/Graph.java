@@ -18,40 +18,37 @@ import java.util.*;
  *     <p>Abstract Invariant: The two nodes of any Edge in Graph.Edges must be in Graph.Nodes.
  */
 public class Graph {
-    //TODO maintains another set of edges.
     /** map represents the graph */
-  private Map<Node, List<Edge>> map;
-
-    /** edges represents all edges in the graph */
-  private Set<Edge> edges;
+  private Map<Node, Set<Edge>> map;
 
     /** Test flag, whether to enable expensive checks. */
-  private static boolean TEST_FLAG = true;
+  private static boolean TEST_FLAG = false;
   // Abstraction Function:
+  //
   //  this.map represents an adjacency list for the graph:
   //    in which map.keys() are list of nodes and
   //             map.getKey(Node) returns all children of this Node (out-edges from this Node).
-  //  map.keys()   represents all Nodes in this graph and
-  //  map.values() represents all edges in this graph.
+  //
+  //  map.keys()   represents all Nodes in this graphs.
+  //  map.get(key) represents a set of Edges with key as start node.
+  //
 
   // Representation Invariant:
   //  this.map != null
-  //  forall node in map.keys()          -> node!= null
-  //  forall list<edges> in map.values() -> list<edges> != null
-  //  forall edge in allEdges     -> edge != null
+  //  forall node in map.keys()                   -> node!= null
+  //  forall list<edges> in map.values()          -> list<edges> != null
+  //  forall edge in map.get(key) for all key     -> edge != null
   //
-  //  allEdges.size()     == set(allEdges).size()
+  //  forall edge in map.get(key) for all key ->  map.contains(edge.end) && edge.start.equals(key)
   //
-  //  forall edge in allEdges -> map.contains(edge.start) && map.contains(edge.end)
-  //
-  //  forall all node-list<edge> mapping -> for all edge in node-list<edge> -> edge.start.equals(node)
   //
   //  In other words:
   //    all keys(nodes) and values(list<edges>, mapping of start to its out-edges) and all edges should not be null.
-  //    duplicate edges is not allowed. (No 2 identical edges in this graph)
   //        (Note that duplicate of nodes is impossible since map does not allow duplicate keys)
-  //    Both nodes of any edge should exist in this graph.
-  //    For any node-list<edge> mapping, the start of any edge in list<edge> must equals node.
+  //        (Note that duplicate of edges is impossible since any node maps to a set, which does not allow duplicates.)
+  //
+  //    Foreach node-Set<edge> mapping relationship in this.map, the start of any edge in Set<Edge> must equals node,
+  //          and the end of any edge in Set<Edge> must be in the graph.
 
   /**
    * creates a new empty graph (with no Nodes or Edges).
@@ -59,8 +56,7 @@ public class Graph {
    * @spec.effects creates a new empty graph
    */
   public Graph() {
-    this.map = new HashMap<Node, List<Edge>>();
-    this.edges = new
+    this.map = new HashMap<Node, Set<Edge>>();
     checkRep();
   }
 
@@ -70,30 +66,15 @@ public class Graph {
       if (!TEST_FLAG) {
           return;
       }
-
-
       for (Node node : this.map.keySet()) {
-          assert node != null; // No null nodes
-      }
-
-        List<Edge> checkDuplicateEdge = new LinkedList<Edge>();
-      for (List<Edge> list : this.map.values()) {
-          assert list != null; // no null mapping
-          checkDuplicateEdge.addAll(list);
-          for (Edge edge : list) {
-              assert edge != null; // no null edges
-          }
-      }
-
-      for(Node node : this.map.keySet()) {
+          assert node != null;                  // No null keys in map
+          assert this.map.get(node) != null;    // No null values in map
           for (Edge edge : this.map.get(node)) {
-              assert edge.getStart().equals(node);
-              assert this.map.containsKey(edge.getStart()) && this.map.containsKey(edge.getEnd());
+              assert edge != null;              // No null edges in graph
+              assert edge.getStart().equals(node);  // All edges in one set must have the same start node.
+              assert this.map.containsKey(edge.getEnd()); // The end node of all edges must be in the graph.
           }
       }
-        // check duplicate edges do not exist.
-      assert checkDuplicateEdge.size() == new HashSet<Edge>(checkDuplicateEdge).size();
-
     }
   /**
    * Return an unmodifiable view of all nodes in the graph. Note that if the graph does not contain any Nodes, it
@@ -102,7 +83,10 @@ public class Graph {
    * @return a set of all nodes in the graph.
    */
   public Set<Node> getNodes() {
-      return Collections.unmodifiableSet(this.map.keySet());
+      checkRep();
+      Set<Node> result = Collections.unmodifiableSet(this.map.keySet());
+      checkRep();
+      return result;
   }
 
   /**
@@ -112,12 +96,15 @@ public class Graph {
    * @return a set of all edges in the graph.
    */
   public Set<Edge> getEdges() {
-      Set<Edge> set = new HashSet<Edge>();
+      checkRep();
 
-      for (List<Edge> list : this.map.values()) {
-          set.addAll(list);
+      Set<Edge> result = new HashSet<Edge>();
+      for (Set<Edge> set : this.map.values()) {
+          result.addAll(set);
       }
-      return set;
+      result = Collections.unmodifiableSet(result);
+      checkRep();
+      return result;
   }
 
   /**
@@ -128,7 +115,10 @@ public class Graph {
    * @return True iff node is in graph
    */
   public boolean containNode(Node node) {
-    throw new RuntimeException("Graph->containNode() is not yet implemented");
+      checkRep();
+        boolean result = this.map.containsKey(node);
+        checkRep();
+        return result;
   }
 
   /**
@@ -142,7 +132,14 @@ public class Graph {
    * @return True iff node is not in graph, False otherwise.
    */
   public boolean addNode(Node node) {
-    throw new RuntimeException("Graph->addNode() is not yet implemented");
+      checkRep();
+      if (this.map.containsKey(node)) {
+          checkRep();
+          return false;
+      }
+      this.map.put(node, new HashSet<Edge>());
+      checkRep();
+      return true;
   }
 
   /**
@@ -159,7 +156,24 @@ public class Graph {
    * @return True iff node is in graph, False otherwise.
    */
   public boolean removeNode(Node node) {
-    throw new RuntimeException("Graph->removeNode() is not yet implemented");
+      checkRep();
+      if (!this.map.containsKey(node)) {
+          checkRep();
+          return false;
+      }
+      this.map.remove(node);
+
+      for (Set<Edge> set: this.map.values()) {
+          Iterator<Edge> iterator = set.iterator();
+          while(iterator.hasNext()) {
+              Edge edge = iterator.next();
+              if (edge.getEnd().equals(node)) {
+                  iterator.remove();
+              }
+          }
+      }
+      checkRep();
+    return true;
   }
 
   /**
@@ -170,7 +184,13 @@ public class Graph {
    * @return True iff edge is in graph
    */
   public boolean containEdge(Edge edge) {
-    throw new RuntimeException("Graph->containEdge() is not yet implemented");
+      checkRep();
+      boolean result = false;
+      if (this.map.containsKey(edge.getStart())) {
+          result = this.map.get(edge.getStart()).contains(edge);
+      }
+      checkRep();
+      return result;
   }
 
   /**
@@ -187,7 +207,17 @@ public class Graph {
    * @return True iff edge is not in graph, False otherwise.
    */
   public boolean addEdge(Edge edge) {
-    throw new RuntimeException("Graph->addEdge() is not yet implemented");
+      checkRep();
+        Node start  = edge.getStart();
+        Node end  = edge.getEnd();
+      if (!this.containNode(start) || !this.containNode(end) || this.containEdge(edge)) {
+          checkRep();
+          return false;
+      }
+      boolean result = this.map.get(edge.getStart()).add(edge);
+      checkRep();
+      return result;
+
   }
 
   /**
@@ -201,23 +231,12 @@ public class Graph {
    * @return True iff edge is in graph, False otherwise.
    */
   public boolean removeEdge(Edge edge) {
-    throw new RuntimeException("Graph->removeEdge() is not yet implemented");
-  }
-
-  /**
-   * Find a path consists of edges connecting start and end, with the lowest cost. If multiple
-   * shortest paths exist, this method may return any one.
-   *
-   * <p>If there does not exist a path from start to end, it will return an empty list. start and
-   * end should not be the same node.
-   *
-   * @spec.requires start != Null and end != Null and !start.equals(end)
-   * @param start the start of the path
-   * @param end the end of the path
-   * @return a list of edges in order such that start and end is connected by going through the
-   *     first, second, third, ..., last edge in the list.
-   */
-  public List<Edge> findPath(Node start, Node end) {
-    throw new RuntimeException("Graph->findPath() is not yet implemented");
+    checkRep();
+        boolean result = false;
+      if (this.containEdge(edge)) {
+          result = this.map.get(edge.getStart()).remove(edge);
+      }
+      checkRep();
+      return result;
   }
 }
