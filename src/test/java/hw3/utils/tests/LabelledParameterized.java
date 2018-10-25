@@ -94,6 +94,7 @@ public class LabelledParameterized extends Parameterized {
       throw new Exception("No @Labels method found");
     }
 
+    @SuppressWarnings("unchecked")
     List<String> labels = (List<String>) foundLabelMethod.invoke(null);
 
     this.labels = labels;
