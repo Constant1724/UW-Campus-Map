@@ -7,6 +7,8 @@ import java.util.*;
 public class HW3TestDriver {
 
   public static void main(String args[]) {
+    List<String> list = new ArrayList<>();
+    System.out.println("Start");
     try {
       if (args.length > 1) {
         printUsage();
@@ -48,6 +50,7 @@ public class HW3TestDriver {
 
   /** String -> Graph: maps the names of graphs to the actual graph * */
   private final Map<String, Graph> graphs = new HashMap<>();
+
   private final PrintWriter output;
 
   private final BufferedReader input;
@@ -140,7 +143,7 @@ public class HW3TestDriver {
     // Insert your code here.
     Graph graph = graphs.get(graphName);
     graph.addNode(new Node(nodeName));
-     output.println(String.format("added node %s to %s", nodeName, graphName));
+    output.println(String.format("added node %s to %s", nodeName, graphName));
   }
 
   private void addEdge(List<String> arguments) {
@@ -158,11 +161,12 @@ public class HW3TestDriver {
 
   private void addEdge(String graphName, String parentName, String childName, String edgeLabel) {
     // Insert your code here.
-     Graph graph = graphs.get(graphName);
-     graph.addEdge(new Edge(new Node(parentName), new Node(childName), edgeLabel));
-     String out = String.format("added edge %s from %s to %s in %s",
-             edgeLabel, parentName, childName, graphName);
-     output.println(out);
+    Graph graph = graphs.get(graphName);
+    graph.addEdge(new Edge(new Node(parentName), new Node(childName), edgeLabel));
+    String out =
+        String.format(
+            "added edge %s from %s to %s in %s", edgeLabel, parentName, childName, graphName);
+    output.println(out);
   }
 
   private void listNodes(List<String> arguments) {
@@ -176,12 +180,17 @@ public class HW3TestDriver {
 
   private void listNodes(String graphName) {
     // Insert your code here.
-     Graph graph = graphs.get(graphName);
-     String out = graphName + " contains:";
-     for (Node node : graph.getNodes()) {
-        out += " " + node.getContent();
-     }
-     output.println(out);
+    Graph graph = graphs.get(graphName);
+    List<String> list = new ArrayList<String>();
+    for (Node node : graph.getNodes()) {
+      list.add(node.getContent());
+    }
+    Collections.sort(list);
+    String out = graphName + " contains:";
+    for (String node : list) {
+      out += " " + node;
+    }
+    output.println(out);
   }
 
   private void listChildren(List<String> arguments) {
@@ -196,25 +205,26 @@ public class HW3TestDriver {
 
   private void listChildren(String graphName, String parentName) {
     // Insert your code here.
-     Graph graph = graphs.get(graphName);
-     String out = String.format("the children of %s in %s are:", parentName, graphName);
+    Graph graph = graphs.get(graphName);
+    String out = String.format("the children of %s in %s are:", parentName, graphName);
     List<Edge> list = new ArrayList<Edge>();
-      for (Edge edge : graph.getEdges()) {
-        if (edge.getStart().equals(new Node(parentName))) {
-          list.add(edge);
-        }
+    for (Edge edge : graph.getEdges()) {
+      if (edge.getStart().equals(new Node(parentName))) {
+        list.add(edge);
       }
-      list.sort((e1, e2) -> {
-        if(e1.getEnd().getContent().compareTo(e2.getEnd().getContent()) == 0) {
-          return e1.getLabel().compareTo(e2.getLabel());
-        } else {
-          return e1.getEnd().getContent().compareTo(e2.getEnd().getContent());
-        }
-      });
-      for (Edge edge : list) {
-        out += String.format(" %s(%s)", edge.getEnd().getContent(), edge.getLabel());
-      }
-     output.println(out);
+    }
+    list.sort(
+        (e1, e2) -> {
+          if (e1.getEnd().getContent().compareTo(e2.getEnd().getContent()) == 0) {
+            return e1.getLabel().compareTo(e2.getLabel());
+          } else {
+            return e1.getEnd().getContent().compareTo(e2.getEnd().getContent());
+          }
+        });
+    for (Edge edge : list) {
+      out += String.format(" %s(%s)", edge.getEnd().getContent(), edge.getLabel());
+    }
+    output.println(out);
   }
 
   /** This exception results when the input file cannot be parsed properly. */

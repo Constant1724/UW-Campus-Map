@@ -12,31 +12,29 @@ package hw3;
  *     two Nodes are equal iff they have the same content.
  */
 public class Node {
-    /** the description(content) of this node */
+  /** the description(content) of this node */
   private String content;
 
-    // Abstraction Function:
-    // content is the description of this Node. It is also a unique identifier of the Node.
+  // Abstraction Function:
+  // content is the description of this Node. It is also a unique identifier of the Node.
 
-    // Representation Invariant:
-    //      content != Null (Node should always have valid content)
+  // Representation Invariant:
+  //      content != Null (Node should always have valid content)
 
   /**
-   *
    * @param content the content of the Node.
-   *
    * @spec.requires content != Null
    * @spec.effects creates a new Node with the given content as description.
    */
   public Node(String content) {
-      this.content = content;
-      checkRep();
+    this.content = content;
+    checkRep();
   }
 
-    /** Checks that the representation invariant holds (if any). */
-    private void checkRep() {
-      assert (content != null);
-    }
+  /** Checks that the representation invariant holds (if any). */
+  private void checkRep() {
+    assert (content != null);
+  }
 
   /**
    * return the content of the Node
@@ -66,7 +64,7 @@ public class Node {
   @Override
   public boolean equals(Object obj) {
     if (!(obj instanceof Node)) {
-        return false;
+      return false;
     }
 
     return this.content.equals(((Node) obj).content);

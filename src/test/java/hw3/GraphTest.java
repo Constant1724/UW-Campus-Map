@@ -1,17 +1,14 @@
 package hw3;
 
-import org.junit.Rule;
-import org.junit.rules.Timeout;
 import static org.junit.Assert.*;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
-
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
-
-import javax.naming.OperationNotSupportedException;
+import org.junit.rules.Timeout;
 
 public class GraphTest {
   @Rule public Timeout globalTimeout = Timeout.seconds(10); // 10 seconds max per method tested
@@ -21,7 +18,6 @@ public class GraphTest {
   private static final Node C = NodeTest.create("C");
   private static final Node D = NodeTest.create("D");
   private static final Node EXCLUDE = NodeTest.create("EXCLUDE");
-
 
   private static final String LABEL = "AHHh";
   private static final String ANOTHER_LABEL = "AHHHHHHHHHHHHHH";
@@ -154,7 +150,7 @@ public class GraphTest {
     }
   }
 
-  /** Test to check if getNodes returns an unmodifiable view*/
+  /** Test to check if getNodes returns an unmodifiable view */
   @Test(expected = UnsupportedOperationException.class)
   public void testGetNodesUnmodifiableView() {
     Graph graph = new Graph();
@@ -275,7 +271,7 @@ public class GraphTest {
     }
   }
 
-  /** Test to check if getEdges returns an unmodifiable view*/
+  /** Test to check if getEdges returns an unmodifiable view */
   @Test(expected = UnsupportedOperationException.class)
   public void testGetEdgesUnmodifiableView() {
     Graph graph = new Graph();
@@ -283,7 +279,7 @@ public class GraphTest {
     addNodesToGraph(graph);
     addEdgesToGraph(graph);
     Set<Edge> view = graph.getEdges();
-    for(Edge edge : view) {
+    for (Edge edge : view) {
       // removing should not affect graph.
       view.remove(edge);
       assertTrue(graph.containEdge(edge));
@@ -292,5 +288,4 @@ public class GraphTest {
       assertFalse(graph.containEdge(A_TO_B));
     }
   }
-
 }

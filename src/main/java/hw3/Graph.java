@@ -18,16 +18,16 @@ import java.util.*;
  *     <p>Abstract Invariant: The two nodes of any Edge in Graph.Edges must be in Graph.Nodes.
  */
 public class Graph {
-    /** map represents the graph */
+  /** map represents the graph */
   private Map<Node, Set<Edge>> map;
 
-    /** Test flag, whether to enable expensive checks. */
+  /** Test flag, whether to enable expensive checks. */
   private static boolean TEST_FLAG = false;
   // Abstraction Function:
   //
   //  this.map represents an adjacency list for the graph:
   //    in which map.keys() are list of nodes and
-  //             map.getKey(Node) returns all children of this Node (out-edges from this Node).
+  //             map.getKey(Node) returns all children of the Node (out-edges from the Node).
   //
   //  map.keys()   represents all Nodes in this graphs.
   //  map.get(key) represents a set of Edges with key as start node.
@@ -43,11 +43,14 @@ public class Graph {
   //
   //
   //  In other words:
-  //    all keys(nodes) and values(list<edges>, mapping of start to its out-edges) and all edges should not be null.
+  //    all keys(nodes) and values(list<edges>, mapping of start to its out-edges) and all edges
+  // should not be null.
   //        (Note that duplicate of nodes is impossible since map does not allow duplicate keys)
-  //        (Note that duplicate of edges is impossible since any node maps to a set, which does not allow duplicates.)
+  //        (Note that duplicate of edges is impossible since any node maps to a set, which does not
+  // allow duplicates.)
   //
-  //    Foreach node-Set<edge> mapping relationship in this.map, the start of any edge in Set<Edge> must equals node,
+  //    Foreach node-Set<edge> mapping relationship in this.map, the start of any edge in Set<Edge>
+  // must equals node,
   //          and the end of any edge in Set<Edge> must be in the graph.
 
   /**
@@ -60,51 +63,52 @@ public class Graph {
     checkRep();
   }
 
-    /** Checks that the representation invariant holds (if any). */
-    private void checkRep() {
-      assert this.map != null;
-      if (!TEST_FLAG) {
-          return;
-      }
-      for (Node node : this.map.keySet()) {
-          assert node != null;                  // No null keys in map
-          assert this.map.get(node) != null;    // No null values in map
-          for (Edge edge : this.map.get(node)) {
-              assert edge != null;              // No null edges in graph
-              assert edge.getStart().equals(node);  // All edges in one set must have the same start node.
-              assert this.map.containsKey(edge.getEnd()); // The end node of all edges must be in the graph.
-          }
+  /** Checks that the representation invariant holds (if any). */
+  private void checkRep() {
+    assert this.map != null;
+    if (!TEST_FLAG) {
+      return;
+    }
+    for (Node node : this.map.keySet()) {
+      assert node != null; // No null keys in map
+      assert this.map.get(node) != null; // No null values in map
+      for (Edge edge : this.map.get(node)) {
+        assert edge != null; // No null edges in graph
+        assert edge.getStart().equals(node); // All edges in one set must have the same start node.
+        assert this.map.containsKey(
+            edge.getEnd()); // The end node of all edges must be in the graph.
       }
     }
+  }
   /**
-   * Return an unmodifiable view of all nodes in the graph. Note that if the graph does not contain any Nodes, it
-   * will an empty set
+   * Return an unmodifiable view of all nodes in the graph. Note that if the graph does not contain
+   * any Nodes, it will an empty set
    *
    * @return a set of all nodes in the graph.
    */
   public Set<Node> getNodes() {
-      checkRep();
-      Set<Node> result = Collections.unmodifiableSet(this.map.keySet());
-      checkRep();
-      return result;
+    checkRep();
+    Set<Node> result = Collections.unmodifiableSet(this.map.keySet());
+    checkRep();
+    return result;
   }
 
   /**
-   * Return an unmodifiable view of all edges in the graph. Note that if the graph does not contain any Edges, it
-   * will an empty set
+   * Return an unmodifiable view of all edges in the graph. Note that if the graph does not contain
+   * any Edges, it will an empty set
    *
    * @return a set of all edges in the graph.
    */
   public Set<Edge> getEdges() {
-      checkRep();
+    checkRep();
 
-      Set<Edge> result = new HashSet<Edge>();
-      for (Set<Edge> set : this.map.values()) {
-          result.addAll(set);
-      }
-      result = Collections.unmodifiableSet(result);
-      checkRep();
-      return result;
+    Set<Edge> result = new HashSet<Edge>();
+    for (Set<Edge> set : this.map.values()) {
+      result.addAll(set);
+    }
+    result = Collections.unmodifiableSet(result);
+    checkRep();
+    return result;
   }
 
   /**
@@ -115,10 +119,10 @@ public class Graph {
    * @return True iff node is in graph
    */
   public boolean containNode(Node node) {
-      checkRep();
-        boolean result = this.map.containsKey(node);
-        checkRep();
-        return result;
+    checkRep();
+    boolean result = this.map.containsKey(node);
+    checkRep();
+    return result;
   }
 
   /**
@@ -132,14 +136,14 @@ public class Graph {
    * @return True iff node is not in graph, False otherwise.
    */
   public boolean addNode(Node node) {
+    checkRep();
+    if (this.map.containsKey(node)) {
       checkRep();
-      if (this.map.containsKey(node)) {
-          checkRep();
-          return false;
-      }
-      this.map.put(node, new HashSet<Edge>());
-      checkRep();
-      return true;
+      return false;
+    }
+    this.map.put(node, new HashSet<Edge>());
+    checkRep();
+    return true;
   }
 
   /**
@@ -156,23 +160,23 @@ public class Graph {
    * @return True iff node is in graph, False otherwise.
    */
   public boolean removeNode(Node node) {
+    checkRep();
+    if (!this.map.containsKey(node)) {
       checkRep();
-      if (!this.map.containsKey(node)) {
-          checkRep();
-          return false;
-      }
-      this.map.remove(node);
+      return false;
+    }
+    this.map.remove(node);
 
-      for (Set<Edge> set: this.map.values()) {
-          Iterator<Edge> iterator = set.iterator();
-          while(iterator.hasNext()) {
-              Edge edge = iterator.next();
-              if (edge.getEnd().equals(node)) {
-                  iterator.remove();
-              }
-          }
+    for (Set<Edge> set : this.map.values()) {
+      Iterator<Edge> iterator = set.iterator();
+      while (iterator.hasNext()) {
+        Edge edge = iterator.next();
+        if (edge.getEnd().equals(node)) {
+          iterator.remove();
+        }
       }
-      checkRep();
+    }
+    checkRep();
     return true;
   }
 
@@ -184,13 +188,13 @@ public class Graph {
    * @return True iff edge is in graph
    */
   public boolean containEdge(Edge edge) {
-      checkRep();
-      boolean result = false;
-      if (this.map.containsKey(edge.getStart())) {
-          result = this.map.get(edge.getStart()).contains(edge);
-      }
-      checkRep();
-      return result;
+    checkRep();
+    boolean result = false;
+    if (this.map.containsKey(edge.getStart())) {
+      result = this.map.get(edge.getStart()).contains(edge);
+    }
+    checkRep();
+    return result;
   }
 
   /**
@@ -207,17 +211,16 @@ public class Graph {
    * @return True iff edge is not in graph, False otherwise.
    */
   public boolean addEdge(Edge edge) {
+    checkRep();
+    Node start = edge.getStart();
+    Node end = edge.getEnd();
+    if (!this.containNode(start) || !this.containNode(end) || this.containEdge(edge)) {
       checkRep();
-        Node start  = edge.getStart();
-        Node end  = edge.getEnd();
-      if (!this.containNode(start) || !this.containNode(end) || this.containEdge(edge)) {
-          checkRep();
-          return false;
-      }
-      boolean result = this.map.get(edge.getStart()).add(edge);
-      checkRep();
-      return result;
-
+      return false;
+    }
+    boolean result = this.map.get(edge.getStart()).add(edge);
+    checkRep();
+    return result;
   }
 
   /**
@@ -232,11 +235,11 @@ public class Graph {
    */
   public boolean removeEdge(Edge edge) {
     checkRep();
-        boolean result = false;
-      if (this.containEdge(edge)) {
-          result = this.map.get(edge.getStart()).remove(edge);
-      }
-      checkRep();
-      return result;
+    boolean result = false;
+    if (this.containEdge(edge)) {
+      result = this.map.get(edge.getStart()).remove(edge);
+    }
+    checkRep();
+    return result;
   }
 }

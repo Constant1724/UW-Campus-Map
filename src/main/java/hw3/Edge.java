@@ -7,20 +7,18 @@ import java.util.Objects;
  *
  * <p>Specification fields:
  *
- * @spec.specfield start : Node     // The start node of this edge.
- * @spec.specfield end : Node       // The end node of this edge.
- * @spec.specfield label : String   // The label of this edge.
- * <p>
- *
- * Abstract Invariant: All edges should have a start and an end, with a label. Equality means
+ * @spec.specfield start : Node // The start node of this edge.
+ * @spec.specfield end : Node // The end node of this edge.
+ * @spec.specfield label : String // The label of this edge.
+ *     <p>Abstract Invariant: All edges should have a start and an end, with a label. Equality means
  *     two Edges are equal iff they have the same start, end and cost.
  */
 public class Edge {
-    /** the start of this edge */
+  /** the start of this edge */
   private Node start;
-    /** the end of this edge */
+  /** the end of this edge */
   private Node end;
-    /** the label of this edge */
+  /** the label of this edge */
   private String label;
 
   // Abstraction Function:
@@ -33,22 +31,21 @@ public class Edge {
 
   /**
    * @param start the start of this Edge.
-   * @param end   the end of this Edge.
+   * @param end the end of this Edge.
    * @param label the label of this Edge.
-   *
-   * @spec.requires start != null && end != null && label != null
+   * @spec.requires start != null and end != null and label != null
    * @spec.effects creates a new edge from start to end with label.
    */
   public Edge(Node start, Node end, String label) {
     this.start = start;
     this.end = end;
-    this.label= label;
+    this.label = label;
     checkRep();
   }
 
   /** Checks that the representation invariant holds (if any). */
   private void checkRep() {
-      assert (this.start != null && this.end != null && this.label != null);
+    assert (this.start != null && this.end != null && this.label != null);
   }
 
   /**
@@ -85,7 +82,7 @@ public class Edge {
    */
   @Override
   public int hashCode() {
-      return Objects.hash(this.start, this.end, this.label);
+    return Objects.hash(this.start, this.end, this.label);
   }
 
   /**
@@ -101,6 +98,8 @@ public class Edge {
     }
     Edge other = (Edge) obj;
 
-    return this.start.equals(other.getStart()) && this.end.equals(other.getEnd()) && this.label.equals(other.label);
+    return this.start.equals(other.getStart())
+        && this.end.equals(other.getEnd())
+        && this.label.equals(other.label);
   }
 }
