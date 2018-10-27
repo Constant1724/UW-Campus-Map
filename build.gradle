@@ -1,3 +1,5 @@
+// Students should not edit this file.
+
 plugins {
   id "net.ltgt.errorprone-base" version "0.0.13"
   id 'org.ajoberstar.grgit' version '2.3.0'
@@ -80,6 +82,16 @@ tasks.withType(Javadoc) {
 ///
 /// Extra code quality checks
 ///
+
+compileJava {
+    options.encoding = 'UTF-8'
+    options.compilerArgs << "-Xlint:unchecked" << "-Xlint:deprecation"
+}
+
+compileTestJava {
+    options.encoding = 'UTF-8'
+    options.compilerArgs << "-Xlint:unchecked" << "-Xlint:deprecation"
+}
 
 task requireJava8 {
   if (JavaVersion.current() != JavaVersion.VERSION_1_8) {
