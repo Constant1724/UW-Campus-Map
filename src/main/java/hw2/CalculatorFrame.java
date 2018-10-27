@@ -7,11 +7,13 @@ import java.util.logging.Logger;
 import javax.swing.*;
 import javax.swing.border.BevelBorder;
 import javax.swing.border.Border;
+import org.checkerframework.checker.nullness.qual.EnsuresNonNull;
 
 /**
- * <B>CalculatorFrame</b> is part of the graphical calculator that utilizes all of the other classes
- * in package hw2. CalculatorFrame contains the main() function which starts the calculator.
+ * <B>CalculatorFrame</b> represents the main window for a graphical calculator. It contains the
+ * main() function that starts the calculator.
  */
+@SuppressWarnings("nullness")
 public final class CalculatorFrame extends JFrame {
   /** The stack of polynomials being manipulated by this calculator. */
   RatPolyStack stack;
@@ -118,10 +120,10 @@ public final class CalculatorFrame extends JFrame {
 
   JButton jButton_Clear = new JButton();
 
-  // Serializable classes are supposed to have this
+  /** Change this when you remove/add fields. */
   private static final long serialVersionUID = 42L;
 
-  // Logger for exceptions and errors
+  /** Logger for exceptions and errors. */
   private static final Logger LOGGER = Logger.getLogger(CalculatorFrame.class.getName());
 
   public CalculatorFrame() {
@@ -145,7 +147,7 @@ public final class CalculatorFrame extends JFrame {
     }
   }
 
-  /*@AssertNonNullAfter({"pg", "border1", "border2", "border3", "border4", "border5"})*/
+  @EnsuresNonNull({"pg", "border1", "border2", "border3", "border4", "border5"})
   private void jbInit() throws Exception {
     border1 =
         BorderFactory.createBevelBorder(
