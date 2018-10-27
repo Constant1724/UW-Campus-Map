@@ -1,0 +1,22 @@
+CSE 331 Homework 5.  Answers to written questions.
+Edit this file to supply your answers.
+
+Name:  <replace this with your name>
+
+1. What changes did you make to NullnessExample.java?
+
+
+2. What changes did you make to the files we gave you in the hw5 package?
+
+
+3. 
+
+a. Did the Nullness Checker indicate any problems with your specifications or code? If so what were they?
+
+
+
+
+b. How did you change your specification or code to account for problems discovered by the Nullness Checker? For each change, also state why the change needed to be made.
+
+
+
