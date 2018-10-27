@@ -4,10 +4,8 @@ import java.awt.Canvas;
 import java.awt.Color;
 import java.awt.Graphics;
 
-/**
- * <b>PolyGraph</b> is part of the graphical calculator that utilizes all of the other classes in
- * package hw2. PolyGraph implements the graphing component.
- */
+/** <b>PolyGraph</b> implements the graphing component of a graphical calculator. */
+@SuppressWarnings("nullness")
 public final class PolyGraph extends Canvas {
 
   /** The frame for this calculator. */
