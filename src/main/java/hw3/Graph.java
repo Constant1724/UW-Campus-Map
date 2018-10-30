@@ -1,7 +1,7 @@
 package hw3;
 
 import org.checkerframework.checker.initialization.qual.UnknownInitialization;
-import org.checkerframework.checker.nullness.qual.EnsuresNonNull;
+import org.checkerframework.checker.nullness.qual.*;
 import org.checkerframework.dataflow.qual.SideEffectFree;
 
 import java.util.*;
@@ -62,13 +62,13 @@ public class Graph {
    *
    * @spec.effects creates a new empty graph
    */
+  @EnsuresNonNull("map")
   public Graph() {
     this.map = new HashMap<Node, Set<Edge>>();
     checkRep();
   }
 
   /** Checks that the representation invariant holds (if any). */
-  @EnsuresNonNull("map")
   private void checkRep(@UnknownInitialization(Graph.class) Graph this) {
     assert this.map != null;
     if (!TEST_FLAG) {
@@ -80,8 +80,7 @@ public class Graph {
       for (Edge edge : this.map.get(node)) {
         assert edge != null; // No null edges in graph
         assert edge.getStart().equals(node); // All edges in one set must have the same start node.
-        assert this.map.containsKey(
-            edge.getEnd()); // The end node of all edges must be in the graph.
+        assert this.map.containsKey(edge.getEnd()); // The end node of all edges must be in the graph.
       }
     }
   }
@@ -127,6 +126,8 @@ public class Graph {
    * @return True iff node is in graph
    */
   @SideEffectFree
+  @RequiresNonNull("#1")
+  @EnsuresNonNullIf(expression = "map.get(#1)", result = true)
   public boolean containNode(Node node) {
     checkRep();
     boolean result = this.map.containsKey(node);
@@ -144,7 +145,8 @@ public class Graph {
    * @param node to be added to the graph
    * @return True iff node is not in graph, False otherwise.
    */
-  @EnsuresNonNull("map")
+  @RequiresNonNull("#1")
+  @EnsuresNonNullIf(expression = "map.get(#1)", result = true)
   public boolean addNode(Node node) {
     checkRep();
     if (this.map.containsKey(node)) {
@@ -169,7 +171,7 @@ public class Graph {
    * @param node to be removed from the graph
    * @return True iff node is in graph, False otherwise.
    */
-  @EnsuresNonNull("map")
+  @RequiresNonNull("#1")
   public boolean removeNode(Node node) {
     checkRep();
     if (!this.map.containsKey(node)) {
@@ -199,11 +201,14 @@ public class Graph {
    * @return True iff edge is in graph
    */
   @SideEffectFree
+  @RequiresNonNull("#1")
+  @EnsuresNonNullIf(expression = "map.get(#1.getStart())", result = true)
   public boolean containEdge(Edge edge) {
     checkRep();
     boolean result = false;
-    if (this.map.containsKey(edge.getStart())) {
-      result = this.map.get(edge.getStart()).contains(edge);
+    Node start = edge.getStart();
+    if (this.map.containsKey(start)) {
+      result = this.map.get(start).contains(edge);
     }
     checkRep();
     return result;
@@ -222,7 +227,8 @@ public class Graph {
    * @param edge to be added to the graph
    * @return True iff edge is not in graph, False otherwise.
    */
-  @EnsuresNonNull("map")
+  @RequiresNonNull("#1")
+  @EnsuresNonNullIf(expression = {"map.get(#1.getStart())", "map.get(#1.getEnd())"}, result = true)
   public boolean addEdge(Edge edge) {
     checkRep();
     Node start = edge.getStart();
@@ -231,7 +237,7 @@ public class Graph {
       checkRep();
       return false;
     }
-    boolean result = this.map.get(edge.getStart()).add(edge);
+    boolean result = this.map.get(start).add(edge);
     checkRep();
     return result;
   }
@@ -246,10 +252,11 @@ public class Graph {
    * @param edge to be removed from the graph
    * @return True iff edge is in graph, False otherwise.
    */
-  @EnsuresNonNull("map")
+  @RequiresNonNull("#1")
   public boolean removeEdge(Edge edge) {
     checkRep();
     boolean result = false;
+    Node start = edge.getStart();
     if (this.containEdge(edge)) {
       result = this.map.get(edge.getStart()).remove(edge);
     }

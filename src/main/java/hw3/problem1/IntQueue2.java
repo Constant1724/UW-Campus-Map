@@ -1,5 +1,9 @@
 package hw3.problem1;
 
+import org.checkerframework.checker.initialization.qual.UnknownInitialization;
+import org.checkerframework.checker.nullness.qual.EnsuresNonNull;
+import org.checkerframework.dataflow.qual.SideEffectFree;
+
 /**
  * IntQueue2 is our second implementation of a basic first-in, first-out queue for Integers.
  *
@@ -40,6 +44,7 @@ public class IntQueue2 {
   int size;
 
   /** @spec.effects constructs an empty queue */
+  @EnsuresNonNull("entries")
   public IntQueue2() {
     entries = new int[INITIAL_SIZE];
     front = 0;
@@ -54,6 +59,7 @@ public class IntQueue2 {
    * @spec.modifies this
    * @spec.effects places entry at the end of the queue
    */
+
   public void enqueue(Integer entry) {
     // Enlarge queue if necessary
     if (size == entries.length) {
@@ -93,22 +99,25 @@ public class IntQueue2 {
    * @spec.requires size() &gt; 0
    * @return the item currently first in the queue
    */
+  @SideEffectFree
   public Integer front() {
     return entries[front];
   }
 
+  @SideEffectFree
   /** @return number of elements in the queue */
   public int size() {
     return size;
   }
 
+  @SideEffectFree
   /** @return size() == 0 */
   public boolean isEmpty() {
     return size == 0;
   }
 
   /** Throws an exception if the representation invariant is violated. */
-  public void checkRep() {
+  public void checkRep(@UnknownInitialization(IntQueue2.class) IntQueue2 this) {
     // If I gave this to you, you wouldn't have the fun of figuring out the
     // rep invariant for yourself :)
   }

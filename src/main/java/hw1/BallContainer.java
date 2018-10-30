@@ -1,5 +1,8 @@
 package hw1;
 
+import org.checkerframework.checker.nullness.qual.RequiresNonNull;
+import org.checkerframework.dataflow.qual.Pure;
+
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
@@ -54,6 +57,7 @@ public class BallContainer implements Iterable<Ball> {
    * @return true if ball was successfully added to the container, i.e. ball was not already in the
    *     container. Returns false if ball was already in the container.
    */
+  @RequiresNonNull("#1")
   public boolean add(Ball b) {
     // Your code goes here.  Remove the exception after you're done.
     boolean flag = contents.add(b);
@@ -74,6 +78,7 @@ public class BallContainer implements Iterable<Ball> {
    * @return true if ball was successfully removed from the container, i.e. ball was in the
    *     container. Returns false if ball was not in the container.
    */
+  @RequiresNonNull("#1")
   public boolean remove(Ball b) {
     // Your code goes here.  Remove the exception after you're done.
     boolean flag = contents.remove(b);
@@ -120,6 +125,7 @@ public class BallContainer implements Iterable<Ball> {
    * @spec.requires b != null
    * @return true if this container contains the specified Ball. Returns false otherwise.
    */
+  @RequiresNonNull("#1")
   public boolean contains(Ball b) {
     // Your code goes here.  Remove the exception after you're done.
     return contents.contains(b);

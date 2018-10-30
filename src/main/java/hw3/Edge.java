@@ -1,7 +1,12 @@
 package hw3;
 
 import org.checkerframework.checker.initialization.qual.UnknownInitialization;
+import org.checkerframework.checker.nullness.qual.EnsuresNonNull;
+import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.checker.nullness.qual.RequiresNonNull;
+import org.checkerframework.dataflow.qual.Pure;
 import org.checkerframework.dataflow.qual.SideEffectFree;
+import org.checkerframework.framework.qual.RequiresQualifier;
 
 import java.util.Objects;
 
@@ -39,6 +44,7 @@ public class Edge {
    * @spec.requires start != null and end != null and label != null
    * @spec.effects creates a new edge from start to end with label.
    */
+  @RequiresNonNull({"#1", "#2", "#3"})
   public Edge(Node start, Node end, String label) {
     this.start = start;
     this.end = end;
@@ -47,6 +53,7 @@ public class Edge {
   }
 
   /** Checks that the representation invariant holds (if any). */
+  @SideEffectFree
   private void checkRep(@UnknownInitialization(Edge.class) Edge this) {
     assert (this.start != null && this.end != null && this.label != null);
   }
@@ -76,7 +83,7 @@ public class Edge {
    *
    * @return the label of this Edge
    */
-  @SideEffectFree
+  @Pure
   public String getLabel() {
     return this.label;
   }
@@ -87,7 +94,7 @@ public class Edge {
    * @return an int that all objects equal to this will also return.
    */
   @Override
-  @SideEffectFree
+  @Pure
   public int hashCode() {
     return Objects.hash(this.start, this.end, this.label);
   }
@@ -99,8 +106,8 @@ public class Edge {
    * @return true if and only if 'this' and 'obj' represent the same Edge.
    */
   @Override
-  @SideEffectFree
-  public boolean equals(Object obj) {
+  @Pure
+  public boolean equals(@Nullable Object obj) {
     if (!(obj instanceof Edge)) {
       return false;
     }

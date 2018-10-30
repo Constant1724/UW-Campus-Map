@@ -1,5 +1,10 @@
 package hw2;
 
+import org.checkerframework.checker.initialization.qual.UnknownInitialization;
+import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.dataflow.qual.Pure;
+import org.checkerframework.dataflow.qual.SideEffectFree;
+
 /**
  * <b>RatNum</b> represents an <b>immutable</b> rational number. It includes all of the elements in
  * the set of rationals, as well as the special "NaN" (not-a-number) element that results from
@@ -88,7 +93,7 @@ public final class RatNum extends Number implements Comparable<RatNum> {
   }
 
   /** Checks that the representation invariant holds (if any). */
-  private void checkRep() {
+  private void checkRep(@UnknownInitialization(RatNum.class) RatNum this) {
     assert (denom >= 0) : "Denominator of a RatNum cannot be less than zero";
     if (denom > 0) {
       int thisGcd = gcd(numer, denom);
@@ -101,6 +106,7 @@ public final class RatNum extends Number implements Comparable<RatNum> {
    *
    * @return true iff this is NaN (not-a-number)
    */
+  @Pure
   public boolean isNaN() {
     return (denom == 0);
   }
@@ -110,6 +116,7 @@ public final class RatNum extends Number implements Comparable<RatNum> {
    *
    * @return true iff {@code this < 0}
    */
+  @Pure
   public boolean isNegative() {
     return (compareTo(ZERO) < 0);
   }
@@ -119,6 +126,7 @@ public final class RatNum extends Number implements Comparable<RatNum> {
    *
    * @return true iff {@code this > 0}
    */
+  @Pure
   public boolean isPositive() {
     return (compareTo(ZERO) > 0);
   }
@@ -132,6 +140,7 @@ public final class RatNum extends Number implements Comparable<RatNum> {
    *     this > rn}
    */
   @Override
+  @Pure
   public int compareTo(RatNum rn) {
     if (this.isNaN() && rn.isNaN()) {
       return 0;
@@ -155,6 +164,7 @@ public final class RatNum extends Number implements Comparable<RatNum> {
    *     Specification, section 4.2.3</a>, for more details.
    */
   @Override
+  @Pure
   public double doubleValue() {
     if (isNaN()) {
       return Double.NaN;
@@ -169,6 +179,7 @@ public final class RatNum extends Number implements Comparable<RatNum> {
    * integer.
    */
   @Override
+  @Pure
   public int intValue() {
     // round to nearest by adding +/- .5 before truncating division.
     // we expect the implementation to use "round half away from zero".
@@ -185,6 +196,7 @@ public final class RatNum extends Number implements Comparable<RatNum> {
 
   /** Returns a float approximation for this. This method is specified by our superclass, Number. */
   @Override
+  @Pure
   public float floatValue() {
     return (float) doubleValue();
   }
@@ -194,6 +206,8 @@ public final class RatNum extends Number implements Comparable<RatNum> {
    * value returned is rounded to the nearest long.
    */
   @Override
+  @Pure
+
   public long longValue() {
     return intValue();
   }
@@ -206,6 +220,7 @@ public final class RatNum extends Number implements Comparable<RatNum> {
    *
    * @return a Rational equal to (0 - this).
    */
+  @SideEffectFree
   public RatNum negate() {
     return new RatNum(-this.numer, this.denom);
   }
@@ -217,6 +232,7 @@ public final class RatNum extends Number implements Comparable<RatNum> {
    * @spec.requires arg != null
    * @return a RatNum equal to (this + arg). If either argument is NaN, then returns NaN.
    */
+  @SideEffectFree
   public RatNum add(RatNum arg) {
     // a/b + x/y = ay/by + bx/by = (ay + bx)/by
     return new RatNum((this.numer * arg.denom) + (arg.numer * this.denom), this.denom * arg.denom);
@@ -229,6 +245,7 @@ public final class RatNum extends Number implements Comparable<RatNum> {
    * @spec.requires arg != null
    * @return a RatNum equal to (this - arg). If either argument is NaN, then returns NaN.
    */
+  @SideEffectFree
   public RatNum sub(RatNum arg) {
     // a/b - x/y = a/b + -x/y
     return this.add(arg.negate());
@@ -241,6 +258,7 @@ public final class RatNum extends Number implements Comparable<RatNum> {
    * @spec.requires arg != null
    * @return a RatNum equal to (this * arg). If either argument is NaN, then returns NaN.
    */
+  @SideEffectFree
   public RatNum mul(RatNum arg) {
     // (a/b) * (x/y) = ax/by
     return new RatNum(this.numer * arg.numer, this.denom * arg.denom);
@@ -254,6 +272,7 @@ public final class RatNum extends Number implements Comparable<RatNum> {
    * @return a RatNum equal to (this / arg). If arg is zero, or if either argument is NaN, then
    *     returns NaN.
    */
+  @SideEffectFree
   public RatNum div(RatNum arg) {
     // (a/b) / (x/y) = ay/bx
     if (arg.isNaN()) {
@@ -270,6 +289,7 @@ public final class RatNum extends Number implements Comparable<RatNum> {
    * @spec.requires b != 0
    * @return d such that a % d = 0 and b % d = 0
    */
+  @Pure
   private static int gcd(int a, int b) {
     // Euclid's method
     if (b == 0) {
@@ -289,6 +309,7 @@ public final class RatNum extends Number implements Comparable<RatNum> {
    * @return an int that all objects equal to this will also return.
    */
   @Override
+  @Pure
   public int hashCode() {
     // all instances that are NaN must return the same hashcode;
     if (this.isNaN()) {
@@ -305,7 +326,8 @@ public final class RatNum extends Number implements Comparable<RatNum> {
    *     same rational number. Note that NaN = NaN for RatNums.
    */
   @Override
-  public boolean equals(/*@Nullable*/ Object obj) {
+  @Pure
+  public boolean equals(@Nullable Object obj) {
     if (obj instanceof RatNum) {
       RatNum rn = (RatNum) obj;
 
@@ -326,6 +348,7 @@ public final class RatNum extends Number implements Comparable<RatNum> {
    *     decimal notation and M != 0.
    */
   @Override
+  @Pure
   public String toString() {
     // using '+' as String concatenation operator in this method
     if (isNaN()) {
@@ -351,6 +374,7 @@ public final class RatNum extends Number implements Comparable<RatNum> {
    * @return NaN if ratStr = "NaN". Else returns a RatNum r = ( N / M ), letting M be 1 in the case
    *     where only "N" is passed in.
    */
+  @SideEffectFree
   public static RatNum valueOf(String ratStr) {
     int slashLoc = ratStr.indexOf('/');
     if (ratStr.equals("NaN")) {

@@ -1,5 +1,11 @@
 package hw3.problem1;
 
+import org.checkerframework.checker.initialization.qual.UnknownInitialization;
+import org.checkerframework.checker.nullness.qual.EnsuresNonNull;
+import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.checker.nullness.qual.RequiresNonNull;
+import org.checkerframework.dataflow.qual.SideEffectFree;
+
 import java.util.LinkedList;
 import java.util.List;
 
@@ -26,6 +32,7 @@ public class IntQueue1 {
 
   /** @spec.effects constructs an empty queue */
   @SuppressWarnings("JdkObsolete")
+  @EnsuresNonNull("entries")
   public IntQueue1() {
     entries = new LinkedList<Integer>();
     checkRep();
@@ -39,7 +46,7 @@ public class IntQueue1 {
    * @spec.effects places entry at the end of the queue
    * @throws IllegalArgumentException if entry is null
    */
-  public void enqueue(Integer entry) {
+  public void enqueue(@Nullable Integer entry) {
     if (entry == null) {
       throw new IllegalArgumentException("entry cannot be null");
     }
@@ -64,25 +71,28 @@ public class IntQueue1 {
   /**
    * See the next item without removing it.
    *
-   * @spec.requires size() &gt; 0
+   * @spec.requires size() > 0
    * @return the item currently first in the queue
    */
+  @SideEffectFree
   public Integer front() {
     return entries.get(0);
   }
 
+  @SideEffectFree
   /** @return number of elements in the queue */
   public int size() {
     return entries.size();
   }
 
   /** @return size() == 0 */
+  @SideEffectFree
   public boolean isEmpty() {
     return entries.isEmpty();
   }
 
   /** Throws an exception if the representation invariant is violated. */
-  public void checkRep() {
+  public void checkRep(@UnknownInitialization(IntQueue1.class) IntQueue1 this) {
     // If I gave this to you, you wouldn't have the fun of figuring out the
     // rep invariant for yourself :)
   }

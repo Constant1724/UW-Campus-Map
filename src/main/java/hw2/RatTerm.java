@@ -1,5 +1,10 @@
 package hw2;
 
+import org.checkerframework.checker.initialization.qual.UnknownInitialization;
+import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.dataflow.qual.Pure;
+import org.checkerframework.dataflow.qual.SideEffectFree;
+
 /**
  * <b>RatTerm</b> is an immutable representation of a term in a single-variable polynomial
  * expression. The term has the form C*x^E where C is a rational number and E is an integer.
@@ -68,6 +73,7 @@ public final class RatTerm {
    *
    * @return the coefficient of this RatTerm.
    */
+  @Pure
   public RatNum getCoeff() {
     return this.coeff;
   }
@@ -77,6 +83,7 @@ public final class RatTerm {
    *
    * @return the exponent of this RatTerm.
    */
+  @Pure
   public int getExpt() {
     return this.expt;
   }
@@ -86,6 +93,7 @@ public final class RatTerm {
    *
    * @return true if and only if this has NaN as a coefficient.
    */
+  @Pure
   public boolean isNaN() {
     return this.coeff.isNaN();
   }
@@ -95,6 +103,7 @@ public final class RatTerm {
    *
    * @return true if and only if this has zero as a coefficient.
    */
+  @Pure
   public boolean isZero() {
     return this.coeff.equals(RatNum.ZERO);
   }
@@ -106,6 +115,7 @@ public final class RatTerm {
    * @return the value of this polynomial when evaluated at 'd'. For example, "3*x^2" evaluated at 2
    *     is 12. if (this.isNaN() == true), return Double.NaN
    */
+  @Pure
   public double eval(double d) {
     if (this.isNaN()) {
       return Double.NaN;
@@ -119,6 +129,7 @@ public final class RatTerm {
    *
    * @return a RatTerm equals to (-this). If this is NaN, then returns NaN.
    */
+  @SideEffectFree
   public RatTerm negate() {
     if (this.isNaN()) {
       return RatTerm.NaN;
@@ -135,6 +146,7 @@ public final class RatTerm {
    * @throws IllegalArgumentException if (this.expt != arg.expt) and neither argument is zero or
    *     NaN.
    */
+  @SideEffectFree
   public RatTerm add(RatTerm arg) {
     if (arg.isNaN() || this.isNaN()) {
       return RatTerm.NaN;
@@ -160,6 +172,7 @@ public final class RatTerm {
    * @throws IllegalArgumentException if (this.expt != arg.expt) and neither argument is zero or
    *     NaN.
    */
+  @SideEffectFree
   public RatTerm sub(RatTerm arg) {
     return this.add(arg.negate());
   }
@@ -171,6 +184,7 @@ public final class RatTerm {
    * @spec.requires arg != null
    * @return a RatTerm equals to (this * arg). If either argument is NaN, then returns NaN.
    */
+  @SideEffectFree
   public RatTerm mul(RatTerm arg) {
     if (this.isNaN() || arg.isNaN()) {
       return RatTerm.NaN;
@@ -186,6 +200,7 @@ public final class RatTerm {
    * @return a RatTerm equals to (this / arg). If arg is zero, or if either argument is NaN, then
    *     returns NaN.
    */
+  @SideEffectFree
   public RatTerm div(RatTerm arg) {
     if (arg.isZero() || this.isNaN() || arg.isNaN()) {
       return RatTerm.NaN;
@@ -202,6 +217,7 @@ public final class RatTerm {
    *     0 for b == 0. (Do not worry about the case when {@code b < 0}. The caller of this function,
    *     RatPoly, contains a rep. invariant stating that b is never less than 0.)
    */
+  @SideEffectFree
   public RatTerm differentiate() {
     if (this.isNaN()) {
       return RatTerm.NaN;
@@ -219,6 +235,7 @@ public final class RatTerm {
    *     a/(b+1)*x^(b+1) (Do not worry about the case when {@code b < 0}. The caller of this
    *     function, RatPoly, contains a rep. invariant stating that b is never less than 0.)
    */
+  @SideEffectFree
   public RatTerm antiDifferentiate() {
     if (this.isNaN()) {
       return RatTerm.NaN;
@@ -241,6 +258,7 @@ public final class RatTerm {
    *     <p>Valid example outputs include "3/2*x^2", "-1/2", "0", and "NaN".
    */
   @Override
+  @Pure
   public String toString() {
     if (this.isNaN()) {
       return "NaN";
@@ -338,6 +356,7 @@ public final class RatTerm {
    * @return an int that all objects equal to this will also.
    */
   @Override
+  @Pure
   public int hashCode() {
     if (this.isNaN()) {
       return 0;
@@ -353,7 +372,8 @@ public final class RatTerm {
    *     RatTerm. Note that all NaN RatTerms are equal.
    */
   @Override
-  public boolean equals(/*@Nullable*/ Object obj) {
+  @Pure
+  public boolean equals(@Nullable Object obj) {
     if (obj instanceof RatTerm) {
       RatTerm rt = (RatTerm) obj;
       if (this.isNaN() && rt.isNaN()) {
@@ -367,7 +387,7 @@ public final class RatTerm {
   }
 
   /** Checks that the representation invariant holds (if any). */
-  private void checkRep() {
+  private void checkRep(@UnknownInitialization(RatTerm.class) RatTerm this) {
     assert (coeff != null) : "coeff == null";
     assert (!coeff.equals(RatNum.ZERO) || expt == 0) : "coeff is zero while expt == " + expt;
   }

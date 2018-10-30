@@ -1,5 +1,10 @@
 package hw2;
 
+import org.checkerframework.checker.initialization.qual.UnknownInitialization;
+import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.dataflow.qual.Pure;
+import org.checkerframework.dataflow.qual.SideEffectFree;
+
 import java.util.*;
 
 /**
@@ -102,6 +107,7 @@ public final class RatPoly {
    * @spec.requires !this.isNaN()
    * @return the largest exponent with a non-zero coefficient, or 0 if this is "0".
    */
+  @Pure
   public int degree() {
     if (this.terms.isEmpty()) {
       return 0;
@@ -118,6 +124,7 @@ public final class RatPoly {
    * @return the RatTerm of degree 'deg'. If there is no term of degree 'deg' in this poly, then
    *     returns the zero RatTerm.
    */
+  @SideEffectFree
   public RatTerm getTerm(int deg) {
     for (RatTerm term : this.terms) {
       if (term.getExpt() == deg) {
@@ -132,6 +139,7 @@ public final class RatPoly {
    *
    * @return true if and only if this has some coefficient = "NaN".
    */
+  @Pure
   public boolean isNaN() {
     for (RatTerm term : this.terms) {
       if (term.isNaN()) {
@@ -152,6 +160,7 @@ public final class RatPoly {
    *     (C*scalar . E)
    * @see hw2.RatTerm regarding (C . E) notation
    */
+  @SideEffectFree
   private static void scaleCoeff(List<RatTerm> lst, RatNum scalar) {
     if (scalar.equals(RatNum.ZERO)) {
       lst.clear();
@@ -175,6 +184,7 @@ public final class RatPoly {
    *     (C . E+degree)
    * @see hw2.RatTerm regarding (C . E) notation
    */
+  @SideEffectFree
   private static void incremExpt(List<RatTerm> lst, int degree) {
     for (int i = 0; i < lst.size(); i++) {
       RatTerm term = lst.get(i);
@@ -202,6 +212,7 @@ public final class RatPoly {
    * @spec.effects sorted(lst_post) && (cofind(lst_post,newTerm.getExpt()) =
    *     cofind(lst,newTerm.getExpt()) + newTerm.getCoeff())
    */
+  @SideEffectFree
   private static void sortedInsert(List<RatTerm> lst, RatTerm newTerm) {
     if (newTerm.isZero()) {
       return;
@@ -234,6 +245,7 @@ public final class RatPoly {
    *
    * @return a RatPoly equal to "0 - this"; if this.isNaN(), returns some r such that r.isNaN()
    */
+  @SideEffectFree
   public RatPoly negate() {
     if (this.isNaN()) {
       return RatPoly.NaN;
@@ -251,6 +263,7 @@ public final class RatPoly {
    * @return a RatPoly, r, such that r = "this + p"; if this.isNaN() or p.isNaN(), returns some r
    *     such that r.isNaN()
    */
+  @SideEffectFree
   public RatPoly add(RatPoly p) {
     if (this.isNaN() || p.isNaN()) {
       return RatPoly.NaN;
@@ -271,6 +284,7 @@ public final class RatPoly {
    * @return a RatPoly, r, such that r = "this - p"; if this.isNaN() or p.isNaN(), returns some r
    *     such that r.isNaN()
    */
+  @SideEffectFree
   public RatPoly sub(RatPoly p) {
     return this.add(p.negate());
   }
@@ -283,6 +297,7 @@ public final class RatPoly {
    * @return a RatPoly, r, such that r = "this * p"; if this.isNaN() or p.isNaN(), returns some r
    *     such that r.isNaN()
    */
+  @SideEffectFree
   public RatPoly mul(RatPoly p) {
     RatPoly result = new RatPoly();
     for (RatTerm term : p.terms) {
@@ -314,6 +329,7 @@ public final class RatPoly {
    *     <p>Note that this truncating behavior is similar to the behavior of integer division on
    *     computers.
    */
+  @SideEffectFree
   public RatPoly div(RatPoly p) {
     if (this.isNaN() || p.isNaN() || p.equals(RatPoly.ZERO)) {
       return RatPoly.NaN;
@@ -338,6 +354,7 @@ public final class RatPoly {
    *     of this. If this.isNaN(), then return some q such that q.isNaN()
    *     <p>The derivative of a polynomial is the sum of the derivative of each term.
    */
+  @SideEffectFree
   public RatPoly differentiate() {
     if (this.isNaN()) {
       return RatPoly.NaN;
@@ -364,6 +381,7 @@ public final class RatPoly {
    *     <p>The antiderivative of a polynomial is the sum of the antiderivative of each term plus
    *     some constant.
    */
+  @SideEffectFree
   public RatPoly antiDifferentiate(RatNum integrationConstant) {
     if (this.isNaN() || integrationConstant.isNaN()) {
       return RatPoly.NaN;
@@ -390,6 +408,7 @@ public final class RatPoly {
    *     lowerBound and upperBound. If this.isNaN(), or either lowerBound or upperBound is
    *     Double.NaN, return Double.NaN.
    */
+  @Pure
   public double integrate(double lowerBound, double upperBound) {
     RatPoly antiDifferentiated = this.antiDifferentiate(RatNum.ZERO);
     return antiDifferentiated.eval(upperBound) - antiDifferentiated.eval(lowerBound);
@@ -402,6 +421,7 @@ public final class RatPoly {
    * @return the value of this polynomial when evaluated at 'd'. For example, "x+2" evaluated at 3
    *     is 5, and "x^2-x" evaluated at 3 is 6. if (this.isNaN() == true), return Double.NaN
    */
+  @Pure
   public double eval(double d) {
     if (this.isNaN()) {
       return Double.NaN;
@@ -430,6 +450,7 @@ public final class RatPoly {
    *     <p>Valid example outputs include "x^17-3/2*x^2+1", "-x+1", "-1/2", and "0".
    */
   @Override
+  @Pure
   public String toString() {
     if (terms.size() == 0) {
       return "0";
@@ -464,6 +485,7 @@ public final class RatPoly {
    *     <p>Valid inputs include "0", "x-10", and "x^3-2*x^2+5/3*x+3", and "NaN".
    * @return a RatPoly p such that p.toString() = polyStr
    */
+  @SideEffectFree
   public static RatPoly valueOf(String polyStr) {
 
     List<RatTerm> parsedTerms = new ArrayList<RatTerm>();
@@ -503,6 +525,7 @@ public final class RatPoly {
    * @return an int that all objects equal to this will also return.
    */
   @Override
+  @Pure
   public int hashCode() {
     // all instances that are NaN must return the same hashcode;
     if (this.isNaN()) {
@@ -519,7 +542,8 @@ public final class RatPoly {
    *     the same rational polynomial. Note that all NaN RatPolys are equal.
    */
   @Override
-  public boolean equals(/*@Nullable*/ Object obj) {
+  @Pure
+  public boolean equals(@Nullable Object obj) {
     if (obj instanceof RatPoly) {
       RatPoly rp = (RatPoly) obj;
 
@@ -535,7 +559,7 @@ public final class RatPoly {
   }
 
   /** Checks that the representation invariant holds (if any). */
-  private void checkRep() {
+  private void checkRep(@UnknownInitialization(RatPoly.class) RatPoly this) {
     assert (terms != null);
 
     for (int i = 0; i < terms.size(); i++) {

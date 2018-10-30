@@ -1,5 +1,7 @@
 package hw1;
 
+import org.checkerframework.dataflow.qual.Pure;
+
 /** This is a simple object that has a volume. */
 // You may not make Ball implement the Comparable interface.
 public class Ball {
@@ -21,6 +23,7 @@ public class Ball {
    *
    * @return the volume of this Ball
    */
+  @Pure
   public double getVolume() {
     return this.volume;
   }

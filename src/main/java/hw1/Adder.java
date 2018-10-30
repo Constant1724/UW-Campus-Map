@@ -1,5 +1,7 @@
 package hw1;
 
+import org.checkerframework.dataflow.qual.SideEffectFree;
+
 import static java.nio.charset.StandardCharsets.UTF_8;
 
 import java.util.Scanner;
@@ -27,6 +29,7 @@ public class Adder {
    * @param y second number to sum
    * @return sum of x and y
    */
+  @SideEffectFree
   public static int computeSum(int x, int y) {
     return x + y;
   }
