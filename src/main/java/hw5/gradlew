@@ -1,0 +1,4 @@
+#!/usr/bin/env sh
+
+# script that will run the gradle build from within a hw folder
+../../../../gradlew -b ../../../../build.gradle "$@"
