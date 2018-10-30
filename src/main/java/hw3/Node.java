@@ -1,5 +1,8 @@
 package hw3;
 
+import org.checkerframework.checker.initialization.qual.UnknownInitialization;
+import org.checkerframework.dataflow.qual.SideEffectFree;
+
 /**
  * Node represent a immutable vertex in a graph.
  *
@@ -32,7 +35,7 @@ public class Node {
   }
 
   /** Checks that the representation invariant holds (if any). */
-  private void checkRep() {
+  private void checkRep(@UnknownInitialization(Node.class) Node this) {
     assert (content != null);
   }
 
@@ -41,6 +44,7 @@ public class Node {
    *
    * @return content of the Node
    */
+  @SideEffectFree
   public String getContent() {
     return this.content;
   }
@@ -51,6 +55,7 @@ public class Node {
    * @return an int that all objects equal to this will also return.
    */
   @Override
+  @SideEffectFree
   public int hashCode() {
     return this.content.hashCode();
   }
@@ -62,6 +67,7 @@ public class Node {
    * @return true if and only if 'this' and 'obj' represent the same Node.
    */
   @Override
+  @SideEffectFree
   public boolean equals(Object obj) {
     if (!(obj instanceof Node)) {
       return false;

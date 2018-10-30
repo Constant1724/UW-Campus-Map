@@ -61,4 +61,5 @@ public class NodeTest {
     assertEquals(create(" ").getContent(), " ");
     assertEquals(create("1").getContent(), "1");
   }
+
 }

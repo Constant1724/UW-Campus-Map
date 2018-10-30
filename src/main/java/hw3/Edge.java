@@ -1,5 +1,8 @@
 package hw3;
 
+import org.checkerframework.checker.initialization.qual.UnknownInitialization;
+import org.checkerframework.dataflow.qual.SideEffectFree;
+
 import java.util.Objects;
 
 /**
@@ -44,7 +47,7 @@ public class Edge {
   }
 
   /** Checks that the representation invariant holds (if any). */
-  private void checkRep() {
+  private void checkRep(@UnknownInitialization(Edge.class) Edge this) {
     assert (this.start != null && this.end != null && this.label != null);
   }
 
@@ -53,6 +56,7 @@ public class Edge {
    *
    * @return the start Node of this Edge
    */
+  @SideEffectFree
   public Node getStart() {
     return this.start;
   }
@@ -62,6 +66,7 @@ public class Edge {
    *
    * @return the end Node of this Edge
    */
+  @SideEffectFree
   public Node getEnd() {
     return this.end;
   }
@@ -71,6 +76,7 @@ public class Edge {
    *
    * @return the label of this Edge
    */
+  @SideEffectFree
   public String getLabel() {
     return this.label;
   }
@@ -81,6 +87,7 @@ public class Edge {
    * @return an int that all objects equal to this will also return.
    */
   @Override
+  @SideEffectFree
   public int hashCode() {
     return Objects.hash(this.start, this.end, this.label);
   }
@@ -92,6 +99,7 @@ public class Edge {
    * @return true if and only if 'this' and 'obj' represent the same Edge.
    */
   @Override
+  @SideEffectFree
   public boolean equals(Object obj) {
     if (!(obj instanceof Edge)) {
       return false;

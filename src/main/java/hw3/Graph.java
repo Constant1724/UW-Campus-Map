@@ -1,5 +1,9 @@
 package hw3;
 
+import org.checkerframework.checker.initialization.qual.UnknownInitialization;
+import org.checkerframework.checker.nullness.qual.EnsuresNonNull;
+import org.checkerframework.dataflow.qual.SideEffectFree;
+
 import java.util.*;
 
 /**
@@ -64,7 +68,8 @@ public class Graph {
   }
 
   /** Checks that the representation invariant holds (if any). */
-  private void checkRep() {
+  @EnsuresNonNull("map")
+  private void checkRep(@UnknownInitialization(Graph.class) Graph this) {
     assert this.map != null;
     if (!TEST_FLAG) {
       return;
@@ -80,12 +85,14 @@ public class Graph {
       }
     }
   }
+
   /**
    * Return an unmodifiable view of all nodes in the graph. Note that if the graph does not contain
    * any Nodes, it will an empty set
    *
    * @return a set of all nodes in the graph.
    */
+  @SideEffectFree
   public Set<Node> getNodes() {
     checkRep();
     Set<Node> result = Collections.unmodifiableSet(this.map.keySet());
@@ -99,6 +106,7 @@ public class Graph {
    *
    * @return a set of all edges in the graph.
    */
+  @SideEffectFree
   public Set<Edge> getEdges() {
     checkRep();
 
@@ -118,6 +126,7 @@ public class Graph {
    * @param node to be checked if in the graph
    * @return True iff node is in graph
    */
+  @SideEffectFree
   public boolean containNode(Node node) {
     checkRep();
     boolean result = this.map.containsKey(node);
@@ -135,6 +144,7 @@ public class Graph {
    * @param node to be added to the graph
    * @return True iff node is not in graph, False otherwise.
    */
+  @EnsuresNonNull("map")
   public boolean addNode(Node node) {
     checkRep();
     if (this.map.containsKey(node)) {
@@ -159,6 +169,7 @@ public class Graph {
    * @param node to be removed from the graph
    * @return True iff node is in graph, False otherwise.
    */
+  @EnsuresNonNull("map")
   public boolean removeNode(Node node) {
     checkRep();
     if (!this.map.containsKey(node)) {
@@ -187,6 +198,7 @@ public class Graph {
    * @param edge to be checked if in the graph
    * @return True iff edge is in graph
    */
+  @SideEffectFree
   public boolean containEdge(Edge edge) {
     checkRep();
     boolean result = false;
@@ -210,6 +222,7 @@ public class Graph {
    * @param edge to be added to the graph
    * @return True iff edge is not in graph, False otherwise.
    */
+  @EnsuresNonNull("map")
   public boolean addEdge(Edge edge) {
     checkRep();
     Node start = edge.getStart();
@@ -233,6 +246,7 @@ public class Graph {
    * @param edge to be removed from the graph
    * @return True iff edge is in graph, False otherwise.
    */
+  @EnsuresNonNull("map")
   public boolean removeEdge(Edge edge) {
     checkRep();
     boolean result = false;
