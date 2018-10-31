@@ -55,6 +55,9 @@ dependencies {
 // build), use this instead:
 compileJava {
   ext.checker_force = true
+  if (project.hasProperty("noChecker")) {
+    ext.checker_force = false
+  }
   if (project.hasProperty("nullnessExample1")) {
    source = fileTree(dir: 'src', include: '**/hw5/NullnessExample.java')
   }
