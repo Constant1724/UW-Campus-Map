@@ -2,6 +2,7 @@ package hw3;
 
 import org.checkerframework.checker.initialization.qual.UnknownInitialization;
 import org.checkerframework.checker.nullness.qual.EnsuresNonNull;
+import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.checkerframework.checker.nullness.qual.RequiresNonNull;
 import org.checkerframework.dataflow.qual.Pure;
@@ -44,7 +45,6 @@ public class Edge {
    * @spec.requires start != null and end != null and label != null
    * @spec.effects creates a new edge from start to end with label.
    */
-  @RequiresNonNull({"#1", "#2", "#3"})
   public Edge(Node start, Node end, String label) {
     this.start = start;
     this.end = end;
@@ -64,7 +64,7 @@ public class Edge {
    * @return the start Node of this Edge
    */
   @SideEffectFree
-  public Node getStart() {
+  public @NonNull Node getStart() {
     return this.start;
   }
 

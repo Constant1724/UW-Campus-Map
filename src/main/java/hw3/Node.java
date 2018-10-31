@@ -33,7 +33,6 @@ public class Node {
    * @spec.requires content != Null
    * @spec.effects creates a new Node with the given content as description.
    */
-  @RequiresNonNull("#1")
   public Node(String content) {
     this.content = content;
     checkRep();

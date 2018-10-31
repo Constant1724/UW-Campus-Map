@@ -1,7 +1,6 @@
 package hw3.problem1;
 
 import org.checkerframework.checker.initialization.qual.UnknownInitialization;
-import org.checkerframework.checker.nullness.qual.EnsuresNonNull;
 import org.checkerframework.dataflow.qual.SideEffectFree;
 
 /**
@@ -44,7 +43,6 @@ public class IntQueue2 {
   int size;
 
   /** @spec.effects constructs an empty queue */
-  @EnsuresNonNull("entries")
   public IntQueue2() {
     entries = new int[INITIAL_SIZE];
     front = 0;
@@ -56,6 +54,8 @@ public class IntQueue2 {
    * Enqueue an item.
    *
    * @param entry item to be added to the queue
+   *
+   * @spec.requires entry != null
    * @spec.modifies this
    * @spec.effects places entry at the end of the queue
    */
@@ -117,6 +117,7 @@ public class IntQueue2 {
   }
 
   /** Throws an exception if the representation invariant is violated. */
+  @SideEffectFree
   public void checkRep(@UnknownInitialization(IntQueue2.class) IntQueue2 this) {
     // If I gave this to you, you wouldn't have the fun of figuring out the
     // rep invariant for yourself :)

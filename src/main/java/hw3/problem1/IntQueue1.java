@@ -32,7 +32,6 @@ public class IntQueue1 {
 
   /** @spec.effects constructs an empty queue */
   @SuppressWarnings("JdkObsolete")
-  @EnsuresNonNull("entries")
   public IntQueue1() {
     entries = new LinkedList<Integer>();
     checkRep();
@@ -92,6 +91,7 @@ public class IntQueue1 {
   }
 
   /** Throws an exception if the representation invariant is violated. */
+  @SideEffectFree
   public void checkRep(@UnknownInitialization(IntQueue1.class) IntQueue1 this) {
     // If I gave this to you, you wouldn't have the fun of figuring out the
     // rep invariant for yourself :)

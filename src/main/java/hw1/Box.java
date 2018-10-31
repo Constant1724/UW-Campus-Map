@@ -1,6 +1,5 @@
 package hw1;
 
-import org.checkerframework.checker.nullness.qual.RequiresNonNull;
 
 import java.util.*;
 
@@ -49,7 +48,6 @@ public class Box implements Iterable<Ball> {
    *     and the box was not already full. Returns false, if ball was already in the box or if the
    *     box was too full to contain the new ball.
    */
-  @RequiresNonNull("#1")
   public boolean add(Ball b) {
     // Your code goes here.  Remove the exception after you're done.
     if (ballContainer.getVolume() + b.getVolume() <= maxVolume) {
@@ -97,7 +95,6 @@ public class Box implements Iterable<Ball> {
    * @return true if the ball was successfully removed from the box, i.e. ball was actually in the
    *     box. Returns false if the ball was not in the box.
    */
-  @RequiresNonNull("#1")
   public boolean remove(Ball b) {
     return ballContainer.remove(b);
   }
@@ -133,7 +130,6 @@ public class Box implements Iterable<Ball> {
    * @spec.requires b != null
    * @return true if this box contains the specified Ball. Returns false otherwise.
    */
-  @RequiresNonNull("#1")
   public boolean contains(Ball b) {
     return ballContainer.contains(b);
   }

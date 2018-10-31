@@ -2,6 +2,7 @@ package hw2;
 
 import org.checkerframework.checker.initialization.qual.UnknownInitialization;
 import org.checkerframework.dataflow.qual.Pure;
+import org.checkerframework.dataflow.qual.SideEffectFree;
 
 import java.util.Iterator;
 import java.util.Stack;
@@ -124,6 +125,7 @@ public final class RatPolyStack implements Iterable<RatPoly> {
    * @spec.requires {@code index >= 0 && index < this.size()}
    * @return If this = S:[p]:T where S.size() = index, then returns p.
    */
+  @SideEffectFree
   public RatPoly getNthFromTop(int index) {
     checkRep();
     RatPoly result = this.polys.get(this.size() - index - 1);

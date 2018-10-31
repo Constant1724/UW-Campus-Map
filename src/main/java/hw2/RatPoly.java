@@ -1,6 +1,7 @@
 package hw2;
 
 import org.checkerframework.checker.initialization.qual.UnknownInitialization;
+import org.checkerframework.checker.nullness.qual.EnsuresNonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.checkerframework.dataflow.qual.Pure;
 import org.checkerframework.dataflow.qual.SideEffectFree;
@@ -60,6 +61,7 @@ public final class RatPoly {
   public static final RatPoly ZERO = new RatPoly();
 
   /** @spec.effects Constructs a new Poly, "0". */
+  @EnsuresNonNull("terms")
   public RatPoly() {
     terms = new ArrayList<RatTerm>();
     checkRep();
@@ -559,6 +561,7 @@ public final class RatPoly {
   }
 
   /** Checks that the representation invariant holds (if any). */
+  @SideEffectFree
   private void checkRep(@UnknownInitialization(RatPoly.class) RatPoly this) {
     assert (terms != null);
 

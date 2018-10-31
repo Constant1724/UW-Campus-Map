@@ -293,6 +293,7 @@ public final class RatTerm {
    *     <p>Valid inputs include "0", "x", and "-5/3*x^3", and "NaN".
    * @return a RatTerm t such that t.toString() = termStr
    */
+  @SideEffectFree
   public static RatTerm valueOf(String termStr) {
 
     if (termStr.equals("NaN")) {
