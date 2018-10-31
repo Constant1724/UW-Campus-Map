@@ -70,7 +70,7 @@ public class IntQueue1 {
   /**
    * See the next item without removing it.
    *
-   * @spec.requires size() > 0
+   * @spec.requires size() &gt; 0
    * @return the item currently first in the queue
    */
   @SideEffectFree
@@ -78,8 +78,9 @@ public class IntQueue1 {
     return entries.get(0);
   }
 
-  @SideEffectFree
+
   /** @return number of elements in the queue */
+  @SideEffectFree
   public int size() {
     return entries.size();
   }

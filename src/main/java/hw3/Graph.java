@@ -62,7 +62,6 @@ public class Graph {
    *
    * @spec.effects creates a new empty graph
    */
-  @EnsuresNonNull("map")
   public Graph() {
     this.map = new HashMap<Node, Set<Edge>>();
     checkRep();
@@ -179,12 +178,11 @@ public class Graph {
     this.map.remove(node);
 
     for (Set<Edge> set : this.map.values()) {
-      Iterator<Edge> iterator = set.iterator();
-      while (iterator.hasNext()) {
-        Edge edge = iterator.next();
-        if (edge.getEnd().equals(node)) {
-          iterator.remove();
-        }
+      for(Iterator<Edge> it = set.iterator(); it.hasNext();) {
+          Edge edge = it.next();
+          if (edge.getEnd().equals(node)) {
+              it.remove();
+          }
       }
     }
     checkRep();
@@ -229,11 +227,11 @@ public class Graph {
     checkRep();
     Node start = edge.getStart();
     Node end = edge.getEnd();
-    if (!this.map.containsKey(start) || !this.map.containsKey(end) || this.containEdge(edge)) {
+    if (!this.map.containsKey(start) || !this.map.containsKey(end)) {
       checkRep();
       return false;
     }
-    boolean result = this.map.get(edge.getStart()).add(edge);
+    boolean result = this.map.get(start).add(edge);
     checkRep();
     return result;
   }

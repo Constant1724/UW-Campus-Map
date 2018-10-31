@@ -104,14 +104,15 @@ public class IntQueue2 {
     return entries[front];
   }
 
-  @SideEffectFree
+
   /** @return number of elements in the queue */
+  @SideEffectFree
   public int size() {
     return size;
   }
 
-  @SideEffectFree
   /** @return size() == 0 */
+  @SideEffectFree
   public boolean isEmpty() {
     return size == 0;
   }
