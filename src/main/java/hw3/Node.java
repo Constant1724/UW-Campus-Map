@@ -1,10 +1,7 @@
 package hw3;
 
 import org.checkerframework.checker.initialization.qual.UnknownInitialization;
-import org.checkerframework.checker.nullness.qual.EnsuresNonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
-import org.checkerframework.checker.nullness.qual.RequiresNonNull;
-import org.checkerframework.dataflow.qual.Pure;
 import org.checkerframework.dataflow.qual.SideEffectFree;
 
 /**
@@ -49,7 +46,7 @@ public class Node {
    *
    * @return content of the Node
    */
-  @Pure
+  @SideEffectFree
   public String getContent() {
     return this.content;
   }
@@ -60,7 +57,7 @@ public class Node {
    * @return an int that all objects equal to this will also return.
    */
   @Override
-  @Pure
+  @SideEffectFree
   public int hashCode() {
     return this.content.hashCode();
   }
@@ -72,7 +69,7 @@ public class Node {
    * @return true if and only if 'this' and 'obj' represent the same Node.
    */
   @Override
-  @Pure
+  @SideEffectFree
   public boolean equals(@Nullable Object obj) {
     if (!(obj instanceof Node)) {
       return false;

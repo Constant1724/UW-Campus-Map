@@ -1,6 +1,8 @@
 package hw1;
 
 
+import org.checkerframework.dataflow.qual.SideEffectFree;
+
 import java.util.*;
 
 /**
@@ -63,6 +65,7 @@ public class Box implements Iterable<Ball> {
    *
    * @return an iterator that yields all the balls in this box in order of ascending size
    */
+  @SideEffectFree
   public Iterator<Ball> getBallsFromSmallest() {
     // Your code goes here.  Remove the exception after you're done.
     List<Ball> list = new ArrayList<Ball>(ballContainer.size());
@@ -104,6 +107,7 @@ public class Box implements Iterable<Ball> {
    *
    * @return the volume of the contents of the box
    */
+  @SideEffectFree
   public double getVolume() {
     return ballContainer.getVolume();
   }
@@ -113,6 +117,7 @@ public class Box implements Iterable<Ball> {
    *
    * @return the number of Balls in this box
    */
+  @SideEffectFree
   public int size() {
     return ballContainer.size();
   }
@@ -130,6 +135,7 @@ public class Box implements Iterable<Ball> {
    * @spec.requires b != null
    * @return true if this box contains the specified Ball. Returns false otherwise.
    */
+  @SideEffectFree
   public boolean contains(Ball b) {
     return ballContainer.contains(b);
   }

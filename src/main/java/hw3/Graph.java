@@ -26,7 +26,7 @@ public class Graph {
   private final Map<Node, Set<Edge>> map;
 
   /** Test flag, whether to enable expensive checks. */
-  private static boolean TEST_FLAG = false;
+  private static boolean TEST_FLAG = true;
   // Abstraction Function:
   //
   //  this.map represents an adjacency list for the graph:
@@ -223,7 +223,7 @@ public class Graph {
     checkRep();
     Node start = edge.getStart();
     Node end = edge.getEnd();
-      if (!this.containNode(start) || !this.containNode(end) || this.containEdge(edge)) {
+      if (!this.map.containsKey(start) || !this.map.containsKey(end)) {
           checkRep();
           return false;
       }
@@ -247,7 +247,7 @@ public class Graph {
     checkRep();
     boolean result = false;
     Node start = edge.getStart();
-    if (this.containEdge(edge)) {
+    if (this.map.containsKey(start)) {
       result = this.map.get(start).remove(edge);
     }
     checkRep();

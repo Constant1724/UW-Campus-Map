@@ -29,7 +29,6 @@ public class Adder {
    * @param y second number to sum
    * @return sum of x and y
    */
-  @SideEffectFree
   public static int computeSum(int x, int y) {
     return x + y;
   }

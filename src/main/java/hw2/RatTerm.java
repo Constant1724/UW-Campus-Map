@@ -2,7 +2,6 @@ package hw2;
 
 import org.checkerframework.checker.initialization.qual.UnknownInitialization;
 import org.checkerframework.checker.nullness.qual.Nullable;
-import org.checkerframework.dataflow.qual.Pure;
 import org.checkerframework.dataflow.qual.SideEffectFree;
 
 /**
@@ -73,7 +72,7 @@ public final class RatTerm {
    *
    * @return the coefficient of this RatTerm.
    */
-  @Pure
+  @SideEffectFree
   public RatNum getCoeff() {
     return this.coeff;
   }
@@ -83,7 +82,7 @@ public final class RatTerm {
    *
    * @return the exponent of this RatTerm.
    */
-  @Pure
+  @SideEffectFree
   public int getExpt() {
     return this.expt;
   }
@@ -93,7 +92,7 @@ public final class RatTerm {
    *
    * @return true if and only if this has NaN as a coefficient.
    */
-  @Pure
+  @SideEffectFree
   public boolean isNaN() {
     return this.coeff.isNaN();
   }
@@ -103,7 +102,7 @@ public final class RatTerm {
    *
    * @return true if and only if this has zero as a coefficient.
    */
-  @Pure
+  @SideEffectFree
   public boolean isZero() {
     return this.coeff.equals(RatNum.ZERO);
   }
@@ -115,7 +114,7 @@ public final class RatTerm {
    * @return the value of this polynomial when evaluated at 'd'. For example, "3*x^2" evaluated at 2
    *     is 12. if (this.isNaN() == true), return Double.NaN
    */
-  @Pure
+  @SideEffectFree
   public double eval(double d) {
     if (this.isNaN()) {
       return Double.NaN;
@@ -258,7 +257,7 @@ public final class RatTerm {
    *     <p>Valid example outputs include "3/2*x^2", "-1/2", "0", and "NaN".
    */
   @Override
-  @Pure
+  @SideEffectFree
   public String toString() {
     if (this.isNaN()) {
       return "NaN";
@@ -357,7 +356,7 @@ public final class RatTerm {
    * @return an int that all objects equal to this will also.
    */
   @Override
-  @Pure
+  @SideEffectFree
   public int hashCode() {
     if (this.isNaN()) {
       return 0;
@@ -373,7 +372,7 @@ public final class RatTerm {
    *     RatTerm. Note that all NaN RatTerms are equal.
    */
   @Override
-  @Pure
+  @SideEffectFree
   public boolean equals(@Nullable Object obj) {
     if (obj instanceof RatTerm) {
       RatTerm rt = (RatTerm) obj;
@@ -388,6 +387,7 @@ public final class RatTerm {
   }
 
   /** Checks that the representation invariant holds (if any). */
+  @SideEffectFree
   private void checkRep(@UnknownInitialization(RatTerm.class) RatTerm this) {
     assert (coeff != null) : "coeff == null";
     assert (!coeff.equals(RatNum.ZERO) || expt == 0) : "coeff is zero while expt == " + expt;

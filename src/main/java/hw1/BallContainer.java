@@ -1,5 +1,6 @@
 package hw1;
 
+import org.checkerframework.dataflow.qual.Pure;
 import org.checkerframework.dataflow.qual.SideEffectFree;
 
 import java.util.Collections;

@@ -1,7 +1,6 @@
 package hw2;
 
 import org.checkerframework.checker.initialization.qual.UnknownInitialization;
-import org.checkerframework.dataflow.qual.Pure;
 import org.checkerframework.dataflow.qual.SideEffectFree;
 
 import java.util.Iterator;
@@ -43,7 +42,7 @@ public final class RatPolyStack implements Iterable<RatPoly> {
    *
    * @return the size of this sequence.
    */
-  @Pure
+  @SideEffectFree
   public int size() {
     return this.polys.size();
   }
@@ -232,6 +231,7 @@ public final class RatPolyStack implements Iterable<RatPoly> {
   }
 
   /** Checks that the representation invariant holds (if any). */
+  @SideEffectFree
   private void checkRep(@UnknownInitialization(RatPolyStack.class) RatPolyStack this) {
     assert (polys != null) : "polys should never be null.";
 

@@ -2,9 +2,7 @@ package hw3;
 
 import org.checkerframework.checker.initialization.qual.UnknownInitialization;
 import org.checkerframework.checker.nullness.qual.*;
-import org.checkerframework.dataflow.qual.Pure;
 import org.checkerframework.dataflow.qual.SideEffectFree;
-import org.checkerframework.framework.qual.RequiresQualifier;
 
 import java.util.Objects;
 
@@ -80,7 +78,7 @@ public class Edge {
    *
    * @return the label of this Edge
    */
-  @Pure
+  @SideEffectFree
   public String getLabel() {
     return this.label;
   }
@@ -91,7 +89,7 @@ public class Edge {
    * @return an int that all objects equal to this will also return.
    */
   @Override
-  @Pure
+  @SideEffectFree
   public int hashCode() {
     return Objects.hash(this.start, this.end, this.label);
   }
@@ -103,7 +101,7 @@ public class Edge {
    * @return true if and only if 'this' and 'obj' represent the same Edge.
    */
   @Override
-  @Pure
+  @SideEffectFree
   public boolean equals(@Nullable Object obj) {
     if (!(obj instanceof Edge)) {
       return false;
