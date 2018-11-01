@@ -16,18 +16,16 @@ public class LinkedListNode {
   //   this.label != null
 
   /** the label of this node */
-  private String label;
+  private @Nullable String label;
   /** the next node in the list */
   private @Nullable LinkedListNode next;
 
   /**
    * @param label the label of this node
-   *
-   * @spec.requires label != null
    * @spec.modifies this
    * @spec.effects constructs the node with the given label
    */
-  public LinkedListNode(String label) {
+  public LinkedListNode(@Nullable String label) {
     this.label = label;
     this.next = null;
     checkRep();
@@ -36,12 +34,12 @@ public class LinkedListNode {
   /**
    * @param label the label of this node
    * @param node the node following this
-   * @spec.requires label != null &amp;&amp; node != null
+   * @spec.requires label != null && node != null
    * @spec.modifies this
    * @spec.effects constructs the node with the given label and given
    *               next node
    */
-  public LinkedListNode(String label, LinkedListNode node) {
+  public LinkedListNode(@Nullable String label, LinkedListNode node) {
     this.label = label;
     this.next = node;
     checkRep();
@@ -52,7 +50,7 @@ public class LinkedListNode {
    * @spec.modifies this
    * @spec.effects sets the node following this to the given node
    */
-  public void setNext(@Nullable LinkedListNode node) {
+  public void setNext(LinkedListNode node) {
     checkRep();
 
     this.next = node;
@@ -60,7 +58,7 @@ public class LinkedListNode {
   }
 
   /** @return the node following this */
-  public @Nullable LinkedListNode getNext() {
+  public LinkedListNode getNext() {
     checkRep();
     return this.next;
   }
@@ -78,7 +76,7 @@ public class LinkedListNode {
    * @spec.effects sets the label of this node
    * @throws IllegalArgumentException iff label == null
    */
-  public void setLabel(String label) {
+  public void setLabel(@Nullable String label) {
     checkRep();
     if (label == null) {
       throw new IllegalArgumentException();

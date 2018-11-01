@@ -92,9 +92,9 @@ public class Graph {
    * @return a set of all nodes in the graph.
    */
   @SideEffectFree
-  public Set<Node> getNodes() {
+  public Set<@KeyFor("map") Node> getNodes() {
     checkRep();
-    Set<Node> result = Collections.unmodifiableSet(this.map.keySet());
+    Set<@KeyFor("map") Node> result = Collections.unmodifiableSet(this.map.keySet());
     checkRep();
     return result;
   }
@@ -126,7 +126,6 @@ public class Graph {
    * @return True iff node is in graph
    */
   @SideEffectFree
-//  @EnsuresNonNullIf(expression = "map.get(#1)", result = true)
   public boolean containNode(Node node) {
     checkRep();
     boolean result = this.map.containsKey(node);
@@ -144,7 +143,6 @@ public class Graph {
    * @param node to be added to the graph
    * @return True iff node is not in graph, False otherwise.
    */
-//  @EnsuresNonNullIf(expression = "map.get(#1)", result = true)
   public boolean addNode(Node node) {
     checkRep();
     if (this.map.containsKey(node)) {
@@ -197,7 +195,6 @@ public class Graph {
    * @return True iff edge is in graph
    */
   @SideEffectFree
-//  @EnsuresNonNullIf(expression = "map.get(#1.getStart())", result = true)
   public boolean containEdge(Edge edge) {
     checkRep();
     boolean result = false;
@@ -222,15 +219,14 @@ public class Graph {
    * @param edge to be added to the graph
    * @return True iff edge is not in graph, False otherwise.
    */
-//  @EnsuresNonNullIf(expression = {"map.get(#1.getStart())", "map.get(#1.getEnd())"}, result = true)
   public boolean addEdge(Edge edge) {
     checkRep();
     Node start = edge.getStart();
     Node end = edge.getEnd();
-    if (!this.map.containsKey(start) || !this.map.containsKey(end)) {
-      checkRep();
-      return false;
-    }
+      if (!this.containNode(start) || !this.containNode(end) || this.containEdge(edge)) {
+          checkRep();
+          return false;
+      }
     boolean result = this.map.get(start).add(edge);
     checkRep();
     return result;
@@ -243,6 +239,7 @@ public class Graph {
    * @spec.requires edge != Null
    * @spec.modifies this.Edges if the edge is in the graph
    * @spec.effects if this.Edges = E, this_post.Edges = E - edge, iff edge is in E.
+   *
    * @param edge to be removed from the graph
    * @return True iff edge is in graph, False otherwise.
    */
@@ -250,7 +247,7 @@ public class Graph {
     checkRep();
     boolean result = false;
     Node start = edge.getStart();
-    if (this.map.containsKey(start)) {
+    if (this.containEdge(edge)) {
       result = this.map.get(start).remove(edge);
     }
     checkRep();

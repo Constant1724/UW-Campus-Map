@@ -6,7 +6,7 @@ public class NullnessExample {
    * @param args The command-line args (ignored)
    */
   public static void main(String[] args) {
-    Object myObject = new Object();
+    Object myObject = null;
     System.out.println(myObject.toString());
   }
 }

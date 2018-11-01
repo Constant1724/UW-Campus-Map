@@ -12,8 +12,9 @@ public class AnotherNullnessExample {
     LinkedListNode node1 = new LinkedListNode("Node 1");
 
     LinkedListNode node2 = new LinkedListNode("Node 2");
+    node2.setLabel(null);
 
-    LinkedListNode node3 = new LinkedListNode("Node 3");
+    LinkedListNode node3 = null;
 
     list.add(node1);
     list.add(node2);

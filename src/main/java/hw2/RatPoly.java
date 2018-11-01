@@ -61,7 +61,6 @@ public final class RatPoly {
   public static final RatPoly ZERO = new RatPoly();
 
   /** @spec.effects Constructs a new Poly, "0". */
-  @EnsuresNonNull("terms")
   public RatPoly() {
     terms = new ArrayList<RatTerm>();
     checkRep();
