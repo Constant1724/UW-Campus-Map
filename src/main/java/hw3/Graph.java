@@ -1,10 +1,9 @@
 package hw3;
 
+import java.util.*;
 import org.checkerframework.checker.initialization.qual.UnknownInitialization;
 import org.checkerframework.checker.nullness.qual.*;
 import org.checkerframework.dataflow.qual.SideEffectFree;
-
-import java.util.*;
 
 /**
  * Graph represents a mutable, directed and cyclic graph. Duplicate of nodes and edges in graph is
@@ -80,7 +79,8 @@ public class Graph {
       for (Edge edge : this.map.get(node)) {
         assert edge != null; // No null edges in graph
         assert edge.getStart().equals(node); // All edges in one set must have the same start node.
-        assert this.map.containsKey(edge.getEnd()); // The end node of all edges must be in the graph.
+        assert this.map.containsKey(
+            edge.getEnd()); // The end node of all edges must be in the graph.
       }
     }
   }
@@ -176,11 +176,11 @@ public class Graph {
     this.map.remove(node);
 
     for (Set<Edge> set : this.map.values()) {
-      for(Iterator<Edge> it = set.iterator(); it.hasNext();) {
-          Edge edge = it.next();
-          if (edge.getEnd().equals(node)) {
-              it.remove();
-          }
+      for (Iterator<Edge> it = set.iterator(); it.hasNext(); ) {
+        Edge edge = it.next();
+        if (edge.getEnd().equals(node)) {
+          it.remove();
+        }
       }
     }
     checkRep();
@@ -223,10 +223,10 @@ public class Graph {
     checkRep();
     Node start = edge.getStart();
     Node end = edge.getEnd();
-      if (!this.map.containsKey(start) || !this.map.containsKey(end)) {
-          checkRep();
-          return false;
-      }
+    if (!this.map.containsKey(start) || !this.map.containsKey(end)) {
+      checkRep();
+      return false;
+    }
     boolean result = this.map.get(start).add(edge);
     checkRep();
     return result;
@@ -239,7 +239,6 @@ public class Graph {
    * @spec.requires edge != Null
    * @spec.modifies this.Edges if the edge is in the graph
    * @spec.effects if this.Edges = E, this_post.Edges = E - edge, iff edge is in E.
-   *
    * @param edge to be removed from the graph
    * @return True iff edge is in graph, False otherwise.
    */

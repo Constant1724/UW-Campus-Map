@@ -1,6 +1,5 @@
 package hw1;
 
-import org.checkerframework.dataflow.qual.SideEffectFree;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 

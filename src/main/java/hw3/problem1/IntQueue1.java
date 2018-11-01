@@ -1,13 +1,10 @@
 package hw3.problem1;
 
-import org.checkerframework.checker.initialization.qual.UnknownInitialization;
-import org.checkerframework.checker.nullness.qual.EnsuresNonNull;
-import org.checkerframework.checker.nullness.qual.Nullable;
-import org.checkerframework.checker.nullness.qual.RequiresNonNull;
-import org.checkerframework.dataflow.qual.SideEffectFree;
-
 import java.util.LinkedList;
 import java.util.List;
+import org.checkerframework.checker.initialization.qual.UnknownInitialization;
+import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.dataflow.qual.SideEffectFree;
 
 /**
  * IntQueue1 is our first implementation of a basic first-in, first-out queue for Integers.
@@ -77,7 +74,6 @@ public class IntQueue1 {
   public Integer front() {
     return entries.get(0);
   }
-
 
   /** @return number of elements in the queue */
   @SideEffectFree

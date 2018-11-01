@@ -9,7 +9,7 @@ public class LinkedListNode {
   // Abstraction Function:
   // AF(this) = A node with a label defined as this.label and the
   //            option to chain multiple nodes together. If there is a
-  //            node that occurs after this in a chain, it will be stored 
+  //            node that occurs after this in a chain, it will be stored
   //            in this.next.
   //
   // Representation Invariant:
@@ -22,7 +22,6 @@ public class LinkedListNode {
 
   /**
    * @param label the label of this node
-   *
    * @spec.requires label != null
    * @spec.modifies this
    * @spec.effects constructs the node with the given label
@@ -38,8 +37,7 @@ public class LinkedListNode {
    * @param node the node following this
    * @spec.requires label != null &amp;&amp; node != null
    * @spec.modifies this
-   * @spec.effects constructs the node with the given label and given
-   *               next node
+   * @spec.effects constructs the node with the given label and given next node
    */
   public LinkedListNode(String label, LinkedListNode node) {
     this.label = label;

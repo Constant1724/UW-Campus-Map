@@ -1,10 +1,9 @@
 package hw2;
 
-import org.checkerframework.checker.initialization.qual.UnknownInitialization;
-import org.checkerframework.dataflow.qual.SideEffectFree;
-
 import java.util.Iterator;
 import java.util.Stack;
+import org.checkerframework.checker.initialization.qual.UnknownInitialization;
+import org.checkerframework.dataflow.qual.SideEffectFree;
 
 /**
  * <b>RatPolyStack</B> is a mutable finite sequence of RatPoly objects.

@@ -1,10 +1,9 @@
 package hw3;
 
+import java.util.Objects;
 import org.checkerframework.checker.initialization.qual.UnknownInitialization;
 import org.checkerframework.checker.nullness.qual.*;
 import org.checkerframework.dataflow.qual.SideEffectFree;
-
-import java.util.Objects;
 
 /**
  * Edge represents an immutable, directed, weighted edge in a graph

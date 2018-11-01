@@ -1,9 +1,7 @@
 package hw1;
 
-
-import org.checkerframework.dataflow.qual.SideEffectFree;
-
 import java.util.*;
+import org.checkerframework.dataflow.qual.SideEffectFree;
 
 /**
  * This is a container can be used to contain Balls. The key difference between a BallContainer and

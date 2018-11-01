@@ -4,7 +4,6 @@ import org.checkerframework.checker.initialization.qual.UnknownInitialization;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.checkerframework.dataflow.qual.SideEffectFree;
 
-
 /**
  * <b>RatNum</b> represents an <b>immutable</b> rational number. It includes all of the elements in
  * the set of rationals, as well as the special "NaN" (not-a-number) element that results from
@@ -207,7 +206,6 @@ public final class RatNum extends Number implements Comparable<RatNum> {
    */
   @Override
   @SideEffectFree
-
   public long longValue() {
     return intValue();
   }

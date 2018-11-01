@@ -1,10 +1,9 @@
 package hw2;
 
+import java.util.*;
 import org.checkerframework.checker.initialization.qual.UnknownInitialization;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.checkerframework.dataflow.qual.SideEffectFree;
-
-import java.util.*;
 
 /**
  * <b>RatPoly</b> represents an immutable single-variate polynomial expression. RatPolys are sums of

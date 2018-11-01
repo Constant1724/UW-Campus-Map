@@ -7,18 +7,18 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 public class NullFilledLinkedList {
 
   // Abstraction Function:
-  // AF(this) = An ordered list where this.head is the first node in the 
-  // list, tail is the last node in the list, and the nth index of this is 
-  // stored in the value of this.head.next.next.next... 
+  // AF(this) = An ordered list where this.head is the first node in the
+  // list, tail is the last node in the list, and the nth index of this is
+  // stored in the value of this.head.next.next.next...
   // (using .next n times).
   // Iff this list is empty, this.head == null.
   //
   // Representation Invariant:
   // true
 
-  /** the first element of this list*/
+  /** the first element of this list */
   private @Nullable LinkedListNode head;
-  /** the last element of this list*/
+  /** the last element of this list */
   private @Nullable LinkedListNode tail;
 
   /**
@@ -44,7 +44,7 @@ public class NullFilledLinkedList {
 
     if (head == null) {
       head = node;
-    } 
+    }
     if (tail == null) {
       tail = node;
     } else {
@@ -54,6 +54,6 @@ public class NullFilledLinkedList {
   }
 
   /** Throws an exception if the representation invariant is violated. */
-  private void checkRep(@UnknownInitialization (NullFilledLinkedList.class) NullFilledLinkedList this) {
-  }
+  private void checkRep(
+      @UnknownInitialization(NullFilledLinkedList.class) NullFilledLinkedList this) {}
 }

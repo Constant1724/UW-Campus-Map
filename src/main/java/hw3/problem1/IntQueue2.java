@@ -54,12 +54,10 @@ public class IntQueue2 {
    * Enqueue an item.
    *
    * @param entry item to be added to the queue
-   *
    * @spec.requires entry != null
    * @spec.modifies this
    * @spec.effects places entry at the end of the queue
    */
-
   public void enqueue(Integer entry) {
     // Enlarge queue if necessary
     if (size == entries.length) {
@@ -103,7 +101,6 @@ public class IntQueue2 {
   public Integer front() {
     return entries[front];
   }
-
 
   /** @return number of elements in the queue */
   @SideEffectFree

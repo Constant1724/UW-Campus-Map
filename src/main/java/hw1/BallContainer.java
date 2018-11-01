@@ -1,12 +1,10 @@
 package hw1;
 
-import org.checkerframework.dataflow.qual.Pure;
-import org.checkerframework.dataflow.qual.SideEffectFree;
-
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.Set;
+import org.checkerframework.dataflow.qual.SideEffectFree;
 
 /**
  * This is a container can be used to contain Balls. A given Ball may only appear in a BallContainer
