@@ -13,13 +13,11 @@ public class MarvelParser {
   /** A checked exception class for bad data files. */
   @SuppressWarnings("serial")
   public static class MalformedDataException extends Exception {
-    /**
-     *  Constructs a checked exception for bad data files.
-     */
+    /** Constructs a checked exception for bad data files. */
     public MalformedDataException() {}
 
     /**
-     *  Constructs a checked exception for bad data files with message.
+     * Constructs a checked exception for bad data files with message.
      *
      * @param message error message
      */
@@ -28,7 +26,7 @@ public class MarvelParser {
     }
 
     /**
-     *  Constructs a checked exception for bad data files with cause.
+     * Constructs a checked exception for bad data files with cause.
      *
      * @param cause the cause of exception
      */
@@ -37,7 +35,7 @@ public class MarvelParser {
     }
 
     /**
-     *  Constructs a checked exception for bad data files with message and cause.
+     * Constructs a checked exception for bad data files with message and cause.
      *
      * @param message error message
      * @param cause the cause of exception
