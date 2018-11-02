@@ -32,20 +32,28 @@ dependencies {
 /// Testing
 ///
 
-task copyTestScripts(type: Copy) {
+task copyHw3TestScripts(type: Copy) {
   from "src/test/java/hw3"
   include "*.test", "*.expected"
   into "${buildDir}/classes/java/test/hw3/"
+}
+
+task copyHw6TestScripts(type: Copy) {
+  from "src/test/java/hw6"
+  include "*.test", "*.expected"
+  into "${buildDir}/classes/java/test/hw6/"
 }
 
 test {
   // Comment out a line to start work on that homework.
   // exclude 'hw2/**'
   // exclude 'hw3/**'
-  exclude 'hw4/**'
-  exclude 'hw5/**'
+  // exclude 'hw4/**'
+  // exclude 'hw5/**'
+  exclude 'hw6/**'
 }
-test.dependsOn copyTestScripts
+test.dependsOn copyHw3TestScripts
+test.dependsOn copyHw6TestScripts
 
 tasks.withType(Test) {
     enableAssertions = true
