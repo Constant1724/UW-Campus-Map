@@ -4,6 +4,8 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.Set;
+
+import org.checkerframework.dataflow.qual.Pure;
 import org.checkerframework.dataflow.qual.SideEffectFree;
 
 /**
@@ -90,7 +92,7 @@ public class BallContainer implements Iterable<Ball> {
    *
    * @return the volume of the contents of the container
    */
-  @SideEffectFree
+  @Pure
   public double getVolume() {
     // Your code goes here.  Remove the exception after you're done.
     return sumVolume;
@@ -101,7 +103,7 @@ public class BallContainer implements Iterable<Ball> {
    *
    * @return the number of Balls in this container
    */
-  @SideEffectFree
+  @Pure
   public int size() {
     // Your code goes here.  Remove the exception after you're done.
     return numOfBalls;
@@ -123,7 +125,7 @@ public class BallContainer implements Iterable<Ball> {
    * @spec.requires b != null
    * @return true if this container contains the specified Ball. Returns false otherwise.
    */
-  @SideEffectFree
+  @Pure
   public boolean contains(Ball b) {
     // Your code goes here.  Remove the exception after you're done.
     return contents.contains(b);

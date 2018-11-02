@@ -3,6 +3,7 @@ package hw3;
 import java.util.Objects;
 import org.checkerframework.checker.initialization.qual.UnknownInitialization;
 import org.checkerframework.checker.nullness.qual.*;
+import org.checkerframework.dataflow.qual.Pure;
 import org.checkerframework.dataflow.qual.SideEffectFree;
 
 /**
@@ -57,8 +58,8 @@ public class Edge {
    *
    * @return the start Node of this Edge
    */
-  @SideEffectFree
-  public @NonNull Node getStart() {
+  @Pure
+  public Node getStart() {
     return this.start;
   }
 
@@ -67,7 +68,7 @@ public class Edge {
    *
    * @return the end Node of this Edge
    */
-  @SideEffectFree
+  @Pure
   public Node getEnd() {
     return this.end;
   }
@@ -77,7 +78,7 @@ public class Edge {
    *
    * @return the label of this Edge
    */
-  @SideEffectFree
+  @Pure
   public String getLabel() {
     return this.label;
   }
@@ -88,7 +89,7 @@ public class Edge {
    * @return an int that all objects equal to this will also return.
    */
   @Override
-  @SideEffectFree
+  @Pure
   public int hashCode() {
     return Objects.hash(this.start, this.end, this.label);
   }
@@ -100,7 +101,7 @@ public class Edge {
    * @return true if and only if 'this' and 'obj' represent the same Edge.
    */
   @Override
-  @SideEffectFree
+  @Pure
   public boolean equals(@Nullable Object obj) {
     if (!(obj instanceof Edge)) {
       return false;

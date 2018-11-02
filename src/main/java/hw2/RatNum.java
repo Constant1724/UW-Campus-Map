@@ -2,6 +2,7 @@ package hw2;
 
 import org.checkerframework.checker.initialization.qual.UnknownInitialization;
 import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.dataflow.qual.Pure;
 import org.checkerframework.dataflow.qual.SideEffectFree;
 
 /**
@@ -92,6 +93,7 @@ public final class RatNum extends Number implements Comparable<RatNum> {
   }
 
   /** Checks that the representation invariant holds (if any). */
+  @SideEffectFree
   private void checkRep(@UnknownInitialization(RatNum.class) RatNum this) {
     assert (denom >= 0) : "Denominator of a RatNum cannot be less than zero";
     if (denom > 0) {
@@ -105,7 +107,7 @@ public final class RatNum extends Number implements Comparable<RatNum> {
    *
    * @return true iff this is NaN (not-a-number)
    */
-  @SideEffectFree
+  @Pure
   public boolean isNaN() {
     return (denom == 0);
   }
@@ -115,7 +117,7 @@ public final class RatNum extends Number implements Comparable<RatNum> {
    *
    * @return true iff {@code this < 0}
    */
-  @SideEffectFree
+  @Pure
   public boolean isNegative() {
     return (compareTo(ZERO) < 0);
   }
@@ -125,7 +127,7 @@ public final class RatNum extends Number implements Comparable<RatNum> {
    *
    * @return true iff {@code this > 0}
    */
-  @SideEffectFree
+  @Pure
   public boolean isPositive() {
     return (compareTo(ZERO) > 0);
   }
@@ -139,7 +141,7 @@ public final class RatNum extends Number implements Comparable<RatNum> {
    *     this > rn}
    */
   @Override
-  @SideEffectFree
+  @Pure
   public int compareTo(RatNum rn) {
     if (this.isNaN() && rn.isNaN()) {
       return 0;
@@ -163,7 +165,7 @@ public final class RatNum extends Number implements Comparable<RatNum> {
    *     Specification, section 4.2.3</a>, for more details.
    */
   @Override
-  @SideEffectFree
+  @Pure
   public double doubleValue() {
     if (isNaN()) {
       return Double.NaN;
@@ -178,7 +180,7 @@ public final class RatNum extends Number implements Comparable<RatNum> {
    * integer.
    */
   @Override
-  @SideEffectFree
+  @Pure
   public int intValue() {
     // round to nearest by adding +/- .5 before truncating division.
     // we expect the implementation to use "round half away from zero".
@@ -195,7 +197,7 @@ public final class RatNum extends Number implements Comparable<RatNum> {
 
   /** Returns a float approximation for this. This method is specified by our superclass, Number. */
   @Override
-  @SideEffectFree
+  @Pure
   public float floatValue() {
     return (float) doubleValue();
   }
@@ -205,7 +207,7 @@ public final class RatNum extends Number implements Comparable<RatNum> {
    * value returned is rounded to the nearest long.
    */
   @Override
-  @SideEffectFree
+  @Pure
   public long longValue() {
     return intValue();
   }
@@ -287,7 +289,7 @@ public final class RatNum extends Number implements Comparable<RatNum> {
    * @spec.requires b != 0
    * @return d such that a % d = 0 and b % d = 0
    */
-  @SideEffectFree
+  @Pure
   private static int gcd(int a, int b) {
     // Euclid's method
     if (b == 0) {
@@ -307,7 +309,7 @@ public final class RatNum extends Number implements Comparable<RatNum> {
    * @return an int that all objects equal to this will also return.
    */
   @Override
-  @SideEffectFree
+  @Pure
   public int hashCode() {
     // all instances that are NaN must return the same hashcode;
     if (this.isNaN()) {
@@ -324,7 +326,7 @@ public final class RatNum extends Number implements Comparable<RatNum> {
    *     same rational number. Note that NaN = NaN for RatNums.
    */
   @Override
-  @SideEffectFree
+  @Pure
   public boolean equals(@Nullable Object obj) {
     if (obj instanceof RatNum) {
       RatNum rn = (RatNum) obj;
@@ -346,7 +348,7 @@ public final class RatNum extends Number implements Comparable<RatNum> {
    *     decimal notation and M != 0.
    */
   @Override
-  @SideEffectFree
+  @Pure
   public String toString() {
     // using '+' as String concatenation operator in this method
     if (isNaN()) {

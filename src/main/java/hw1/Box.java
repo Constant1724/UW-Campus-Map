@@ -1,6 +1,8 @@
 package hw1;
 
 import java.util.*;
+
+import org.checkerframework.dataflow.qual.Pure;
 import org.checkerframework.dataflow.qual.SideEffectFree;
 
 /**
@@ -105,7 +107,7 @@ public class Box implements Iterable<Ball> {
    *
    * @return the volume of the contents of the box
    */
-  @SideEffectFree
+  @Pure
   public double getVolume() {
     return ballContainer.getVolume();
   }
@@ -115,7 +117,7 @@ public class Box implements Iterable<Ball> {
    *
    * @return the number of Balls in this box
    */
-  @SideEffectFree
+  @Pure
   public int size() {
     return ballContainer.size();
   }
@@ -133,7 +135,7 @@ public class Box implements Iterable<Ball> {
    * @spec.requires b != null
    * @return true if this box contains the specified Ball. Returns false otherwise.
    */
-  @SideEffectFree
+  @Pure
   public boolean contains(Ball b) {
     return ballContainer.contains(b);
   }

@@ -3,6 +3,7 @@ package hw3;
 import java.util.*;
 import org.checkerframework.checker.initialization.qual.UnknownInitialization;
 import org.checkerframework.checker.nullness.qual.*;
+import org.checkerframework.dataflow.qual.Pure;
 import org.checkerframework.dataflow.qual.SideEffectFree;
 
 /**
@@ -91,7 +92,7 @@ public class Graph {
    *
    * @return a set of all nodes in the graph.
    */
-  @SideEffectFree
+  @Pure
   public Set<@KeyFor("map") Node> getNodes() {
     checkRep();
     Set<@KeyFor("map") Node> result = Collections.unmodifiableSet(this.map.keySet());
@@ -105,7 +106,7 @@ public class Graph {
    *
    * @return a set of all edges in the graph.
    */
-  @SideEffectFree
+  @Pure
   public Set<Edge> getEdges() {
     checkRep();
 
@@ -125,7 +126,7 @@ public class Graph {
    * @param node to be checked if in the graph
    * @return True iff node is in graph
    */
-  @SideEffectFree
+  @Pure
   public boolean containNode(Node node) {
     checkRep();
     boolean result = this.map.containsKey(node);
@@ -194,13 +195,12 @@ public class Graph {
    * @param edge to be checked if in the graph
    * @return True iff edge is in graph
    */
-  @SideEffectFree
+  @Pure
   public boolean containEdge(Edge edge) {
     checkRep();
     boolean result = false;
-    Node start = edge.getStart();
-    if (this.map.containsKey(start)) {
-      result = this.map.get(start).contains(edge);
+    if (this.map.containsKey(edge.getStart())) {
+      result = this.map.get(edge.getStart()).contains(edge);
     }
     checkRep();
     return result;
@@ -221,13 +221,11 @@ public class Graph {
    */
   public boolean addEdge(Edge edge) {
     checkRep();
-    Node start = edge.getStart();
-    Node end = edge.getEnd();
-    if (!this.map.containsKey(start) || !this.map.containsKey(end)) {
+    if (!this.map.containsKey(edge.getStart()) || !this.map.containsKey(edge.getEnd())) {
       checkRep();
       return false;
     }
-    boolean result = this.map.get(start).add(edge);
+    boolean result = this.map.get(edge.getStart()).add(edge);
     checkRep();
     return result;
   }
@@ -245,9 +243,8 @@ public class Graph {
   public boolean removeEdge(Edge edge) {
     checkRep();
     boolean result = false;
-    Node start = edge.getStart();
-    if (this.map.containsKey(start)) {
-      result = this.map.get(start).remove(edge);
+    if (this.map.containsKey(edge.getStart())) {
+      result = this.map.get(edge.getStart()).remove(edge);
     }
     checkRep();
     return result;

@@ -3,6 +3,7 @@ package hw2;
 import java.util.*;
 import org.checkerframework.checker.initialization.qual.UnknownInitialization;
 import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.dataflow.qual.Pure;
 import org.checkerframework.dataflow.qual.SideEffectFree;
 
 /**
@@ -105,7 +106,7 @@ public final class RatPoly {
    * @spec.requires !this.isNaN()
    * @return the largest exponent with a non-zero coefficient, or 0 if this is "0".
    */
-  @SideEffectFree
+  @Pure
   public int degree() {
     if (this.terms.isEmpty()) {
       return 0;
@@ -137,7 +138,7 @@ public final class RatPoly {
    *
    * @return true if and only if this has some coefficient = "NaN".
    */
-  @SideEffectFree
+  @Pure
   public boolean isNaN() {
     for (RatTerm term : this.terms) {
       if (term.isNaN()) {
@@ -406,7 +407,7 @@ public final class RatPoly {
    *     lowerBound and upperBound. If this.isNaN(), or either lowerBound or upperBound is
    *     Double.NaN, return Double.NaN.
    */
-  @SideEffectFree
+  @Pure
   public double integrate(double lowerBound, double upperBound) {
     RatPoly antiDifferentiated = this.antiDifferentiate(RatNum.ZERO);
     return antiDifferentiated.eval(upperBound) - antiDifferentiated.eval(lowerBound);
@@ -419,7 +420,7 @@ public final class RatPoly {
    * @return the value of this polynomial when evaluated at 'd'. For example, "x+2" evaluated at 3
    *     is 5, and "x^2-x" evaluated at 3 is 6. if (this.isNaN() == true), return Double.NaN
    */
-  @SideEffectFree
+  @Pure
   public double eval(double d) {
     if (this.isNaN()) {
       return Double.NaN;
@@ -448,7 +449,7 @@ public final class RatPoly {
    *     <p>Valid example outputs include "x^17-3/2*x^2+1", "-x+1", "-1/2", and "0".
    */
   @Override
-  @SideEffectFree
+  @Pure
   public String toString() {
     if (terms.size() == 0) {
       return "0";
@@ -523,7 +524,7 @@ public final class RatPoly {
    * @return an int that all objects equal to this will also return.
    */
   @Override
-  @SideEffectFree
+  @Pure
   public int hashCode() {
     // all instances that are NaN must return the same hashcode;
     if (this.isNaN()) {
@@ -540,7 +541,7 @@ public final class RatPoly {
    *     the same rational polynomial. Note that all NaN RatPolys are equal.
    */
   @Override
-  @SideEffectFree
+  @Pure
   public boolean equals(@Nullable Object obj) {
     if (obj instanceof RatPoly) {
       RatPoly rp = (RatPoly) obj;

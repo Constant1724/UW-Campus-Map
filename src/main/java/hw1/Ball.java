@@ -1,5 +1,6 @@
 package hw1;
 
+import org.checkerframework.dataflow.qual.Pure;
 import org.checkerframework.dataflow.qual.SideEffectFree;
 
 /** This is a simple object that has a volume. */
@@ -23,7 +24,7 @@ public class Ball {
    *
    * @return the volume of this Ball
    */
-  @SideEffectFree
+  @Pure
   public double getVolume() {
     return this.volume;
   }
