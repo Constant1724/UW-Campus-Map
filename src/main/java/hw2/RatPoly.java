@@ -123,7 +123,7 @@ public final class RatPoly {
    * @return the RatTerm of degree 'deg'. If there is no term of degree 'deg' in this poly, then
    *     returns the zero RatTerm.
    */
-  @SideEffectFree
+  @Pure
   public RatTerm getTerm(int deg) {
     for (RatTerm term : this.terms) {
       if (term.getExpt() == deg) {

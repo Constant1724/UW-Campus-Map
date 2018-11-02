@@ -1,6 +1,7 @@
 package hw3.problem1;
 
 import org.checkerframework.checker.initialization.qual.UnknownInitialization;
+import org.checkerframework.dataflow.qual.Pure;
 import org.checkerframework.dataflow.qual.SideEffectFree;
 
 /**
@@ -97,19 +98,19 @@ public class IntQueue2 {
    * @spec.requires size() &gt; 0
    * @return the item currently first in the queue
    */
-  @SideEffectFree
+  @Pure
   public Integer front() {
     return entries[front];
   }
 
   /** @return number of elements in the queue */
-  @SideEffectFree
+  @Pure
   public int size() {
     return size;
   }
 
   /** @return size() == 0 */
-  @SideEffectFree
+  @Pure
   public boolean isEmpty() {
     return size == 0;
   }

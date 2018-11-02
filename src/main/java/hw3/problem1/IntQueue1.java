@@ -4,6 +4,7 @@ import java.util.LinkedList;
 import java.util.List;
 import org.checkerframework.checker.initialization.qual.UnknownInitialization;
 import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.dataflow.qual.Pure;
 import org.checkerframework.dataflow.qual.SideEffectFree;
 
 /**
@@ -70,19 +71,19 @@ public class IntQueue1 {
    * @spec.requires size() &gt; 0
    * @return the item currently first in the queue
    */
-  @SideEffectFree
+  @Pure
   public Integer front() {
     return entries.get(0);
   }
 
   /** @return number of elements in the queue */
-  @SideEffectFree
+  @Pure
   public int size() {
     return entries.size();
   }
 
   /** @return size() == 0 */
-  @SideEffectFree
+  @Pure
   public boolean isEmpty() {
     return entries.isEmpty();
   }
