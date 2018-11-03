@@ -50,7 +50,7 @@ test {
   // exclude 'hw3/**'
   // exclude 'hw4/**'
   // exclude 'hw5/**'
-  exclude 'hw6/**'
+  // exclude 'hw6/**'
 }
 test.dependsOn copyHw3TestScripts
 test.dependsOn copyHw6TestScripts
