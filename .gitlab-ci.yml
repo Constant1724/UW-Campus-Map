@@ -1,2 +1,2 @@
 validate:
-  script: chmod +x gradlew && ./gradlew validateWorkingCopy
+  script: curl -s https://courses.cs.washington.edu/courses/cse331/18au/gitlab/script.sh | bash
