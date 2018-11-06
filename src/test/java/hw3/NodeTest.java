@@ -5,7 +5,6 @@ import static org.junit.Assert.*;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.Timeout;
-
 public class NodeTest {
   @Rule public Timeout globalTimeout = Timeout.seconds(10); // 10 seconds max per method tested
 
@@ -18,8 +17,8 @@ public class NodeTest {
    * @param content content of a Node.
    * @return a new Node with content as its description.
    */
-  public static Node create(String content) {
-    return new Node(content);
+  public static Graph.Node create(String content) {
+    return new Graph().new Node(content);
   }
 
   /** try to create Node with empty, space and character content. */

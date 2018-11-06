@@ -142,7 +142,7 @@ public class HW3TestDriver {
   private void addNode(String graphName, String nodeName) {
     // Insert your code here.
     Graph graph = graphs.get(graphName);
-    graph.addNode(new Node(nodeName));
+    graph.addNode(NodeTest.create(nodeName));
     output.println(String.format("added node %s to %s", nodeName, graphName));
   }
 
@@ -162,7 +162,7 @@ public class HW3TestDriver {
   private void addEdge(String graphName, String parentName, String childName, String edgeLabel) {
     // Insert your code here.
     Graph graph = graphs.get(graphName);
-    graph.addEdge(new Edge(new Node(parentName), new Node(childName), edgeLabel));
+    graph.addEdge(EdgeTest.create(NodeTest.create(parentName), NodeTest.create(childName), edgeLabel));
     String out =
         String.format(
             "added edge %s from %s to %s in %s", edgeLabel, parentName, childName, graphName);
@@ -182,7 +182,7 @@ public class HW3TestDriver {
     // Insert your code here.
     Graph graph = graphs.get(graphName);
     List<String> list = new ArrayList<String>();
-    for (Node node : graph.getNodes()) {
+    for (Graph.Node node : graph.getNodes()) {
       list.add(node.getContent());
     }
     Collections.sort(list);
@@ -207,9 +207,9 @@ public class HW3TestDriver {
     // Insert your code here.
     Graph graph = graphs.get(graphName);
     String out = String.format("the children of %s in %s are:", parentName, graphName);
-    List<Edge> list = new ArrayList<Edge>();
-    for (Edge edge : graph.getEdges()) {
-      if (edge.getStart().equals(new Node(parentName))) {
+    List<Graph.Edge> list = new ArrayList<Graph.Edge>();
+    for (Graph.Edge edge : graph.getEdges()) {
+      if (edge.getStart().equals(NodeTest.create(parentName))) {
         list.add(edge);
       }
     }
@@ -221,7 +221,7 @@ public class HW3TestDriver {
             return e1.getEnd().getContent().compareTo(e2.getEnd().getContent());
           }
         });
-    for (Edge edge : list) {
+    for (Graph.Edge edge : list) {
       out += String.format(" %s(%s)", edge.getEnd().getContent(), edge.getLabel());
     }
     output.println(out);

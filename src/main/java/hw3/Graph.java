@@ -7,7 +7,7 @@ import org.checkerframework.dataflow.qual.Pure;
 import org.checkerframework.dataflow.qual.SideEffectFree;
 
 /**
- * Graph represents a mutable, directed and cyclic graph. Duplicate of nodes and edges in graph is
+ * Graph represents a mutable, directed and cyclic graph. Duplicate of nodes or edges in graph is
  * not allowed.
  *
  * <p>Client can add, remove or view any nodes or edges. Note that if a node is removed, any edges
@@ -15,10 +15,13 @@ import org.checkerframework.dataflow.qual.SideEffectFree;
  *
  * <p>Client may also find the path from one node to another.
  *
+ * <p>Node and Edge are helper class and represent a node and a edge in the graph, respectively.
+ *
  * <p>Specification field:
  *
  * @spec.specfield Nodes : a set of Nodes // Represent all Nodes in this Graph.
  * @spec.specfield Edges : a set of Edges // Represent all Edges in this Graph.
+ *
  *     <p>Abstract Invariant: The two nodes of any Edge in Graph.Edges must be in Graph.Nodes.
  */
 public class Graph {
@@ -249,4 +252,187 @@ public class Graph {
     checkRep();
     return result;
   }
+
+  /**
+   * Node represent a immutable vertex in a graph.
+   *
+   * <p>It holds the description about this Node.
+   *
+   * <p>Specification fields:
+   *
+   * @spec.specfield content : String // The description about this Node.
+   *     <p>Abstract Invariant: Any Node should have a unique, non Null description. Equality means
+   *     two Nodes are equal iff they have the same content.
+   */
+  public class Node {
+    /** the description(content) of this node */
+    private String content;
+
+    // Abstraction Function:
+    // content is the description of this Node. It is also a unique identifier of the Node.
+
+    // Representation Invariant:
+    //      content != Null (Node should always have valid content)
+
+    /**
+     * @param content the content of the Node.
+     * @spec.requires content != Null
+     * @spec.effects creates a new Node with the given content as description.
+     */
+    public Node(String content) {
+      this.content = content;
+      checkRep();
+    }
+
+    /** Checks that the representation invariant holds (if any). */
+    @SideEffectFree
+    private void checkRep(@UnknownInitialization(Node.class) Node this) {
+      assert (content != null);
+    }
+
+    /**
+     * return the content of the Node
+     *
+     * @return content of the Node
+     */
+    @Pure
+    public String getContent() {
+      return this.content;
+    }
+
+    /**
+     * Standard hashCode function.
+     *
+     * @return an int that all objects equal to this will also return.
+     */
+    @Override
+    @Pure
+    public int hashCode() {
+      return this.content.hashCode();
+    }
+
+    /**
+     * Standard equality operation.
+     *
+     * @param obj The object to be compared for equality.
+     * @return true if and only if 'this' and 'obj' represent the same Node.
+     */
+    @Override
+    @Pure
+    public boolean equals(@Nullable Object obj) {
+      if (!(obj instanceof Node)) {
+        return false;
+      }
+
+      return this.content.equals(((Node) obj).content);
+    }
+  }
+
+  /**
+   * Edge represents an immutable, directed, weighted edge in a graph
+   *
+   * <p>Specification fields:
+   *
+   * @spec.specfield start : Node // The start node of this edge.
+   * @spec.specfield end : Node // The end node of this edge.
+   * @spec.specfield label : String // The label of this edge.
+   *     <p>Abstract Invariant: All edges should have a start and an end, with a label. Equality
+   *     means two Edges are equal iff they have the same start, end and cost.
+   */
+  public class Edge {
+    /** the start of this edge */
+    private Node start;
+    /** the end of this edge */
+    private Node end;
+    /** the label of this edge */
+    private String label;
+
+    // Abstraction Function:
+    //  An edge is defined with this.start  as its starting Node
+    //                      and this.end    as its ending Node
+    //                      and this.label  as its label.
+
+    // Representation Invariant:
+    //      start != null && end != null && label != null (All fields should be valid)
+
+    /**
+     * @param start the start of this Edge.
+     * @param end the end of this Edge.
+     * @param label the label of this Edge.
+     * @spec.requires start != null and end != null and label != null
+     * @spec.effects creates a new edge from start to end with label.
+     */
+    public Edge(Node start, Node end, String label) {
+      this.start = start;
+      this.end = end;
+      this.label = label;
+      checkRep();
+    }
+
+    /** Checks that the representation invariant holds (if any). */
+    @SideEffectFree
+    private void checkRep(@UnknownInitialization(Edge.class) Edge this) {
+      assert (this.start != null && this.end != null && this.label != null);
+    }
+
+    /**
+     * get the start Node of this Edge
+     *
+     * @return the start Node of this Edge
+     */
+    @Pure
+    public Node getStart() {
+      return this.start;
+    }
+
+    /**
+     * get the end Node of this Edge
+     *
+     * @return the end Node of this Edge
+     */
+    @Pure
+    public Node getEnd() {
+      return this.end;
+    }
+
+    /**
+     * get the label of this Edge
+     *
+     * @return the label of this Edge
+     */
+    @Pure
+    public String getLabel() {
+      return this.label;
+    }
+
+    /**
+     * Standard hashCode function.
+     *
+     * @return an int that all objects equal to this will also return.
+     */
+    @Override
+    @Pure
+    public int hashCode() {
+      return Objects.hash(this.start, this.end, this.label);
+    }
+
+    /**
+     * Standard equality operation.
+     *
+     * @param obj The object to be compared for equality.
+     * @return true if and only if 'this' and 'obj' represent the same Edge.
+     */
+    @Override
+    @Pure
+    public boolean equals(@Nullable Object obj) {
+      if (!(obj instanceof Edge)) {
+        return false;
+      }
+      Edge other = (Edge) obj;
+
+      return this.start.equals(other.getStart())
+          && this.end.equals(other.getEnd())
+          && this.label.equals(other.label);
+    }
+    }
 }

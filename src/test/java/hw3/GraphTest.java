@@ -13,30 +13,30 @@ import org.junit.rules.Timeout;
 public class GraphTest {
   @Rule public Timeout globalTimeout = Timeout.seconds(10); // 10 seconds max per method tested
 
-  private static final Node A = NodeTest.create("A");
-  private static final Node B = NodeTest.create("B");
-  private static final Node C = NodeTest.create("C");
-  private static final Node D = NodeTest.create("D");
-  private static final Node EXCLUDE = NodeTest.create("EXCLUDE");
+  private static final Graph.Node A = NodeTest.create("A");
+  private static final Graph.Node B = NodeTest.create("B");
+  private static final Graph.Node C = NodeTest.create("C");
+  private static final Graph.Node D = NodeTest.create("D");
+  private static final Graph.Node EXCLUDE = NodeTest.create("EXCLUDE");
 
   private static final String LABEL = "AHHh";
   private static final String ANOTHER_LABEL = "AHHHHHHHHHHHHHH";
 
-  private static final Edge A_TO_B = EdgeTest.create(A, B, ANOTHER_LABEL);
+  private static final Graph.Edge A_TO_B = EdgeTest.create(A, B, ANOTHER_LABEL);
 
-  private static final Edge A_TO_A = EdgeTest.create(A, A, ANOTHER_LABEL);
+  private static final Graph.Edge A_TO_A = EdgeTest.create(A, A, ANOTHER_LABEL);
 
-  private List<Node> Nodes;
-  private List<Edge> Edges;
+  private List<Graph.Node> Nodes;
+  private List<Graph.Edge> Edges;
 
   private void addNodesToGraph(Graph g) {
-    for (Node node : this.Nodes) {
+    for (Graph.Node node : this.Nodes) {
       g.addNode(node);
     }
   }
 
   private void addEdgesToGraph(Graph g) {
-    for (Edge edge : this.Edges) {
+    for (Graph.Edge edge : this.Edges) {
       g.addEdge(edge);
     }
   }
@@ -44,7 +44,7 @@ public class GraphTest {
   @Before
   public void initialize() {
 
-    this.Nodes = new ArrayList<Node>();
+    this.Nodes = new ArrayList<Graph.Node>();
     this.Nodes.add(A);
     this.Nodes.add(B);
     this.Nodes.add(C);
@@ -54,9 +54,9 @@ public class GraphTest {
       this.Nodes.add(NodeTest.create(i.toString()));
     }
 
-    this.Edges = new ArrayList<Edge>();
-    for (Node start : this.Nodes) {
-      for (Node end : this.Nodes) {
+    this.Edges = new ArrayList<Graph.Edge>();
+    for (Graph.Node start : this.Nodes) {
+      for (Graph.Node end : this.Nodes) {
         this.Edges.add(EdgeTest.create(start, end, LABEL));
       }
     }
@@ -66,14 +66,14 @@ public class GraphTest {
   @Test
   public void testAddNode() {
     Graph graph = new Graph();
-    for (Node node : this.Nodes) {
-      // It should not contain the Node before add.
+    for (Graph.Node node : this.Nodes) {
+      // It should not contain the Graph.Node before add.
       assertFalse(graph.containNode(node));
 
       // Successful add operation should return True.
       assertTrue(graph.addNode(node));
 
-      // It should contain the Node after add.
+      // It should contain the Graph.Node after add.
       assertTrue(graph.containNode(node));
 
       // Adding duplicate should not succeed.
@@ -86,11 +86,11 @@ public class GraphTest {
   public void testContainNode() {
     Graph graph = new Graph();
 
-    for (Node node : this.Nodes) {
+    for (Graph.Node node : this.Nodes) {
       // Empty graph shall not contain any node
       assertFalse(graph.containNode(node));
     }
-    for (Node node : this.Nodes) {
+    for (Graph.Node node : this.Nodes) {
       graph.addNode(node);
       // After a node has been added, the graph should contain the node
       assertTrue(graph.containNode(node));
@@ -105,14 +105,14 @@ public class GraphTest {
     addNodesToGraph(graph);
 
     // Check if removeNode actually removes the node.
-    for (Node node : this.Nodes) {
+    for (Graph.Node node : this.Nodes) {
       // Before remove, the graph should contain the node
       assertTrue(graph.containNode(node));
       // Successful remove operation should return True
       assertTrue(graph.removeNode(node));
       // After remove, the graph should not contain the node.
       assertFalse(graph.containNode(node));
-      // Node should not be able to be removed twice.
+      // Graph.Node should not be able to be removed twice.
       assertFalse(graph.removeNode(node));
     }
 
@@ -121,10 +121,10 @@ public class GraphTest {
     addNodesToGraph(graph);
     addEdgesToGraph(graph);
 
-    for (Node node : this.Nodes) {
+    for (Graph.Node node : this.Nodes) {
       graph.removeNode(node);
       // if any edge contain the node, check if the edge is removed
-      for (Edge edge : this.Edges) {
+      for (Graph.Edge edge : this.Edges) {
         if (edge.getStart().equals(node) || edge.getEnd().equals(node)) {
           assertFalse(graph.containEdge(edge));
         }
@@ -144,7 +144,7 @@ public class GraphTest {
     // size should be equal
     assertEquals(graph.getNodes().size(), this.Nodes.size());
 
-    for (Node node : this.Nodes) {
+    for (Graph.Node node : this.Nodes) {
       // each node should be available in the graph.
       assertTrue(graph.getNodes().contains(node));
     }
@@ -156,9 +156,9 @@ public class GraphTest {
     Graph graph = new Graph();
 
     addNodesToGraph(graph);
-    Set<Node> view = graph.getNodes();
+    Set<Graph.Node> view = graph.getNodes();
 
-    for (Node node : view) {
+    for (Graph.Node node : view) {
       // removing should not affect graph.
       view.remove(node);
       assertTrue(graph.containNode(node));
@@ -176,14 +176,14 @@ public class GraphTest {
     // make sure any edge with both nodes in graph, could be added to the graph,
     // and duplicate should not be added to the graph.
     addNodesToGraph(graph);
-    for (Edge edge : this.Edges) {
-      // It should not contain the Edge before add.
+    for (Graph.Edge edge : this.Edges) {
+      // It should not contain the Graph.Edge before add.
       assertFalse(graph.containEdge(edge));
 
       // Successful add operation should return True.
       assertTrue(graph.addEdge(edge));
 
-      // It should contain the Edge after add.
+      // It should contain the Graph.Edge after add.
       assertTrue(graph.containEdge(edge));
 
       // Adding duplicate should not succeed.
@@ -193,14 +193,14 @@ public class GraphTest {
     graph = new Graph();
 
     // make sure that any edge with neither nodes in graph, could not be added to the graph.
-    for (Edge edge : this.Edges) {
+    for (Graph.Edge edge : this.Edges) {
       assertFalse(graph.addEdge(edge));
     }
 
     // make sure that any edge with only one node in graph, could not be added to the graph.
-    for (Node node : this.Nodes) {
+    for (Graph.Node node : this.Nodes) {
       graph.addNode(node);
-      for (Edge edge : this.Edges) {
+      for (Graph.Edge edge : this.Edges) {
         if (graph.containNode(edge.getStart()) ^ graph.containNode(edge.getEnd())) {
           assertFalse(graph.addEdge(edge));
         }
@@ -214,11 +214,11 @@ public class GraphTest {
     Graph graph = new Graph();
     addNodesToGraph(graph);
 
-    for (Edge edge : this.Edges) {
+    for (Graph.Edge edge : this.Edges) {
       // Empty graph shall not contain any edge
       assertFalse(graph.containEdge(edge));
     }
-    for (Edge edge : this.Edges) {
+    for (Graph.Edge edge : this.Edges) {
       graph.addEdge(edge);
       // After a edge has been added, the graph should contain the edge
       assertTrue(graph.containEdge(edge));
@@ -234,19 +234,19 @@ public class GraphTest {
     addEdgesToGraph(graph);
 
     // Check if removeEdge actually removes the edge.
-    for (Edge edge : this.Edges) {
+    for (Graph.Edge edge : this.Edges) {
       // Before remove, the graph should contain the edge
       assertTrue(graph.containEdge(edge));
       // Successful remove operation should return True
       assertTrue(graph.removeEdge(edge));
       // After remove, the graph should not contain the edge.
       assertFalse(graph.containEdge(edge));
-      // Edge should not be able to be removed twice.
+      // Graph.Edge should not be able to be removed twice.
       assertFalse(graph.removeEdge(edge));
     }
 
-    // Remove edge should not remove any Node.
-    for (Node node : this.Nodes) {
+    // Remove edge should not remove any Graph.Node.
+    for (Graph.Node node : this.Nodes) {
       assertTrue(graph.containNode(node));
     }
   }
@@ -265,7 +265,7 @@ public class GraphTest {
     // size should be equal
     assertEquals(graph.getEdges().size(), this.Edges.size());
 
-    for (Edge edge : this.Edges) {
+    for (Graph.Edge edge : this.Edges) {
       // Each edge should be available in the graph.
       assertTrue(graph.getEdges().contains(edge));
     }
@@ -278,8 +278,8 @@ public class GraphTest {
 
     addNodesToGraph(graph);
     addEdgesToGraph(graph);
-    Set<Edge> view = graph.getEdges();
-    for (Edge edge : view) {
+    Set<Graph.Edge> view = graph.getEdges();
+    for (Graph.Edge edge : view) {
       // removing should not affect graph.
       view.remove(edge);
       assertTrue(graph.containEdge(edge));
