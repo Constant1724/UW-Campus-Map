@@ -7,8 +7,6 @@ import java.util.*;
 public class HW3TestDriver {
 
   public static void main(String args[]) {
-    List<String> list = new ArrayList<>();
-    System.out.println("Start");
     try {
       if (args.length > 1) {
         printUsage();
@@ -42,18 +40,18 @@ public class HW3TestDriver {
     }
   }
 
-  private static void printUsage() {
+  protected static void printUsage() {
     System.err.println("Usage:");
     System.err.println("to read from a file: java hw3.test.HW3TestDriver <name of input script>");
     System.err.println("to read from standard in: java hw3.test.HW3TestDriver");
   }
 
   /** String -> Graph: maps the names of graphs to the actual graph * */
-  private final Map<String, Graph> graphs = new HashMap<>();
+  protected final Map<String, Graph> graphs = new HashMap<>();
 
-  private final PrintWriter output;
+  protected final PrintWriter output;
 
-  private final BufferedReader input;
+  protected final BufferedReader input;
 
   /**
    * @spec.requires r != null && w != null
@@ -207,12 +205,8 @@ public class HW3TestDriver {
     // Insert your code here.
     Graph graph = graphs.get(graphName);
     String out = String.format("the children of %s in %s are:", parentName, graphName);
-    List<Graph.Edge> list = new ArrayList<Graph.Edge>();
-    for (Graph.Edge edge : graph.getEdges()) {
-      if (edge.getStart().equals(NodeTest.create(parentName))) {
-        list.add(edge);
-      }
-    }
+    List<Graph.Edge> list = new ArrayList<Graph.Edge>(graph.getEdges(graph.makeNode(parentName)));
+
     list.sort(
         (e1, e2) -> {
           if (e1.getEnd().getContent().compareTo(e2.getEnd().getContent()) == 0) {

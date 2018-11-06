@@ -18,7 +18,7 @@ public class NodeTest {
    * @return a new Node with content as its description.
    */
   public static Graph.Node create(String content) {
-    return new Graph().new Node(content);
+    return new Graph().makeNode(content);
   }
 
   /** try to create Node with empty, space and character content. */

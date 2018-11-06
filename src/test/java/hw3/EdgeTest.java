@@ -27,7 +27,7 @@ public class EdgeTest {
    */
   public static Graph.Edge create(Graph.Node start, Graph.Node end, String label) {
 
-    return new Graph().new Edge(start, end, label);
+    return new Graph().makeEdge(start, end, label);
   }
 
   @Test

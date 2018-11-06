@@ -104,20 +104,17 @@ public class Graph {
   }
 
   /**
-   * Return an unmodifiable view of all edges in the graph. Note that if the graph does not contain
-   * any Edges, it will an empty set
+   * Return an unmodifiable view of all out-edges in the graph for a given node. Note that if the node does not have
+   * any Edges, it will return an empty set
    *
-   * @return a set of all edges in the graph.
+   * @spec.requires node != null and map.containsKey(node)
+   * @param node the node to be searched to return all out-edges.
+   * @return a set of all out-edges in the graph for the node.
    */
   @Pure
-  public Set<Edge> getEdges() {
+  public Set<Edge> getEdges(Node node) {
     checkRep();
-
-    Set<Edge> result = new HashSet<Edge>();
-    for (Set<Edge> set : this.map.values()) {
-      result.addAll(set);
-    }
-    result = Collections.unmodifiableSet(result);
+    Set<Edge> result = Collections.unmodifiableSet(map.get(node));
     checkRep();
     return result;
   }
@@ -252,6 +249,31 @@ public class Graph {
     checkRep();
     return result;
   }
+    /**
+     *  create a new Node with content.
+     *
+     * @param content the content of the Node.
+     *
+     * @spec.requires content != Null
+     *
+     * @return a new instance of Node
+     */
+  public Node makeNode(String content) {
+      return new Node(content);
+  }
+    /**
+     *  create a new Edge with start, end and label
+     *
+     * @param start the start of this Edge.
+     * @param end the end of this Edge.
+     * @param label the label of this Edge.
+     * @spec.requires start != null and end != null and label != null
+     *
+     * @return a new instance of Edge
+     */
+  public Edge makeEdge(Node start, Node end, String label) {
+      return new Edge(start, end, label);
+  }
 
   /**
    * Node represent a immutable vertex in a graph.
@@ -279,7 +301,7 @@ public class Graph {
      * @spec.requires content != Null
      * @spec.effects creates a new Node with the given content as description.
      */
-    public Node(String content) {
+    private Node(String content) {
       this.content = content;
       checkRep();
     }
@@ -362,7 +384,7 @@ public class Graph {
      * @spec.requires start != null and end != null and label != null
      * @spec.effects creates a new edge from start to end with label.
      */
-    public Edge(Node start, Node end, String label) {
+    private Edge(Node start, Node end, String label) {
       this.start = start;
       this.end = end;
       this.label = label;

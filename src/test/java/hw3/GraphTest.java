@@ -5,10 +5,13 @@ import static org.junit.Assert.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+
+import com.sun.javafx.geom.Edge;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.Timeout;
+import sun.security.x509.EDIPartyName;
 
 public class GraphTest {
   @Rule public Timeout globalTimeout = Timeout.seconds(10); // 10 seconds max per method tested
@@ -260,14 +263,27 @@ public class GraphTest {
     addEdgesToGraph(graph);
 
     // the set object should not be null.
-    assertNotNull(graph.getEdges());
+    for (Graph.Node node : Nodes) {
+      assertNotNull(graph.getEdges(node));
+    }
 
-    // size should be equal
-    assertEquals(graph.getEdges().size(), this.Edges.size());
+    for (Graph.Node node : Nodes) {
+      Set<Graph.Edge> edges = graph.getEdges(node);
 
-    for (Graph.Edge edge : this.Edges) {
-      // Each edge should be available in the graph.
-      assertTrue(graph.getEdges().contains(edge));
+      // test if the return view only contains edges, whose start.equals(node)
+      for (Graph.Edge edge : edges) {
+        assertEquals(edge.getStart(), node);
+      }
+
+      // size should be equal
+      int count = 0;
+      for (Graph.Edge edge : Edges) {
+        if (edge.getStart().equals(node)) {
+          count++;
+        }
+      }
+      assertEquals(edges.size(), count);
+
     }
   }
 
@@ -278,14 +294,18 @@ public class GraphTest {
 
     addNodesToGraph(graph);
     addEdgesToGraph(graph);
-    Set<Graph.Edge> view = graph.getEdges();
-    for (Graph.Edge edge : view) {
-      // removing should not affect graph.
-      view.remove(edge);
-      assertTrue(graph.containEdge(edge));
-      // adding should not affect graph.
-      view.add(A_TO_B);
-      assertFalse(graph.containEdge(A_TO_B));
+
+    for (Graph.Node node : Nodes) {
+      Set<Graph.Edge> view = graph.getEdges(node);
+      for (Graph.Edge edge : view) {
+        // removing should not affect graph.
+        view.remove(edge);
+        assertTrue(graph.containEdge(edge));
+        // adding should not affect graph.
+        view.add(A_TO_B);
+        assertFalse(graph.containEdge(A_TO_B));
+      }
     }
+
   }
 }
