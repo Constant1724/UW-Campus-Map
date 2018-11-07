@@ -222,7 +222,7 @@ public class HW3TestDriver {
   }
 
   /** This exception results when the input file cannot be parsed properly. */
-  static class CommandException extends RuntimeException {
+  public static class CommandException extends RuntimeException {
 
     public CommandException() {
       super();

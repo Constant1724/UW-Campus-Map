@@ -71,7 +71,7 @@ public class MarvelPaths {
      * @param end   the end of the path to be searched
      * @return a list holding the path from start to end if there exists one, or null otherwise.
      */
-    public static List<Graph.Edge> findPath(Graph graph, Graph.Node start, Graph.Node end) {
+    public static @Nullable List<Graph.Edge> findPath(Graph graph, Graph.Node start, Graph.Node end) {
         Queue<Graph.Node> queue = new LinkedList<>();
         queue.add(start);
         Map<Graph.Node, List<Graph.Edge>> mapping = new HashMap<>();
