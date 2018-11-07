@@ -119,6 +119,7 @@ tasks.create(name: 'runErrorProne', type: JavaCompile, group: 'Validation') {
 
   options.compilerArgs = [
     '-Werror',
+    '-Xep:ClassCanBeStatic:OFF',
   ]
 }
 build.dependsOn runErrorProne
