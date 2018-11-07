@@ -1,0 +1,23 @@
+# START_TEST
+# NAME TwoHops
+# test a graph can be loaded and correctly find the path from A to B.
+
+# Create a graph
+CreateGraph graph1
+
+# AddNode
+AddNode graph1 ValidNode1
+AddNode graph1 ValidNode2
+AddNode graph1 ValidNode3
+AddNode graph1 ValidNode4
+AddNode graph1 ValidNode5
+AddNode graph1 ValidNode6
+AddEdge graph1 ValidNode1 ValidNode2 label12
+AddEdge graph1 ValidNode1 ValidNode3 label13
+AddEdge graph1 ValidNode1 ValidNode4 label14
+AddEdge graph1 ValidNode3 ValidNode5 label35
+AddEdge graph1 ValidNode5 ValidNode6 label56
+
+FindPath graph1 ValidNode1 ValidNode5
+
+# END_TEST

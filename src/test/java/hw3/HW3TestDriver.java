@@ -91,7 +91,7 @@ public class HW3TestDriver {
     }
   }
 
-  private void executeCommand(String command, List<String> arguments) {
+  protected void executeCommand(String command, List<String> arguments) {
     try {
       if (command.equals("CreateGraph")) {
         createGraph(arguments);

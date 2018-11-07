@@ -1,0 +1,14 @@
+# START_TEST
+# NAME UnknownCharacter
+# test a graph can be loaded and correctly find the path from A to B.
+
+# Create a graph and load data
+loaded graph heros
+
+
+unknown character Ernst
+unknown character Grossman
+
+unknown character Grossman
+
+# END_TEST

@@ -1,0 +1,11 @@
+# START_TEST
+# NAME SelfEdgeInLargeDataSet
+# test a graph can be loaded and correctly find the path from A to B.
+
+# Create a graph and load data
+LoadGraph heros marvel.tsv
+
+
+FindPath heros WISDOM,_PETER WISDOM,_PETER
+
+# END_TEST

@@ -62,14 +62,14 @@ public class MarvelPaths {
      *      the second element is the next step, the third element is the next next step..
      *      all the way to the end.
      *
-     *      If such a path does not exist, it will return an empty list.
+     *      If such a path does not exist, it will return null.
      *
      * @spec.requires graph != null and start != null and end != null
      *
      * @param graph the graph to be searched in
      * @param start the start of the path to be searched.
      * @param end   the end of the path to be searched
-     * @return a list holding the path from start to end if there exists one, and an empty list otherwise.
+     * @return a list holding the path from start to end if there exists one, or null otherwise.
      */
     public static List<Graph.Edge> findPath(Graph graph, Graph.Node start, Graph.Node end) {
         Queue<Graph.Node> queue = new LinkedList<>();
@@ -84,7 +84,7 @@ public class MarvelPaths {
             }
 
             // make a sorted view of currentEdges, so that alphabetically cost least path is guaranteed.
-            Queue<Graph.Edge> currentEdges = new PriorityQueue<Graph.Edge>(graph.getEdges(node).size(), (o1, o2) -> {
+            Queue<Graph.Edge> currentEdges = new PriorityQueue<>(graph.getEdges(node).size(), (o1, o2) -> {
                 if (o1.getEnd().equals(o2.getEnd())) {
                     return o1.getLabel().compareTo(o2.getLabel());
                 } else {
@@ -102,8 +102,8 @@ public class MarvelPaths {
             }
 
         }
-        // return empty if no path found.
-        return new LinkedList<>();
+        // return null if no path found.
+        return null;
     }
 }
 

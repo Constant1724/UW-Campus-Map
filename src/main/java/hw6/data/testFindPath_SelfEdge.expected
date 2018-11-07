@@ -1,0 +1,11 @@
+# START_TEST
+# NAME SelfEdge
+# test a graph can be loaded and correctly find the path from A to B.
+
+# Create a graph and load data
+loaded graph heros
+
+
+path from Ernst-the-Bicycling-Wizard to Ernst-the-Bicycling-Wizard:
+
+# END_TEST

@@ -1,0 +1,10 @@
+# START_TEST
+# NAME ListHugeNodes
+# test a graph can be loaded and correctly list edges for a node.
+
+# Create a graph and load data
+LoadGraph heros smallMarvel.tsv
+
+ListNodes heros
+
+# END_TEST

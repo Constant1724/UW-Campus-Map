@@ -1,0 +1,15 @@
+# START_TEST
+# NAME ListEdges
+# test a graph can be loaded and correctly list edges for a node.
+
+# Create a graph and load data
+LoadGraph heros small.tsv
+
+ListChildren heros Ernst-the-Bicycling-Wizard
+ListChildren heros Notkin-of-the-Superhuman-Beard
+ListChildren heros Perkins-the-Magical-Singing-Instructor
+
+# List Edge for an isolated node.
+ListChildren heros Grossman-the-Youngest-of-them-all
+
+# END_TEST

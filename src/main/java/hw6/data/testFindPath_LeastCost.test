@@ -1,0 +1,36 @@
+# START_TEST
+# NAME LeastCost
+# test a graph can be loaded and correctly find the path from A to B, with least
+# cost, as cost being the alphabetical ordering of edges and labels..
+
+# Create a graph
+CreateGraph graph1
+
+# AddNode
+AddNode graph1 ValidNode1
+AddNode graph1 ValidNode2
+AddNode graph1 ValidNode3
+AddNode graph1 ValidNode4
+AddNode graph1 ValidNode5
+AddNode graph1 ValidNode6
+
+AddEdge graph1 ValidNode1 ValidNode2 label12a
+AddEdge graph1 ValidNode1 ValidNode2 label12b
+
+AddEdge graph1 ValidNode1 ValidNode3 label13
+
+AddEdge graph1 ValidNode1 ValidNode4 label14a
+AddEdge graph1 ValidNode1 ValidNode4 label14b
+
+AddEdge graph1 ValidNode2 ValidNode5 label25
+
+AddEdge graph1 ValidNode5 ValidNode6 label56
+
+AddEdge graph1 ValidNode2 ValidNode6 label26a
+AddEdge graph1 ValidNode2 ValidNode6 label26b
+
+AddEdge graph1 ValidNode4 ValidNode6 label46a
+AddEdge graph1 ValidNode4 ValidNode6 label46b
+
+FindPath graph1 ValidNode1 ValidNode6
+# END_TEST

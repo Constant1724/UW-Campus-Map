@@ -1,0 +1,10 @@
+# START_TEST
+# NAME ListNodes
+# test a graph can be loaded and correctly list nodes.
+
+# Create a graph and load data
+loaded graph heros
+
+heros contains: Ernst-the-Bicycling-Wizard Grossman-the-Youngest-of-them-all Notkin-of-the-Superhuman-Beard Perkins-the-Magical-Singing-Instructor
+
+# END_TEST
