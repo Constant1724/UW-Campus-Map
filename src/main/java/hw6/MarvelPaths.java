@@ -17,6 +17,10 @@ public class MarvelPaths {
         long start = System.currentTimeMillis();
         Graph graph = loadData(MARVEL);
         long times = System.currentTimeMillis() - start;
+        if (graph == null) {
+            System.out.println("Malformed Data Detected");
+            System.exit(1);
+        }
         System.out.println("Loading complete in " + times + " ms");
 
         Scanner reader = new Scanner(System.in);  // Reading from System.in
@@ -117,15 +121,15 @@ public class MarvelPaths {
      * @return a list holding the path from start to end if there exists one, or null otherwise.
      */
     @SuppressWarnings({"nullness", "initialization", "incompatible"})
-    public static @Nullable List<Graph.Edge> findPath(Graph graph, Graph.@KeyFor("#1.map") Node start, Graph.@KeyFor("#1.map")Node end) {
+    public static @Nullable List<Graph.Edge> findPath(Graph graph, Graph.Node start, Graph.Node end) {
 
         Map<Graph.Node, List<Graph.Edge>> mapping = new HashMap<>();
         mapping.put(start, new LinkedList<>());
-        Queue<Graph.@KeyFor({"#1.map", "mapping"}) Node> queue = new LinkedList<>();
+        Queue<Graph.Node> queue = new LinkedList<>();
         queue.add(start);
 
         while (!queue.isEmpty()) {
-            Graph.@KeyFor({"#1.map", "mapping"}) Node node = queue.poll();
+            Graph.Node node = queue.poll();
             if (node.equals(end)) {
                 return mapping.get(node);
             }
