@@ -3,12 +3,9 @@ package hw6;
 import hw3.Graph;
 import hw3.HW3TestDriver;
 
-import java.io.Reader;
-import java.io.Writer;
+import java.io.*;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 /**
  * This class implements a testing driver which reads test scripts from files for testing Graph, the
@@ -17,9 +14,42 @@ import java.util.Set;
 public class HW6TestDriver extends HW3TestDriver {
     private static String path = "src/main/java/hw6/data/";
 
-  public static void main(String args[]) {}
+  public static void main(String args[]) {
+      try {
+      if (args.length > 1) {
+          printUsage();
+          return;
+      }
 
-  public HW6TestDriver(Reader r, Writer w) {super(r,w);}
+      HW3TestDriver td;
+
+      if (args.length == 0) {
+          td =
+                  new HW6TestDriver(new InputStreamReader(System.in), new OutputStreamWriter(System.out));
+      } else {
+
+          String fileName = args[0];
+          File tests = new File(fileName);
+
+          if (tests.exists() || tests.canRead()) {
+              td = new HW6TestDriver(new FileReader(tests), new OutputStreamWriter(System.out));
+          } else {
+              System.err.println("Cannot read from " + tests.toString());
+              printUsage();
+              return;
+          }
+      }
+
+      td.runTests();
+
+  } catch (IOException e) {
+      System.err.println(e.toString());
+      e.printStackTrace(System.err);
+  }}
+
+  public HW6TestDriver(Reader r, Writer w) {
+      super(r,w);
+  }
 
   @Override
   protected void executeCommand(String command, List<String> arguments) {
@@ -31,29 +61,31 @@ public class HW6TestDriver extends HW3TestDriver {
     superCommands.add("ListNodes");
     superCommands.add("ListChildren");
     try {
-        if (superCommands.contains(command)) {
-            super.executeCommand(command, arguments);
-        } else if (command.equals("LoadGraph")) {
-            loadGraph(arguments);
-        } else if (command.equals("FindPath ")) {
-            findPath(arguments);
-        } else {
-            output.println("Unrecognized command: " + command);
-        }
+    if (superCommands.contains(command)) {
+        super.executeCommand(command, arguments);
+    } else if (command.equals("LoadGraph")) {
+        loadGraph(arguments);
+    } else if (command.equals("FindPath")) {
+        findPath(arguments);
+    } else {
+        output.println("Unrecognized command: " + command);
+    }
     } catch (Exception e) {
         output.println("Exception: " + e.toString());
+        e.printStackTrace();
     }
 
   }
 
   private void loadGraph(List<String> arguments) {
     if (arguments.size() != 2) {
-        throw new CommandException("Baz arguments to CreateGraph: " + arguments);
+        throw new CommandException("Baz arguments to LoadGraph: " + arguments);
     }
     String graphName = arguments.get(0);
     String fileName = arguments.get(1);
     loadGraph(graphName, path + fileName);
   }
+
   private void loadGraph(String graphName, String filePath) {
     graphs.put(graphName, MarvelPaths.loadData(filePath));
     output.println("loaded graph " + graphName);
@@ -61,13 +93,14 @@ public class HW6TestDriver extends HW3TestDriver {
 
   private void findPath(List<String> arguments) {
       if (arguments.size() != 3) {
-          throw new CommandException("Baz arguments to CreateGraph: " + arguments);
+          throw new CommandException("Baz arguments to FindPath: " + arguments);
       }
       String graphName = arguments.get(0);
       String startNode = arguments.get(1).replace('_', ' ');
       String endNode = arguments.get(2).replace('_', ' ');
       findPath(graphName, startNode, endNode);
   }
+
   private void findPath(String graphName, String startNode, String endNode) {
     Graph graph = graphs.get(graphName);
     Graph.Node start = graph.makeNode(startNode);
@@ -93,8 +126,5 @@ public class HW6TestDriver extends HW3TestDriver {
             }
         }
     }
-
-
   }
-  //  public void runTests() {}
 }

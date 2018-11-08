@@ -12,22 +12,23 @@ import java.util.List;
 import static org.junit.Assert.*;
 
 public class MarvelPathsTest {
-    public static final String small_test = "src/main/java/hw6/data/staffSuperheroes.txt";
-    public static final String small_test_malformed = "src/main/java/hw6/data/staffSuperheroes_malformed_version.txt";
-    public static final Graph.Node Ernst = NodeTest.create("Ernst-the-Bicycling-Wizard");
-    public static final Graph.Node Notkin = NodeTest.create("Notkin-of-the-Superhuman-Beard");
-    public static final Graph.Node Perkins = NodeTest.create("Perkins-the-Magical-Singing-Instructor");
-    public static final Graph.Node Grossman = NodeTest.create("Grossman-the-Youngest-of-them-all");
+    public static final String SMALL_TEST = "src/main/java/hw6/data/staffSuperheroes.tsv";
+    public static final String SMALL_TEST_MALFORMED = "src/main/java/hw6/data/staffSuperheroes_malformed_version.tsv";
+    public static final String MARVEL = "src/main/java/hw6/data/marvel.tsv";
+    public static final Graph.Node ERNST = NodeTest.create("Ernst-the-Bicycling-Wizard");
+    public static final Graph.Node NOTKIN = NodeTest.create("Notkin-of-the-Superhuman-Beard");
+    public static final Graph.Node PERKINS = NodeTest.create("Perkins-the-Magical-Singing-Instructor");
+    public static final Graph.Node GROSSMAN = NodeTest.create("Grossman-the-Youngest-of-them-all");
 
     private List<Graph.Node> nodes;
 
     @Before
     public void initialize() {
         nodes = new ArrayList<>();
-        nodes.add(Ernst);
-        nodes.add(Notkin);
-        nodes.add(Perkins);
-        nodes.add(Grossman);
+        nodes.add(ERNST);
+        nodes.add(NOTKIN);
+        nodes.add(PERKINS);
+        nodes.add(GROSSMAN);
     }
 
     /**
@@ -36,8 +37,9 @@ public class MarvelPathsTest {
      */
     @Test
     public void testLoadData() {
-        assertNotNull(MarvelPaths.loadData(small_test));
-        assertNull(MarvelPaths.loadData(small_test_malformed));
+        assertNotNull(MarvelPaths.loadData(MARVEL));
+        assertNotNull(MarvelPaths.loadData(SMALL_TEST));
+        assertNull(MarvelPaths.loadData(SMALL_TEST_MALFORMED));
     }
 
     /**
@@ -45,9 +47,11 @@ public class MarvelPathsTest {
      */
     @Test
     public void testFindPath() {
-        Graph graph = MarvelPaths.loadData(small_test);
+        Graph graph = MarvelPaths.loadData(SMALL_TEST);
         for (Graph.Node node : nodes) {
             assertEquals(0, MarvelPaths.findPath(graph, node, node).size());
         }
     }
+
+
 }

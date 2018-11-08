@@ -29,7 +29,7 @@ public class Graph {
   private final Map<Node, Set<Edge>> map;
 
   /** Test flag, whether to enable expensive checks. */
-  private static boolean TEST_FLAG = true;
+  private static boolean TEST_FLAG = false;
   // Abstraction Function:
   //
   //  this.map represents an adjacency list for the graph:
@@ -112,7 +112,7 @@ public class Graph {
    * @return a set of all out-edges in the graph for the node.
    */
   @Pure
-  public Set<Edge> getEdges(Node node) {
+  public Set<Edge> getEdges(@KeyFor("map") Node node) {
     checkRep();
     Set<Edge> result = Collections.unmodifiableSet(map.get(node));
     checkRep();

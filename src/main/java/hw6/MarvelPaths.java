@@ -1,12 +1,58 @@
 package hw6;
 
 import hw3.Graph;
+import org.checkerframework.checker.nullness.qual.KeyFor;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 import java.util.*;
 
 
 public class MarvelPaths {
+
+    public static final String MARVEL = "src/main/java/hw6/data/marvel.tsv";
+
+
+    public static void main(String[] args) {
+        System.out.println("Loading data...");
+        long start = System.currentTimeMillis();
+        Graph graph = loadData(MARVEL);
+        long times = System.currentTimeMillis() - start;
+        System.out.println("Loading complete in " + times + " ms");
+
+        Scanner reader = new Scanner(System.in);  // Reading from System.in
+        System.out.println("Type exit at any time to quit");
+        while(true) {
+            System.out.println();
+            System.out.println("Please input two character name:");
+
+            Graph.Node startNode = graph.makeNode(readInput(reader, "character1: "));
+            Graph.Node endNode = graph.makeNode(readInput(reader, "character2: "));
+            if (!graph.containNode(startNode)) {
+                System.out.println("Character " + startNode.getContent() + " NOT FOUND!");
+            } else if (!graph.containNode(endNode)) {
+                System.out.println("Character " + startNode.getContent() + " NOT FOUND!");
+            } else {
+                List<Graph.Edge> path = MarvelPaths.findPath(graph, startNode, endNode);
+                if (path == null) {
+                    System.out.println("no path found");
+                } else {
+                    for (Graph.Edge edge : path) {
+                        System.out.println(String.format("%s to %s via %s", edge.getStart().getContent(),
+                                edge.getEnd().getContent(), edge.getLabel()));
+                    }
+                }
+            }
+        }
+    }
+
+    private static String readInput(Scanner reader, String prompt) {
+        System.out.print(prompt);
+        String character = reader.nextLine().replaceAll("\"", "");
+        if (character.equals("exit")) {
+            System.exit(0);
+        }
+        return character;
+    }
 
     /**
      * Fill the graph with the data in a file, whose path is filename.
@@ -35,7 +81,6 @@ public class MarvelPaths {
 
 
         assert characters.size() == graph.getNodes().size(); // quick sanity check.
-
         for (Map.Entry<String, List<String>> entry : books.entrySet())  {
             for (String character1 : entry.getValue()) {
                 for(String character2 : entry.getValue()) {
@@ -71,20 +116,22 @@ public class MarvelPaths {
      * @param end   the end of the path to be searched
      * @return a list holding the path from start to end if there exists one, or null otherwise.
      */
-    public static @Nullable List<Graph.Edge> findPath(Graph graph, Graph.Node start, Graph.Node end) {
-        Queue<Graph.Node> queue = new LinkedList<>();
-        queue.add(start);
+    @SuppressWarnings({"nullness", "initialization", "incompatible"})
+    public static @Nullable List<Graph.Edge> findPath(Graph graph, Graph.@KeyFor("#1.map") Node start, Graph.@KeyFor("#1.map")Node end) {
+
         Map<Graph.Node, List<Graph.Edge>> mapping = new HashMap<>();
         mapping.put(start, new LinkedList<>());
+        Queue<Graph.@KeyFor({"#1.map", "mapping"}) Node> queue = new LinkedList<>();
+        queue.add(start);
 
         while (!queue.isEmpty()) {
-            Graph.Node node = queue.poll();
+            Graph.@KeyFor({"#1.map", "mapping"}) Node node = queue.poll();
             if (node.equals(end)) {
                 return mapping.get(node);
             }
 
             // make a sorted view of currentEdges, so that alphabetically cost least path is guaranteed.
-            Queue<Graph.Edge> currentEdges = new PriorityQueue<>(graph.getEdges(node).size(), (o1, o2) -> {
+            Queue<Graph.Edge> currentEdges = new PriorityQueue<>((o1, o2) -> {
                 if (o1.getEnd().equals(o2.getEnd())) {
                     return o1.getLabel().compareTo(o2.getLabel());
                 } else {
@@ -96,8 +143,9 @@ public class MarvelPaths {
             for (Graph.Edge edge : currentEdges) {
                 if (!mapping.containsKey(edge.getEnd())) {
                     queue.add(edge.getEnd());
-                    mapping.put(edge.getEnd(), mapping.get(node));
-                    mapping.get(edge.getEnd()).add(edge);
+                    List<Graph.Edge> previous_list = new ArrayList<>(mapping.get(node));
+                    previous_list.add(edge);
+                    mapping.put(edge.getEnd(), previous_list);
                 }
             }
 
