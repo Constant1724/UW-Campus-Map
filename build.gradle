@@ -44,6 +44,30 @@ task copyHw6TestScripts(type: Copy) {
   into "${buildDir}/classes/java/test/hw6/"
 }
 
+task copyHw6StaffTestScripts(type: Copy) {
+  from "src/staffTest/java/hw6"
+  include "*.test", "*.expected"
+  into "${buildDir}/classes/java/staffTest/hw6/"
+}
+
+task copyHw6TestData(type: Copy) {
+  from "src/staffTest/java/hw6/data"
+  include "*.tsv"
+  into "src/main/java/hw6/data"
+}
+
+task copyHw7TestScripts(type: Copy) {
+  from "src/test/java/hw7"
+  include "*.test", "*.expected"
+  into "${buildDir}/classes/java/test/hw7/"
+}
+
+task copyHw8TestScripts(type: Copy) {
+  from "src/test/java/hw8"
+  include "*.test", "*.expected"
+  into "${buildDir}/classes/java/test/hw8/"
+}
+
 test {
   // Comment out a line to start work on that homework.
   // exclude 'hw2/**'
@@ -51,9 +75,13 @@ test {
   // exclude 'hw4/**'
   // exclude 'hw5/**'
   // exclude 'hw6/**'
+  exclude 'hw7/**'
+  exclude 'hw8/**'
 }
 test.dependsOn copyHw3TestScripts
 test.dependsOn copyHw6TestScripts
+test.dependsOn copyHw7TestScripts
+test.dependsOn copyHw8TestScripts
 
 tasks.withType(Test) {
     enableAssertions = true
@@ -319,15 +347,29 @@ task javadocPublic(type: Javadoc) {
 sourceSets {
   staffTest {
     java {
-      srcDirs = ['src/staff_test/java']
+      compileClasspath += main.output
+      runtimeClasspath += main.output
     }
-    compileClasspath += sourceSets.main.runtimeClasspath
   }
+}
+
+configurations {
+  staffTestImplementation.extendsFrom testImplementation
+  staffTestRuntimeOnly.extendsFrom testRuntimeOnly
 }
 
 task staffTest(type: Test) {
   description = "Runs staff Tests"
   testClassesDirs = sourceSets.staffTest.output.classesDirs
-  classpath += sourceSets.staffTest.runtimeClasspath
+  classpath = sourceSets.staffTest.runtimeClasspath
+
+  // For debugging purposes
+  outputs.upToDateWhen { false }
+  testLogging {
+    events = ["passed", "failed", "skipped"]
+    showStandardStreams = true
+  }
 }
-staffTest.dependsOn test
+staffTest.dependsOn copyHw6StaffTestScripts
+staffTest.dependsOn copyHw6TestData
+
