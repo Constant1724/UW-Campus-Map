@@ -160,7 +160,8 @@ public class HW3TestDriver {
   private void addEdge(String graphName, String parentName, String childName, String edgeLabel) {
     // Insert your code here.
     Graph graph = graphs.get(graphName);
-    graph.addEdge(EdgeTest.create(NodeTest.create(parentName), NodeTest.create(childName), edgeLabel));
+    graph.addEdge(
+        EdgeTest.create(NodeTest.create(parentName), NodeTest.create(childName), edgeLabel));
     String out =
         String.format(
             "added edge %s from %s to %s in %s", edgeLabel, parentName, childName, graphName);

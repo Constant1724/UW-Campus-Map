@@ -5,7 +5,6 @@ import static org.junit.Assert.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
-
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -281,7 +280,6 @@ public class GraphTest {
         }
       }
       assertEquals(edges.size(), count);
-
     }
   }
 
@@ -304,6 +302,5 @@ public class GraphTest {
         assertFalse(graph.containEdge(A_TO_B));
       }
     }
-
   }
 }
