@@ -111,11 +111,11 @@ public class MarvelPaths {
 
 
         assert characters.size() == graph.getNodes().size(); // quick sanity check.
+
         for (Map.Entry<String, List<String>> entry : books.entrySet())  {
             for (String character1 : entry.getValue()) {
                 for(String character2 : entry.getValue()) {
-
-                    if (character1.equals(character2)) { // prevent self edge, since the hw spec does not say.
+                    if (character1.equals(character2)) { // we do not necessarily need to create self-edge.
                         continue;
                     }
                     graph.addEdge(graph.makeEdge(graph.makeNode(character1),

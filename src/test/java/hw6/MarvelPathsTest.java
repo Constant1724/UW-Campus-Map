@@ -1,6 +1,5 @@
 package hw6;
 
-import hw3.EdgeTest;
 import hw3.Graph;
 import hw3.NodeTest;
 import org.junit.Before;
@@ -43,13 +42,23 @@ public class MarvelPathsTest {
     }
 
     /**
-     * test additional behavior of findPath, specifically, if it returns empty list if no path exist.
+     * test additional behavior of findPath, specifically, if it returns empty list for self edge and
+     *                                                           returns null for no path exists.
      */
     @Test
     public void testFindPath() {
-        Graph graph = MarvelPaths.loadData(SMALL_TEST);
-        for (Graph.Node node : nodes) {
-            assertEquals(0, MarvelPaths.findPath(graph, node, node).size());
+        Graph graph = new Graph();
+        for (Graph.Node node1 : nodes) {
+            graph.addNode(node1);
+            for (Graph.Node node2 : nodes) {
+                if (!node1.equals(node2)) {
+                    // check no path case
+                    assertNull(MarvelPaths.findPath(graph, node1, node2));
+                } else {
+                    // check self-edge case
+                    assertEquals(0, MarvelPaths.findPath(graph, node1, node2).size());
+                }
+            }
         }
     }
 

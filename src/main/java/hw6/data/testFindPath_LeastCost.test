@@ -14,23 +14,23 @@ AddNode graph1 ValidNode4
 AddNode graph1 ValidNode5
 AddNode graph1 ValidNode6
 
-AddEdge graph1 ValidNode1 ValidNode2 label12a
 AddEdge graph1 ValidNode1 ValidNode2 label12b
+AddEdge graph1 ValidNode1 ValidNode2 label12a
 
 AddEdge graph1 ValidNode1 ValidNode3 label13
 
-AddEdge graph1 ValidNode1 ValidNode4 label14a
 AddEdge graph1 ValidNode1 ValidNode4 label14b
+AddEdge graph1 ValidNode1 ValidNode4 label14a
 
 AddEdge graph1 ValidNode2 ValidNode5 label25
 
 AddEdge graph1 ValidNode5 ValidNode6 label56
 
-AddEdge graph1 ValidNode2 ValidNode6 label26a
 AddEdge graph1 ValidNode2 ValidNode6 label26b
+AddEdge graph1 ValidNode2 ValidNode6 label26a
 
-AddEdge graph1 ValidNode4 ValidNode6 label46a
 AddEdge graph1 ValidNode4 ValidNode6 label46b
+AddEdge graph1 ValidNode4 ValidNode6 label46a
 
 FindPath graph1 ValidNode1 ValidNode6
 # END_TEST
