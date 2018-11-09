@@ -6,4 +6,11 @@ Name:  Haopeng Zhou
 Briefly describe any changes made to your Graph ADT from HW 3-4 and why
 those changes were made below.  (See the HW6 assignment for details.)
 
-make inner class, modify access as package private, add makeNode/makeEdge methods, change getEdges
+The first change I made is to refactor the code. Specifically, I make Node and Edge as inner classes for graph, and
+add a makeNode/makeEdge method to create a node or an edge. This is required by the HW6 spec, to achieve a single
+top-level class.
+
+The second change is that I change the getEdges method, so that it returns all out edges for a given node, instead
+of return all edges in the graph. Because i realize that return all edges at once is less useful and less efficient,
+and moreover, user can still access all edges in the graph by simply
+iterate through the node and get edges for that node.

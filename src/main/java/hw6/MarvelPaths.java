@@ -2,16 +2,35 @@ package hw6;
 
 import hw3.Graph;
 import org.checkerframework.checker.nullness.qual.KeyFor;
+import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 import java.util.*;
 
-
+/**
+ * This class loads a file, which is defined in the format for marvel.tsv, and create a graph with data from that file.
+ *
+ * It also provides functionality to find a path between two given nodes.
+ */
 public class MarvelPaths {
+    // This is NOT an ADT!!!
+    // This is NOT an ADT!!!
 
+    /**
+     * default path for the data
+     */
     public static final String MARVEL = "src/main/java/hw6/data/marvel.tsv";
 
-
+    /**
+     * Standard main method. Read in data and construct a graph and allow user to type in two nodes and print out
+     * a path between these two nodes.
+     *
+     * Note that both input and output will be directed to System.in and System.out
+     *
+     * It provide usage messages.
+     *
+     * @param args list of command line arguments
+     */
     public static void main(String[] args) {
         System.out.println("Loading data...");
         long start = System.currentTimeMillis();
@@ -23,7 +42,7 @@ public class MarvelPaths {
         }
         System.out.println("Loading complete in " + times + " ms");
 
-        Scanner reader = new Scanner(System.in);  // Reading from System.in
+        Scanner reader = new Scanner(System.in, "UTF-8");  // Reading from System.in
         System.out.println("Type exit at any time to quit");
         while(true) {
             System.out.println();
@@ -49,6 +68,13 @@ public class MarvelPaths {
         }
     }
 
+    /**
+     * Helper method to help print out prompts and parse user input and return it.
+     *
+     * @param reader a reader that reads in user input
+     * @param prompt the prompt message, will be printed out before user type in anything.
+     * @return a correctly formatted user input. specifically, all quotation marks will be excluded.
+     */
     private static String readInput(Scanner reader, String prompt) {
         System.out.print(prompt);
         String character = reader.nextLine().replaceAll("\"", "");
@@ -120,36 +146,60 @@ public class MarvelPaths {
      * @param end   the end of the path to be searched
      * @return a list holding the path from start to end if there exists one, or null otherwise.
      */
-    @SuppressWarnings({"nullness", "initialization", "incompatible"})
+    //@SuppressWarnings({"nullness", "initialization"})
     public static @Nullable List<Graph.Edge> findPath(Graph graph, Graph.Node start, Graph.Node end) {
 
         Map<Graph.Node, List<Graph.Edge>> mapping = new HashMap<>();
-        mapping.put(start, new LinkedList<>());
-        Queue<Graph.Node> queue = new LinkedList<>();
+        mapping.put(start, new ArrayList<>());
+        Queue<@KeyFor({"mapping"}) Graph.Node> queue = new ArrayDeque<>();
         queue.add(start);
 
         while (!queue.isEmpty()) {
-            Graph.Node node = queue.poll();
+
+            @KeyFor({"mapping"})Graph.Node node = queue.poll();
+
+            // The queue does not allow null elements, and the while loop condition guarantees that queue is not empty
+            // Therefore, there is no way for node to be null
+            assert node != null :
+                    "@AssumeAssertion(nullness): queue does not allow null elements, and queue is not empty";
             if (node.equals(end)) {
                 return mapping.get(node);
             }
 
+
             // make a sorted view of currentEdges, so that alphabetically cost least path is guaranteed.
-            Queue<Graph.Edge> currentEdges = new PriorityQueue<>((o1, o2) -> {
+            Queue<Graph.Edge> currentEdgesSorted = new PriorityQueue<>((o1, o2) -> {
                 if (o1.getEnd().equals(o2.getEnd())) {
                     return o1.getLabel().compareTo(o2.getLabel());
                 } else {
                     return o1.getEnd().getContent().compareTo(o2.getEnd().getContent());
                 }
             });
-            currentEdges.addAll(graph.getEdges(node));
 
-            for (Graph.Edge edge : currentEdges) {
+            // Note that the node must be in the graph ADT. Since we are only adding endNode of edges that are in graph,
+            // to the queue. (Start node is an exception, but start node is required to be in the graph)
+            // As a result, when we poll out an item in the queue, it must be in the graph, as long as
+            // no other mutator are called.
+
+            // Note that we cannot write @Keyfor for node, since graph.map is private and we cannot access it from outer
+            // class
+
+            // Note that it makes sense to not write @Keyfor for the Node class. According to my design,
+            // You need to first create a Node and then add the node to the graph. As a result, after you create the
+            // Node but before you add it to the graph, the node is not a key for the graph.
+            @SuppressWarnings("incompatible") Set<Graph.Edge> currentEdgesUnsorted = graph.getEdges(node);
+
+            currentEdgesSorted.addAll(currentEdgesUnsorted);
+
+            for (Graph.Edge edge : currentEdgesSorted) {
                 if (!mapping.containsKey(edge.getEnd())) {
+                    // Any node in queue must be a node in the mapping. Whenever we are adding a Node to the queue,
+                    // we first add it to the mapping. Moreover, node has already been annotated as @Keyfor("mapping")
+                    @NonNull @SuppressWarnings("incompatible") List<Graph.Edge> previousList = mapping.get(node);
+                    List<Graph.Edge> previousListCopy = new ArrayList<>(previousList);
+                    previousListCopy.add(edge);
+                    mapping.put(edge.getEnd(), previousListCopy);
                     queue.add(edge.getEnd());
-                    List<Graph.Edge> previous_list = new ArrayList<>(mapping.get(node));
-                    previous_list.add(edge);
-                    mapping.put(edge.getEnd(), previous_list);
                 }
             }
 
