@@ -75,7 +75,7 @@ test {
   // exclude 'hw4/**'
   // exclude 'hw5/**'
   // exclude 'hw6/**'
-  exclude 'hw7/**'
+  // exclude 'hw7/**'
   exclude 'hw8/**'
 }
 test.dependsOn copyHw3TestScripts
