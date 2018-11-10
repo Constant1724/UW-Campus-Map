@@ -1,5 +1,12 @@
+*.log
+# Gradle files
 .gradle
-.idea/
 .run-google-java-format/
 build/
 gradlew/
+# IntelliJ files
+*.iml
+.idea/
+out/
+# MacOS files
+.DS_Store
