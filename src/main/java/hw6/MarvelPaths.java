@@ -32,7 +32,7 @@ public class MarvelPaths {
   public static void main(String[] args) {
     System.out.println("Loading data...");
     long start = System.currentTimeMillis();
-    Graph graph = loadData(MARVEL);
+    Graph<String, String> graph = loadData(MARVEL);
     long times = System.currentTimeMillis() - start;
     if (graph == null) {
       System.out.println("Malformed Data Detected");
@@ -46,14 +46,14 @@ public class MarvelPaths {
       System.out.println();
       System.out.println("Please input two character name:");
 
-      Graph.Node startNode = graph.makeNode(readInput(reader, "character1: "));
-      Graph.Node endNode = graph.makeNode(readInput(reader, "character2: "));
+      Graph<String, String>.Node startNode = graph.makeNode(readInput(reader, "character1: "));
+      Graph<String, String>.Node endNode = graph.makeNode(readInput(reader, "character2: "));
       if (!graph.containNode(startNode)) {
         System.out.println("Character " + startNode.getContent() + " NOT FOUND!");
       } else if (!graph.containNode(endNode)) {
         System.out.println("Character " + startNode.getContent() + " NOT FOUND!");
       } else {
-        List<Graph.Edge> path = MarvelPaths.findPath(graph, startNode, endNode);
+        List<Graph<String, String>.Edge> path = MarvelPaths.findPath(graph, startNode, endNode);
         if (path == null) {
           System.out.println("no path found");
         } else {
@@ -92,8 +92,8 @@ public class MarvelPaths {
    * @param filename the name of the datafile
    * @return a graph holding all data in filename, otherwise null.
    */
-  public static @Nullable Graph loadData(String filename) {
-    Graph graph = new Graph();
+  public static @Nullable Graph<String, String> loadData(String filename) {
+    Graph<String, String> graph = new Graph<>();
     Set<String> characters = new HashSet<>();
     Map<String, List<String>> books = new HashMap<>();
 
@@ -143,16 +143,16 @@ public class MarvelPaths {
    * @return a list holding the path from start to end if there exists one, or null otherwise.
    */
   // @SuppressWarnings({"nullness", "initialization"})
-  public static @Nullable List<Graph.Edge> findPath(Graph graph, Graph.Node start, Graph.Node end) {
+  public static @Nullable List<Graph<String, String>.Edge> findPath(Graph<String, String> graph, Graph<String, String>.Node start, Graph<String, String>.Node end) {
 
-    Map<Graph.Node, List<Graph.Edge>> mapping = new HashMap<>();
+    Map<Graph<String, String>.Node, List<Graph<String, String>.Edge>> mapping = new HashMap<>();
     mapping.put(start, new ArrayList<>());
-    Queue<@KeyFor({"mapping"}) Graph.Node> queue = new ArrayDeque<>();
+    Queue<@KeyFor({"mapping"}) Graph<String, String>.Node> queue = new ArrayDeque<>();
     queue.add(start);
 
     while (!queue.isEmpty()) {
 
-      @KeyFor({"mapping"}) Graph.Node node = queue.poll();
+      @KeyFor({"mapping"}) Graph<String, String>.Node node = queue.poll();
 
       // The queue does not allow null elements, and the while loop condition guarantees that queue
       // is not empty
@@ -164,7 +164,7 @@ public class MarvelPaths {
       }
 
       // make a sorted view of currentEdges, so that alphabetically cost least path is guaranteed.
-      Queue<Graph.Edge> currentEdgesSorted =
+      Queue<Graph<String, String>.Edge> currentEdgesSorted =
           new PriorityQueue<>(
               (o1, o2) -> {
                 if (o1.getEnd().equals(o2.getEnd())) {
@@ -189,19 +189,19 @@ public class MarvelPaths {
       // create the
       // Node but before you add it to the graph, the node is not a key for the graph.
       @SuppressWarnings("incompatible")
-      Set<Graph.Edge> currentEdgesUnsorted = graph.getEdges(node);
+      Set<Graph<String, String>.Edge> currentEdgesUnsorted = graph.getEdges(node);
 
       currentEdgesSorted.addAll(currentEdgesUnsorted);
 
-      for (Graph.Edge edge : currentEdgesSorted) {
+      for (Graph<String, String>.Edge edge : currentEdgesSorted) {
         if (!mapping.containsKey(edge.getEnd())) {
           // Any node in queue must be a node in the mapping. Whenever we are adding a Node to the
           // queue,
           // we first add it to the mapping. Moreover, node has already been annotated as
           // @Keyfor("mapping")
           @NonNull @SuppressWarnings("incompatible")
-          List<Graph.Edge> previousList = mapping.get(node);
-          List<Graph.Edge> previousListCopy = new ArrayList<>(previousList);
+          List<Graph<String, String>.Edge> previousList = mapping.get(node);
+          List<Graph<String, String>.Edge> previousListCopy = new ArrayList<>(previousList);
           previousListCopy.add(edge);
           mapping.put(edge.getEnd(), previousListCopy);
           queue.add(edge.getEnd());

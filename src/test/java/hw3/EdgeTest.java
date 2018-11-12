@@ -9,8 +9,8 @@ import org.junit.rules.Timeout;
 public class EdgeTest {
   @Rule public Timeout globalTimeout = Timeout.seconds(10); // 10 seconds max per method tested
 
-  private static final Graph.Node A = NodeTest.create("start");
-  private static final Graph.Node B = NodeTest.create("end");
+  private static final Graph<String, String>.Node A = NodeTest.create("start");
+  private static final Graph<String, String>.Node B = NodeTest.create("end");
   private static final String LABEL = "0";
   private static final String LABEL1 = "";
 
@@ -25,9 +25,9 @@ public class EdgeTest {
    * @param label cost of the Edge.
    * @return a new Node with content as its description.
    */
-  public static Graph.Edge create(Graph.Node start, Graph.Node end, String label) {
+  public static Graph<String, String>.Edge create(Graph<String, String>.Node start, Graph<String, String>.Node end, String label) {
 
-    return new Graph().makeEdge(start, end, label);
+    return new Graph<String, String>().makeEdge(start, end, label);
   }
 
   @Test
@@ -41,9 +41,9 @@ public class EdgeTest {
   /** Test Edges with Equals content should have the Equals hashCode. */
   @Test
   public void testHashCode() {
-    Graph.Edge aToB = create(A, B, LABEL);
-    Graph.Edge bToA = create(B, A, LABEL);
-    Graph.Edge aToA = create(A, A, LABEL);
+    Graph<String, String>.Edge aToB = create(A, B, LABEL);
+    Graph<String, String>.Edge bToA = create(B, A, LABEL);
+    Graph<String, String>.Edge aToA = create(A, A, LABEL);
 
     assertEquals(aToB.hashCode(), create(A, B, LABEL).hashCode());
     assertEquals(bToA.hashCode(), create(B, A, LABEL).hashCode());
@@ -56,9 +56,9 @@ public class EdgeTest {
   /** Test Edges with Equals content should be equal. */
   @Test
   public void testEquals() {
-    Graph.Edge aToB = create(A, B, LABEL);
-    Graph.Edge bToA = create(B, A, LABEL);
-    Graph.Edge aToA = create(A, A, LABEL);
+    Graph<String, String>.Edge aToB = create(A, B, LABEL);
+    Graph<String, String>.Edge bToA = create(B, A, LABEL);
+    Graph<String, String>.Edge aToA = create(A, A, LABEL);
 
     assertEquals(aToB, create(A, B, LABEL));
     assertEquals(bToA, create(B, A, LABEL));

@@ -10,6 +10,10 @@ import org.checkerframework.dataflow.qual.SideEffectFree;
  * Graph represents a mutable, directed and cyclic graph. Duplicate of nodes or edges in graph is
  * not allowed.
  *
+ * Generics:
+ *      N represents the type of data to be stored in single Node in the graph.
+ *      E represents the type of data ot be stored in single Edge in the graph.
+ *
  * <p>Client can add, remove or view any nodes or edges. Note that if a node is removed, any edges
  * contain that node will be removed.
  *
@@ -23,7 +27,7 @@ import org.checkerframework.dataflow.qual.SideEffectFree;
  * @spec.specfield Edges : a set of Edges // Represent all Edges in this Graph.
  *     <p>Abstract Invariant: The two nodes of any Edge in Graph.Edges must be in Graph.Nodes.
  */
-public class Graph {
+public class Graph<N extends @NonNull Object, E extends @NonNull Object> {
   /** map represents the graph */
   private final Map<Node, Set<Edge>> map;
 
@@ -65,13 +69,13 @@ public class Graph {
    * @spec.effects creates a new empty graph
    */
   public Graph() {
-    this.map = new HashMap<Node, Set<Edge>>();
+    this.map = new HashMap<>();
     checkRep();
   }
 
   /** Checks that the representation invariant holds (if any). */
   @SideEffectFree
-  private void checkRep(@UnknownInitialization(Graph.class) Graph this) {
+  private void checkRep(@UnknownInitialization(Graph.class) Graph<N, E> this) {
     assert this.map != null;
     if (!TEST_FLAG) {
       return;
@@ -255,7 +259,7 @@ public class Graph {
    * @spec.requires content != Null
    * @return a new instance of Node
    */
-  public Node makeNode(String content) {
+  public Node makeNode(N content) {
     return new Node(content);
   }
   /**
@@ -267,7 +271,7 @@ public class Graph {
    * @spec.requires start != null and end != null and label != null
    * @return a new instance of Edge
    */
-  public Edge makeEdge(Node start, Node end, String label) {
+  public Edge makeEdge(Node start, Node end, E label) {
     return new Edge(start, end, label);
   }
 
@@ -284,7 +288,7 @@ public class Graph {
    */
   public class Node {
     /** the description(content) of this node */
-    private String content;
+    private N content;
 
     // Abstraction Function:
     // content is the description of this Node. It is also a unique identifier of the Node.
@@ -297,14 +301,14 @@ public class Graph {
      * @spec.requires content != Null
      * @spec.effects creates a new Node with the given content as description.
      */
-    private Node(String content) {
+    private Node(N content) {
       this.content = content;
-      checkRep();
+//      checkRep();
     }
 
     /** Checks that the representation invariant holds (if any). */
     @SideEffectFree
-    private void checkRep(@UnknownInitialization(Node.class) Node this) {
+    private void checkRep(@UnknownInitialization(Graph.Node.class) Graph<N, E>.Node this) {
       assert (content != null);
     }
 
@@ -314,7 +318,7 @@ public class Graph {
      * @return content of the Node
      */
     @Pure
-    public String getContent() {
+    public N getContent() {
       return this.content;
     }
 
@@ -338,11 +342,11 @@ public class Graph {
     @Override
     @Pure
     public boolean equals(@Nullable Object obj) {
-      if (!(obj instanceof Node)) {
+      if (!(obj instanceof Graph<?,?>.Node)) {
         return false;
       }
 
-      return this.content.equals(((Node) obj).content);
+      return this.content.equals(((Graph<?,?>.Node) obj).content);
     }
   }
 
@@ -363,7 +367,7 @@ public class Graph {
     /** the end of this edge */
     private Node end;
     /** the label of this edge */
-    private String label;
+    private E label;
 
     // Abstraction Function:
     //  An edge is defined with this.start  as its starting Node
@@ -380,16 +384,16 @@ public class Graph {
      * @spec.requires start != null and end != null and label != null
      * @spec.effects creates a new edge from start to end with label.
      */
-    private Edge(Node start, Node end, String label) {
+    private Edge(Node start, Node end, E label) {
       this.start = start;
       this.end = end;
       this.label = label;
-      checkRep();
+//      checkRep();
     }
 
     /** Checks that the representation invariant holds (if any). */
     @SideEffectFree
-    private void checkRep(@UnknownInitialization(Edge.class) Edge this) {
+    private void checkRep(@UnknownInitialization(Graph.Edge.class) Graph<N, E>.Edge this) {
       assert (this.start != null && this.end != null && this.label != null);
     }
 
@@ -419,7 +423,7 @@ public class Graph {
      * @return the label of this Edge
      */
     @Pure
-    public String getLabel() {
+    public E getLabel() {
       return this.label;
     }
 
@@ -443,10 +447,10 @@ public class Graph {
     @Override
     @Pure
     public boolean equals(@Nullable Object obj) {
-      if (!(obj instanceof Edge)) {
+      if (!(obj instanceof Graph<?,?>.Edge)) {
         return false;
       }
-      Edge other = (Edge) obj;
+      Graph<?,?>.Edge other = (Graph<?,?>.Edge) obj;
 
       return this.start.equals(other.getStart())
           && this.end.equals(other.getEnd())

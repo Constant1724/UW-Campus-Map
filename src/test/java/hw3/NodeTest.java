@@ -18,8 +18,8 @@ public class NodeTest {
    * @param content content of a Node.
    * @return a new Node with content as its description.
    */
-  public static Graph.Node create(String content) {
-    return new Graph().makeNode(content);
+  public static Graph<String, String>.Node create(String content) {
+    return new Graph<String, String>().makeNode(content);
   }
 
   /** try to create Node with empty, space and character content. */

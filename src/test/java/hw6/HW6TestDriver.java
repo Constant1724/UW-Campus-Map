@@ -101,9 +101,9 @@ public class HW6TestDriver extends HW3TestDriver {
   }
 
   private void findPath(String graphName, String startNode, String endNode) {
-    Graph graph = graphs.get(graphName);
-    Graph.Node start = graph.makeNode(startNode);
-    Graph.Node end = graph.makeNode(endNode);
+    Graph<String, String> graph = graphs.get(graphName);
+    Graph<String, String>.Node start = graph.makeNode(startNode);
+    Graph<String, String>.Node end = graph.makeNode(endNode);
     boolean ifBothNodesInGraph = true;
     if (!graph.containNode(start)) {
       ifBothNodesInGraph = false;
@@ -115,12 +115,12 @@ public class HW6TestDriver extends HW3TestDriver {
     }
     if (ifBothNodesInGraph) {
       output.println(String.format("path from %s to %s:", startNode, endNode));
-      List<Graph.Edge> path =
+      List<Graph<String, String>.Edge> path =
           MarvelPaths.findPath(graph, graph.makeNode(startNode), graph.makeNode(endNode));
       if (path == null) {
         output.println("no path found");
       } else {
-        for (Graph.Edge edge : path) {
+        for (Graph<String, String>.Edge edge : path) {
           output.println(
               String.format(
                   "%s to %s via %s",

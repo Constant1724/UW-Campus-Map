@@ -47,7 +47,7 @@ public class HW3TestDriver {
   }
 
   /** String -> Graph: maps the names of graphs to the actual graph * */
-  protected final Map<String, Graph> graphs = new HashMap<>();
+  protected final Map<String, Graph<String, String>> graphs = new HashMap<>();
 
   protected final PrintWriter output;
 
@@ -122,7 +122,7 @@ public class HW3TestDriver {
 
   private void createGraph(String graphName) {
     // Insert your code here.
-    graphs.put(graphName, new Graph());
+    graphs.put(graphName, new Graph<String, String>());
     output.println("created graph " + graphName);
   }
 
@@ -139,7 +139,7 @@ public class HW3TestDriver {
 
   private void addNode(String graphName, String nodeName) {
     // Insert your code here.
-    Graph graph = graphs.get(graphName);
+    Graph<String, String> graph = graphs.get(graphName);
     graph.addNode(NodeTest.create(nodeName));
     output.println(String.format("added node %s to %s", nodeName, graphName));
   }
@@ -159,7 +159,7 @@ public class HW3TestDriver {
 
   private void addEdge(String graphName, String parentName, String childName, String edgeLabel) {
     // Insert your code here.
-    Graph graph = graphs.get(graphName);
+    Graph<String, String> graph = graphs.get(graphName);
     graph.addEdge(
         EdgeTest.create(NodeTest.create(parentName), NodeTest.create(childName), edgeLabel));
     String out =
@@ -179,9 +179,9 @@ public class HW3TestDriver {
 
   private void listNodes(String graphName) {
     // Insert your code here.
-    Graph graph = graphs.get(graphName);
+    Graph<String, String> graph = graphs.get(graphName);
     List<String> list = new ArrayList<String>();
-    for (Graph.Node node : graph.getNodes()) {
+    for (Graph<String, String>.Node node : graph.getNodes()) {
       list.add(node.getContent());
     }
     Collections.sort(list);
@@ -204,9 +204,9 @@ public class HW3TestDriver {
 
   private void listChildren(String graphName, String parentName) {
     // Insert your code here.
-    Graph graph = graphs.get(graphName);
+    Graph<String, String> graph = graphs.get(graphName);
     String out = String.format("the children of %s in %s are:", parentName, graphName);
-    List<Graph.Edge> list = new ArrayList<Graph.Edge>(graph.getEdges(graph.makeNode(parentName)));
+    List<Graph<String, String>.Edge> list = new ArrayList<Graph<String, String>.Edge>(graph.getEdges(graph.makeNode(parentName)));
 
     list.sort(
         (e1, e2) -> {
@@ -216,7 +216,7 @@ public class HW3TestDriver {
             return e1.getEnd().getContent().compareTo(e2.getEnd().getContent());
           }
         });
-    for (Graph.Edge edge : list) {
+    for (Graph<String, String>.Edge edge : list) {
       out += String.format(" %s(%s)", edge.getEnd().getContent(), edge.getLabel());
     }
     output.println(out);
