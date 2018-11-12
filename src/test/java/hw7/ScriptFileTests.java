@@ -10,8 +10,8 @@ import java.util.List;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized.Parameters;
-import utils.tests.LabelledParameterized;
-import utils.tests.LabelledParameterized.*;
+import hw6.utils.LabelledParameterized;
+import hw6.utils.LabelledParameterized.*;
 
 /**
  * DO NOT MODIFY
