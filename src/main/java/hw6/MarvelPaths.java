@@ -51,7 +51,7 @@ public class MarvelPaths {
       if (!graph.containNode(startNode)) {
         System.out.println("Character " + startNode.getContent() + " NOT FOUND!");
       } else if (!graph.containNode(endNode)) {
-        System.out.println("Character " + startNode.getContent() + " NOT FOUND!");
+        System.out.println("Character " + endNode.getContent() + " NOT FOUND!");
       } else {
         List<Graph<String, String>.Edge> path = MarvelPaths.findPath(graph, startNode, endNode);
         if (path == null) {
@@ -151,7 +151,7 @@ public class MarvelPaths {
     queue.add(start);
 
     while (!queue.isEmpty()) {
-
+      // Poll out the next element in the queue.
       @KeyFor({"mapping"}) Graph<String, String>.Node node = queue.poll();
 
       // The queue does not allow null elements, and the while loop condition guarantees that queue
@@ -159,6 +159,8 @@ public class MarvelPaths {
       // Therefore, there is no way for node to be null
       assert node != null
           : "@AssumeAssertion(nullness): queue does not allow null elements, and queue is not empty";
+
+      // if we meet the end node, just get the path.
       if (node.equals(end)) {
         return mapping.get(node);
       }
@@ -193,7 +195,11 @@ public class MarvelPaths {
 
       currentEdgesSorted.addAll(currentEdgesUnsorted);
 
-      for (Graph<String, String>.Edge edge : currentEdgesSorted) {
+      // Loop through all out-edges from current node, from smallest to largest in Strings natural order.
+      while (!currentEdgesSorted.isEmpty()) {
+        Graph<String, String>.Edge edge = currentEdgesSorted.poll();
+
+        // If the endNode of this edge has not been visited.
         if (!mapping.containsKey(edge.getEnd())) {
           // Any node in queue must be a node in the mapping. Whenever we are adding a Node to the
           // queue,
@@ -201,9 +207,15 @@ public class MarvelPaths {
           // @Keyfor("mapping")
           @NonNull @SuppressWarnings("incompatible")
           List<Graph<String, String>.Edge> previousList = mapping.get(node);
+
+          // Make a copy of previous list and add endNode of edge to the end of the list.
           List<Graph<String, String>.Edge> previousListCopy = new ArrayList<>(previousList);
           previousListCopy.add(edge);
+
+          // Put the endNode of edge in the mapping (Mark as visited), and its path so far.
           mapping.put(edge.getEnd(), previousListCopy);
+
+          // add the endNode of this edge in the queue, and explore it in the future.
           queue.add(edge.getEnd());
         }
       }
