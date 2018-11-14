@@ -57,7 +57,7 @@ public class MarvelPaths {
         if (path == null) {
           System.out.println("no path found");
         } else {
-          for (Graph.Edge edge : path) {
+          for (Graph<String, String>.Edge edge : path) {
             System.out.println(
                 String.format(
                     "%s to %s via %s",
@@ -143,7 +143,9 @@ public class MarvelPaths {
    * @return a list holding the path from start to end if there exists one, or null otherwise.
    */
   // @SuppressWarnings({"nullness", "initialization"})
-  public static @Nullable List<Graph<String, String>.Edge> findPath(Graph<String, String> graph, Graph<String, String>.Node start, Graph<String, String>.Node end) {
+  public static @Nullable List<Graph<String, String>.Edge> findPath(Graph<String, String> graph,
+                                                                    Graph<String, String>.Node start,
+                                                                    Graph<String, String>.Node end) {
 
     Map<Graph<String, String>.Node, List<Graph<String, String>.Edge>> mapping = new HashMap<>();
     mapping.put(start, new ArrayList<>());
@@ -198,6 +200,12 @@ public class MarvelPaths {
       // Loop through all out-edges from current node, from smallest to largest in Strings natural order.
       while (!currentEdgesSorted.isEmpty()) {
         Graph<String, String>.Edge edge = currentEdgesSorted.poll();
+
+        // The queue does not allow null elements, and the while loop condition guarantees that queue
+        // is not empty
+        // Therefore, there is no way for edge to be null
+        assert edge != null
+                : "@AssumeAssertion(nullness): queue does not allow null elements, and queue is not empty";
 
         // If the endNode of this edge has not been visited.
         if (!mapping.containsKey(edge.getEnd())) {

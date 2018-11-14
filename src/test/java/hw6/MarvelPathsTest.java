@@ -24,7 +24,7 @@ public class MarvelPathsTest {
 
   @Before
   public void initialize() {
-    nodes = new ArrayList<Graph<java.lang.String, java.lang.String>.Node>();
+    nodes = new ArrayList<>();
     nodes.add(ERNST);
     nodes.add(NOTKIN);
     nodes.add(PERKINS);

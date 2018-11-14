@@ -11,8 +11,8 @@ import org.checkerframework.dataflow.qual.SideEffectFree;
  * not allowed.
  *
  * Generics:
- *      N represents the type of data to be stored in single Node in the graph.
- *      E represents the type of data ot be stored in single Edge in the graph.
+ *      N represents the type of data to be stored in single Node in the graph. N should be immutable
+ *      E represents the type of data ot be stored in single Edge in the graph. E should be immutable
  *
  * <p>Client can add, remove or view any nodes or edges. Note that if a node is removed, any edges
  * contain that node will be removed.
@@ -303,6 +303,7 @@ public class Graph<N extends @NonNull Object, E extends @NonNull Object> {
      */
     private Node(N content) {
       this.content = content;
+      // TODO: ask Ta
 //      checkRep();
     }
 
@@ -388,7 +389,9 @@ public class Graph<N extends @NonNull Object, E extends @NonNull Object> {
       this.start = start;
       this.end = end;
       this.label = label;
+      // TODO: ask Ta.
 //      checkRep();
+
     }
 
     /** Checks that the representation invariant holds (if any). */
