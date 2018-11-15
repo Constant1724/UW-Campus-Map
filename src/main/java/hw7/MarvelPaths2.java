@@ -117,17 +117,21 @@ public class MarvelPaths2 {
                     tuple.add(values.get(i));
                     tuple.add(values.get(j));
                     Collections.sort(tuple);
-                    counts.put(tuple, counts.keySet().contains(tuple) ? counts.get(tuple) + 1 : 0);
+                    counts.put(tuple, counts.containsKey(tuple) ? counts.get(tuple) + 1 : 0);
                 }
             }
         }
 
         for(Map.Entry<List<String>, Integer> entry : counts.entrySet()) {
-            String character1 = entry.getKey().get(0);
-            String character2 = entry.getKey().get(1);
-
-            graph.addEdge(graph.makeEdge(graph.makeNode(character1), graph.makeNode(character2), 1.0 / entry.getValue()));
-            graph.addEdge(graph.makeEdge(graph.makeNode(character2), graph.makeNode(character1), 1.0 / entry.getValue()));
+            if (entry.getValue() != 0) {
+                String character1 = entry.getKey().get(0);
+                String character2 = entry.getKey().get(1);
+                Graph<String, Double>.Node node1 = graph.makeNode(character1);
+                Graph<String, Double>.Node node2 = graph.makeNode(character2);
+                double cost = 1.0 / entry.getValue();
+                graph.addEdge(graph.makeEdge(node1, node2, cost));
+                graph.addEdge(graph.makeEdge(node2, node1, cost));
+            }
         }
 
 
@@ -166,7 +170,8 @@ public class MarvelPaths2 {
      * @param end the end of the path to be searched
      * @return a list holding the path from start to end if there exists one, or null otherwise.
      */
-    public static <N extends @NonNull Object> @Nullable List<Graph<N, Double>.Edge> findPath(Graph<N, Double> graph, Graph<N, Double>.Node start, Graph<N, Double>.Node end) {
+    public static <N extends @NonNull Object> @Nullable List<Graph<N, Double>.Edge> findPath
+    (Graph<N, Double> graph, Graph<N, Double>.Node start, Graph<N, Double>.Node end) {
 
         // Create a PriorityQueue with a comparator.
         // Note that since the number of edges from start to some node is << than the total number of edges in graph,
@@ -186,11 +191,11 @@ public class MarvelPaths2 {
             // Poll out the path with minimum cost.
             List<Graph<N, Double>.Edge> minPath = active.poll();
 
-            // The queue does not allow null elements, and the while loop condition guarantees that queue
+            // active does not allow null elements, and the while loop condition guarantees that active
             // is not empty
             // Therefore, there is no way for minPath to be null
             assert minPath != null
-                    : "@AssumeAssertion(nullness): queue does not allow null elements, and queue is not empty";
+                    : "@AssumeAssertion(nullness): active does not allow null elements, and active is not empty";
 
             // Get end node of the path.
             Graph<N, Double>.Node minNode = minPath.get(minPath.size() - 1).getEnd();
@@ -214,8 +219,29 @@ public class MarvelPaths2 {
                 continue;
             }
 
-            // TODO: add suppressing.
-            for (Graph<N, Double>.Edge edge : graph.getEdges(minNode)) {
+            // Note that the node must be in the graph ADT.
+            // Because minNode is obtained from some edge in a list in in active.
+            // Note that the start of any list in active is a self-edge of start node. start node must be
+            // in the graph.
+            // After that whenever we are adding a new list to active, we only append an edge we just
+            // get out of the graph to previous list.
+            // As a result, we prove by induction that any edge in a list in active must be an edge in graph.
+            // The Graph ADT requires that if an edge is in the graph, both start and end must be in the graph as well.
+            // Therefore, minNode must be in the graph.
+            // The only exception is the self-edge of the start node,
+            // but start node is required to be in the graph as well.
+
+
+            // Note that we cannot write @Keyfor for node, since graph.map is private and we cannot access
+            // it from outer class
+
+            // Note that it makes sense to not write @Keyfor for the Node class. According to my design,
+            // You need to first create a Node and then add the node to the graph. As a result, after you
+            // create the
+            // Node but before you add it to the graph, the node is not a key for the graph.
+            @SuppressWarnings("incompatible")
+            Set<Graph<N, Double>.Edge> edges = graph.getEdges(minNode);
+            for (Graph<N, Double>.Edge edge : edges) {
                 // If the end node is not finished, i.e whose minPath has not been found.
                 if (!finished.contains(edge.getEnd())) {
                     // Make a shallow Copy and append current edge.
