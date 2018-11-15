@@ -1,18 +1,17 @@
 package hw3;
 
-import java.util.*;
 import org.checkerframework.checker.initialization.qual.UnknownInitialization;
-import org.checkerframework.checker.nullness.qual.*;
+import org.checkerframework.checker.nullness.qual.KeyFor;
+import org.checkerframework.checker.nullness.qual.NonNull;
+import org.checkerframework.checker.nullness.qual.Nullable;
 import org.checkerframework.dataflow.qual.Pure;
 import org.checkerframework.dataflow.qual.SideEffectFree;
+
+import java.util.*;
 
 /**
  * Graph represents a mutable, directed and cyclic graph. Duplicate of nodes or edges in graph is
  * not allowed.
- *
- * Generics:
- *      N represents the type of data to be stored in single Node in the graph. N should be immutable
- *      E represents the type of data ot be stored in single Edge in the graph. E should be immutable
  *
  * <p>Client can add, remove or view any nodes or edges. Note that if a node is removed, any edges
  * contain that node will be removed.
@@ -26,6 +25,10 @@ import org.checkerframework.dataflow.qual.SideEffectFree;
  * @spec.specfield Nodes : a set of Nodes // Represent all Nodes in this Graph.
  * @spec.specfield Edges : a set of Edges // Represent all Edges in this Graph.
  *     <p>Abstract Invariant: The two nodes of any Edge in Graph.Edges must be in Graph.Nodes.
+ *
+ *
+ * @param <N> represents the type of data to be stored in single Node in the graph. N should be immutable
+ * @param <E> represents the type of data ot be stored in single Edge in the graph. E should be immutable
  */
 public class Graph<N extends @NonNull Object, E extends @NonNull Object> {
   /** map represents the graph */
@@ -303,13 +306,12 @@ public class Graph<N extends @NonNull Object, E extends @NonNull Object> {
      */
     private Node(N content) {
       this.content = content;
-      // TODO: ask Ta
-//      checkRep();
+      checkRep();
     }
 
     /** Checks that the representation invariant holds (if any). */
     @SideEffectFree
-    private void checkRep(@UnknownInitialization(Graph.Node.class) Graph<N, E>.Node this) {
+    private void checkRep(@UnknownInitialization(Graph.Node.class) Node this) {
       assert (content != null);
     }
 
@@ -389,14 +391,13 @@ public class Graph<N extends @NonNull Object, E extends @NonNull Object> {
       this.start = start;
       this.end = end;
       this.label = label;
-      // TODO: ask Ta.
-//      checkRep();
+      checkRep();
 
     }
 
     /** Checks that the representation invariant holds (if any). */
     @SideEffectFree
-    private void checkRep(@UnknownInitialization(Graph.Edge.class) Graph<N, E>.Edge this) {
+    private void checkRep(@UnknownInitialization(Graph.Edge.class) Edge this) {
       assert (this.start != null && this.end != null && this.label != null);
     }
 

@@ -19,7 +19,7 @@ public class MarvelPaths2 {
     // This is NOT an ADT!!!
 
     /** default path for the data */
-    public static final String MARVEL = "src/main/java/hw6/data/marvel.tsv";
+    public static final String MARVEL = "src/main/java/hw7/data/marvel.tsv";
 
     /**
      * Standard main method. Read in data and construct a graph and allow user to type in two nodes
@@ -118,13 +118,18 @@ public class MarvelPaths2 {
         }
 
         for(Map.Entry<List<String>, Integer> entry : counts.entrySet()) {
-            // Avoid infinity cost edge.
+            // Avoid edge with infinity cost.
             if (entry.getValue() != 0) {
+                // Just quick sanity check.
+                assert entry.getKey().size() == 2;
+
                 String character1 = entry.getKey().get(0);
                 String character2 = entry.getKey().get(1);
                 Graph<String, Double>.Node node1 = graph.makeNode(character1);
                 Graph<String, Double>.Node node2 = graph.makeNode(character2);
+
                 double cost = 1.0 / entry.getValue();
+
                 // Connection is bidirectional so we add two edges.
                 graph.addEdge(graph.makeEdge(node1, node2, cost));
                 graph.addEdge(graph.makeEdge(node2, node1, cost));
@@ -136,12 +141,12 @@ public class MarvelPaths2 {
     }
 
     /**
-     * Sum all the edges in the given lst and return the answer.
+     * Sum the cost of all edges in the given lst and return the answer.
      *
      * @spec.requires lst != null
      * @param lst the list to be summed
-     * @param <N> the generic type for the data type in Graph&lt;N, E&gt;.Node.//TODO check
-     * @return a Double that represents the sum of all edges in the list.
+     * @param <N> the generic type for the data type in Graph&lt;N, E&gt;.Node.
+     * @return a Double that represents the sum of cost of all edges in the list.
      */
     public static <N extends @NonNull Object> Double sumCost(List<Graph<N, Double>.Edge> lst) {
         double count = 0.0;
@@ -165,7 +170,7 @@ public class MarvelPaths2 {
      * @param graph the graph to be searched in
      * @param start the start of the path to be searched.
      * @param end the end of the path to be searched
-     * @param <N> the generic type for the data type in Graph&lt;N, E&gt;.Node.//TODO check
+     * @param <N> the generic type for the data type in Graph&lt;N, E&gt;.Node.
      * @return a list holding the path from start to end if there exists one, or null otherwise.
      */
     public static <N extends @NonNull Object> @Nullable List<Graph<N, Double>.Edge> findPath
@@ -195,7 +200,7 @@ public class MarvelPaths2 {
             assert minPath != null
                     : "@AssumeAssertion(nullness): active does not allow null elements, and active is not empty";
 
-            // Get end node of the path.
+             // Get end node of the path.
             Graph<N, Double>.Node minNode = minPath.get(minPath.size() - 1).getEnd();
 
             // Great! We find a min
@@ -218,7 +223,7 @@ public class MarvelPaths2 {
             }
 
             // Note that the node must be in the graph ADT.
-            // Because minNode is obtained from some edge in a list in in active.
+            // Because minNode is obtained from some edge in a list ./gradin active.
             // Note that the start of any list in active is a self-edge of start node. start node must be
             // in the graph.
             // After that whenever we are adding a new list to active, we only append an edge we just
