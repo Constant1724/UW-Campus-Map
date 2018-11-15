@@ -74,6 +74,7 @@ public class MarvelPaths2 {
     private static String readInput(Scanner reader, String prompt) {
         System.out.print(prompt);
         String character = reader.nextLine().replaceAll("\"", "");
+        character = character.replaceAll("_", " ");
         if (character.equals("exit")) {
             System.exit(0);
         }
@@ -108,6 +109,8 @@ public class MarvelPaths2 {
         // quick sanity check.
         assert characters.size() == graph.getNodes().size();
 
+        // construct a mapping where key is sorted tuple of any two characters,
+        // and value is the number of common books their have
         Map<List<String>, Integer> counts = new HashMap<>();
 
         for (List<String> values: books.values()) {
@@ -117,18 +120,22 @@ public class MarvelPaths2 {
                     tuple.add(values.get(i));
                     tuple.add(values.get(j));
                     Collections.sort(tuple);
-                    counts.put(tuple, counts.containsKey(tuple) ? counts.get(tuple) + 1 : 0);
+                    // Make it 1 if the tuple does not exist.
+                    // count + 1 if the tuple exists.
+                    counts.put(tuple, counts.containsKey(tuple) ? counts.get(tuple) + 1 : 1);
                 }
             }
         }
 
         for(Map.Entry<List<String>, Integer> entry : counts.entrySet()) {
+            // Avoid infinity cost edge.
             if (entry.getValue() != 0) {
                 String character1 = entry.getKey().get(0);
                 String character2 = entry.getKey().get(1);
                 Graph<String, Double>.Node node1 = graph.makeNode(character1);
                 Graph<String, Double>.Node node2 = graph.makeNode(character2);
                 double cost = 1.0 / entry.getValue();
+                // Connection is bidirectional so we add two edges.
                 graph.addEdge(graph.makeEdge(node1, node2, cost));
                 graph.addEdge(graph.makeEdge(node2, node1, cost));
             }
@@ -143,7 +150,7 @@ public class MarvelPaths2 {
      *
      * @spec.requires lst != null
      * @param lst the list to be summed
-     * @param <N> the generic type for Graph.//TODO check
+     * @param <N> the generic type for the data type in Graph<N, E>.Node.//TODO check
      * @return a Double that represents the sum of all edges in the list.
      */
     public static <N extends @NonNull Object> Double sumCost(List<Graph<N, Double>.Edge> lst) {
@@ -168,6 +175,7 @@ public class MarvelPaths2 {
      * @param graph the graph to be searched in
      * @param start the start of the path to be searched.
      * @param end the end of the path to be searched
+     * @param <N> the generic type for the data type in Graph<N, E>.Node.//TODO check
      * @return a list holding the path from start to end if there exists one, or null otherwise.
      */
     public static <N extends @NonNull Object> @Nullable List<Graph<N, Double>.Edge> findPath
@@ -210,7 +218,7 @@ public class MarvelPaths2 {
                 if (minPath.size() == 1) {
                     return new ArrayList<>();
                 } else {
-                    return minPath.subList(1, minPath.size() - 1);
+                    return minPath.subList(1, minPath.size());
                 }
             }
 

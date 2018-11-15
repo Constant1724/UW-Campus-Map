@@ -14,26 +14,25 @@ added node ValidNode4 to graph1
 added node ValidNode5 to graph1
 added node ValidNode6 to graph1
 
-added edge label12a from ValidNode1 to ValidNode2 in graph1
 added edge label12b from ValidNode1 to ValidNode2 in graph1
+added edge label12a from ValidNode1 to ValidNode2 in graph1
 
 added edge label13 from ValidNode1 to ValidNode3 in graph1
 
-added edge label14a from ValidNode1 to ValidNode4 in graph1
 added edge label14b from ValidNode1 to ValidNode4 in graph1
+added edge label14a from ValidNode1 to ValidNode4 in graph1
 
 added edge label25 from ValidNode2 to ValidNode5 in graph1
 
 added edge label56 from ValidNode5 to ValidNode6 in graph1
 
-added edge label26a from ValidNode2 to ValidNode6 in graph1
 added edge label26b from ValidNode2 to ValidNode6 in graph1
+added edge label26a from ValidNode2 to ValidNode6 in graph1
 
-added edge label46a from ValidNode4 to ValidNode6 in graph1
 added edge label46b from ValidNode4 to ValidNode6 in graph1
+added edge label46a from ValidNode4 to ValidNode6 in graph1
 
 path from ValidNode1 to ValidNode6:
 ValidNode1 to ValidNode2 via label12a
-ValidNode2 to ValidNode5 via label26a
-
+ValidNode2 to ValidNode6 via label26a
 # END_TEST

@@ -12,7 +12,7 @@ import org.junit.runners.Suite.*;
  * <p>For instance, unit tests for your individual methods would go here.
  */
 @RunWith(Suite.class)
-@SuiteClasses({CheckAsserts.class /* list classes here */})
+@SuiteClasses({CheckAsserts.class, MarvelPaths2Test.class /* list classes here */})
 public final class ImplementationTests {
   // This class is a placeholder for the suite, so it has no members.
 }
