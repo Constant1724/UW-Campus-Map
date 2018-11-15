@@ -3,6 +3,7 @@
 plugins {
   id "net.ltgt.errorprone-base" version "0.0.13"
   id 'org.ajoberstar.grgit' version '2.3.0'
+  id 'com.github.johnrengelman.shadow' version '4.0.2'
 }
 apply plugin: 'java'
 apply from: "gradle/checkerframework.gradle"
@@ -17,15 +18,21 @@ repositories {
 }
 
 dependencies {
-  implementation group: 'asm', name: 'asm-all', version: '2.2.3' // for staff tools
   implementation group: 'org.plumelib', name: 'require-javadoc', version: '0.1.0'
+  implementation 'com.opencsv:opencsv:4.3.2'
+
+  // For staff tools
+  implementation group: 'asm', name: 'asm-all', version: '2.2.3' // for staff tools
+
+  // For testing.
   // These should really be testImplementation, but put them in implementation so
   // javadoc target works without change for test files.
   implementation group: 'junit', name: 'junit', version: '4.12'
   implementation group: 'org.hamcrest', name: 'hamcrest-core', version: '1.3'
   implementation group: 'org.hamcrest', name: 'hamcrest-all', version: '1.3'
 
-  compile 'org.ajoberstar:grgit:2.3.0'
+  // For this build file
+  implementation 'org.ajoberstar:grgit:2.3.0'
 }
 
 ///
@@ -258,14 +265,14 @@ task checkNoUncommittedChanges {
 task validateWorkingCopy(group: 'Validation') {
   description = 'Validate the working copy.  Ensures that the project builds and that required files exist.'
   doLast {
-    def String[] homeworkProperties = homeworks.split(',')
+    def String[] homeworkProperties = homeworks.split(' ')
     homeworkProperties.each { requiredHwFiles ->
-      def String[] requiredFiles = getProperty(requiredHwFiles).split(',')
+      def String[] requiredFiles = getProperty(requiredHwFiles).split(' ')
       requiredFiles.each { fileName ->
         fileName = fileName.trim()
-        if (! file("src/main/java/${fileName}").exists()) {
-	  throw new GradleException("File ${fileName} does not exist.")
-	}
+        if (! file("${fileName}").exists()) {
+          throw new GradleException("File ${fileName} does not exist.")
+        }
       }
     }
   }
