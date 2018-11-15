@@ -1,0 +1,13 @@
+# START_TEST
+# NAME OneHop
+# test a graph can be loaded and correctly find the path from A to B.
+
+# Create a graph and load data
+LoadGraph heros staffSuperheroes.tsv
+
+
+FindPath heros Ernst-the-Bicycling-Wizard Perkins-the-Magical-Singing-Instructor
+
+FindPath heros Ernst-the-Bicycling-Wizard Notkin-of-the-Superhuman-Beard
+
+# END_TEST

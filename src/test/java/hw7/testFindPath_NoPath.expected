@@ -1,0 +1,11 @@
+# START_TEST
+# NAME NoPath
+# test a graph can be loaded and correctly find the path from A to B.
+
+# Create a graph and load data
+loaded graph heros
+
+path from Ernst-the-Bicycling-Wizard to Grossman-the-Youngest-of-them-all:
+no path found
+
+# END_TEST

@@ -1,0 +1,15 @@
+# START_TEST
+# NAME ListEdges
+# test a graph can be loaded and correctly list edges for a node.
+
+# Create a graph and load data
+loaded graph heros
+
+the children of Ernst-the-Bicycling-Wizard in heros are: Notkin-of-the-Superhuman-Beard(0.250) Perkins-the-Magical-Singing-Instructor(1.000)
+the children of Notkin-of-the-Superhuman-Beard in heros are: Ernst-the-Bicycling-Wizard(0.250) Perkins-the-Magical-Singing-Instructor(1.000)
+the children of Perkins-the-Magical-Singing-Instructor in heros are: Ernst-the-Bicycling-Wizard(1.000) Notkin-of-the-Superhuman-Beard(1.000)
+
+# List Edge for an isolated node.
+the children of Grossman-the-Youngest-of-them-all in heros are:
+
+# END_TEST

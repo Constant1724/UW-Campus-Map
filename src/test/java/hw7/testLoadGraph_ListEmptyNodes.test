@@ -1,0 +1,10 @@
+# START_TEST
+# NAME ListEmptyNodes
+# test a graph can be loaded and correctly list nodes.
+
+# Create a graph and load data
+LoadGraph heros empty.tsv
+
+ListNodes heros
+
+# END_TEST

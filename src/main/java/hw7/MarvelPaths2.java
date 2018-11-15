@@ -2,11 +2,18 @@ package hw7;
 
 import hw3.Graph;
 import hw6.MarvelParser;
+import hw6.MarvelPaths;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 import java.util.*;
 
+/**
+ * This class loads a file, which is defined in the format for marvel.tsv, and create a graph with
+ * data from that file.
+ *
+ * <p>It also provides functionality to find a shortest path between two given nodes.
+ */
 public class MarvelPaths2 {
     // This is NOT an ADT!!!
     // This is NOT an ADT!!!
@@ -41,8 +48,8 @@ public class MarvelPaths2 {
             System.out.println();
             System.out.println("Please input two character name:");
 
-            Graph<String, Double>.Node startNode = graph.makeNode(readInput(reader, "character1: "));
-            Graph<String, Double>.Node endNode = graph.makeNode(readInput(reader, "character2: "));
+            Graph<String, Double>.Node startNode = graph.makeNode(MarvelPaths.readInput(reader, "character1: "));
+            Graph<String, Double>.Node endNode = graph.makeNode(MarvelPaths.readInput(reader, "character2: "));
             if (!graph.containNode(startNode)) {
                 System.out.println("Character " + startNode.getContent() + " NOT FOUND!");
             } else if (!graph.containNode(endNode)) {
@@ -62,23 +69,6 @@ public class MarvelPaths2 {
                 }
             }
         }
-    }
-
-    /**
-     * Helper method to help print out prompts and parse user input and return it.
-     *
-     * @param reader a reader that reads in user input
-     * @param prompt the prompt message, will be printed out before user type in anything.
-     * @return a correctly formatted user input. specifically, all quotation marks will be excluded.
-     */
-    private static String readInput(Scanner reader, String prompt) {
-        System.out.print(prompt);
-        String character = reader.nextLine().replaceAll("\"", "");
-        character = character.replaceAll("_", " ");
-        if (character.equals("exit")) {
-            System.exit(0);
-        }
-        return character;
     }
 
     /**
@@ -150,7 +140,7 @@ public class MarvelPaths2 {
      *
      * @spec.requires lst != null
      * @param lst the list to be summed
-     * @param <N> the generic type for the data type in Graph<N, E>.Node.//TODO check
+     * @param <N> the generic type for the data type in Graph&lt;N, E&gt;.Node.//TODO check
      * @return a Double that represents the sum of all edges in the list.
      */
     public static <N extends @NonNull Object> Double sumCost(List<Graph<N, Double>.Edge> lst) {
@@ -175,7 +165,7 @@ public class MarvelPaths2 {
      * @param graph the graph to be searched in
      * @param start the start of the path to be searched.
      * @param end the end of the path to be searched
-     * @param <N> the generic type for the data type in Graph<N, E>.Node.//TODO check
+     * @param <N> the generic type for the data type in Graph&lt;N, E&gt;.Node.//TODO check
      * @return a list holding the path from start to end if there exists one, or null otherwise.
      */
     public static <N extends @NonNull Object> @Nullable List<Graph<N, Double>.Edge> findPath

@@ -1,0 +1,45 @@
+# START_TEST
+# NAME FindShortest
+# test a graph can be loaded and correctly find the path from A to B, with least
+# cost, as cost being the alphabetical ordering of edges and labels..
+
+# Create a graph
+CreateGraph graph1
+
+# AddNode
+AddNode graph1 ValidNode1
+AddNode graph1 ValidNode2
+AddNode graph1 ValidNode3
+AddNode graph1 ValidNode4
+AddNode graph1 ValidNode5
+AddNode graph1 ValidNode6
+
+# make cost 13 = 0.1
+AddEdge graph1 ValidNode1 ValidNode3 0.100
+
+
+# make cost 25 = 0.1
+AddEdge graph1 ValidNode2 ValidNode5 0.100
+
+
+# make cost 32 = 0.2
+AddEdge graph1 ValidNode3 ValidNode2 0.200
+
+
+# make cost 14 = 0.3
+AddEdge graph1 ValidNode1 ValidNode4 0.300
+
+
+# make cost 45 = 0.2
+AddEdge graph1 ValidNode4 ValidNode5 0.200
+
+
+# make cost 16 = 1.0
+AddEdge graph1 ValidNode1 ValidNode6 1.000
+
+#make cost 56 = 0.5
+AddEdge graph1 ValidNode5 ValidNode6 0.500
+
+
+FindPath graph1 ValidNode1 ValidNode6
+# END_TEST

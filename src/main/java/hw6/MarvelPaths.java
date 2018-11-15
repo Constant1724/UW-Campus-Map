@@ -75,9 +75,10 @@ public class MarvelPaths {
    * @param prompt the prompt message, will be printed out before user type in anything.
    * @return a correctly formatted user input. specifically, all quotation marks will be excluded.
    */
-  private static String readInput(Scanner reader, String prompt) {
+  public static String readInput(Scanner reader, String prompt) {
     System.out.print(prompt);
     String character = reader.nextLine().replaceAll("\"", "");
+    character = character.replaceAll("_", " ");
     if (character.equals("exit")) {
       System.exit(0);
     }

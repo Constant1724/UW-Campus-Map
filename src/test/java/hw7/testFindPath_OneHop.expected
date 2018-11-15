@@ -1,0 +1,17 @@
+# START_TEST
+# NAME OneHop
+# test a graph can be loaded and correctly find the path from A to B.
+
+# Create a graph and load data
+loaded graph heros
+
+
+path from Ernst-the-Bicycling-Wizard to Perkins-the-Magical-Singing-Instructor:
+Ernst-the-Bicycling-Wizard to Perkins-the-Magical-Singing-Instructor with weight 1.000
+total cost: 1.000
+
+path from Ernst-the-Bicycling-Wizard to Notkin-of-the-Superhuman-Beard:
+Ernst-the-Bicycling-Wizard to Notkin-of-the-Superhuman-Beard with weight 0.500
+total cost: 0.500
+
+# END_TEST

@@ -57,7 +57,7 @@ public class HW7TestDriver {
 
   protected final BufferedReader input;
 
-    private static String path = "src/main/java/hw6/data/";
+    private static String path = "src/main/java/hw7/data/";
   /**
    * @spec.requires r != null && w != null
    * @spec.effects Creates a new HW7TestDriver which reads command from <tt>r</tt> and writes
@@ -226,7 +226,7 @@ public class HW7TestDriver {
               }
             });
     for (Graph<String, Double>.Edge edge : list) {
-      out += String.format(" %s(%s)", edge.getEnd().getContent(), edge.getLabel());
+      out += String.format(" %s(%.3f)", edge.getEnd().getContent(), edge.getLabel());
     }
     output.println(out);
   }

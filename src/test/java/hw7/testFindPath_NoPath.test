@@ -1,0 +1,10 @@
+# START_TEST
+# NAME NoPath
+# test a graph can be loaded and correctly find the path from A to B.
+
+# Create a graph and load data
+LoadGraph heros small.tsv
+
+FindPath heros Ernst-the-Bicycling-Wizard Grossman-the-Youngest-of-them-all
+
+# END_TEST
