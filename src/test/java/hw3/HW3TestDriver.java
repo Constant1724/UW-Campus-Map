@@ -160,8 +160,7 @@ public class HW3TestDriver {
   private void addEdge(String graphName, String parentName, String childName, String edgeLabel) {
     // Insert your code here.
     Graph<String, String> graph = graphs.get(graphName);
-    graph.addEdge(
-        graph.makeEdge(graph.makeNode(parentName), graph.makeNode(childName), edgeLabel));
+    graph.addEdge(graph.makeEdge(graph.makeNode(parentName), graph.makeNode(childName), edgeLabel));
     String out =
         String.format(
             "added edge %s from %s to %s in %s", edgeLabel, parentName, childName, graphName);
@@ -206,7 +205,8 @@ public class HW3TestDriver {
     // Insert your code here.
     Graph<String, String> graph = graphs.get(graphName);
     String out = String.format("the children of %s in %s are:", parentName, graphName);
-    List<Graph<String, String>.Edge> list = new ArrayList<Graph<String, String>.Edge>(graph.getEdges(graph.makeNode(parentName)));
+    List<Graph<String, String>.Edge> list =
+        new ArrayList<Graph<String, String>.Edge>(graph.getEdges(graph.makeNode(parentName)));
 
     list.sort(
         (e1, e2) -> {
@@ -222,7 +222,7 @@ public class HW3TestDriver {
     output.println(out);
   }
 
-    /** This exception results when the input file cannot be parsed properly. */
+  /** This exception results when the input file cannot be parsed properly. */
   public static class CommandException extends RuntimeException {
 
     public CommandException() {

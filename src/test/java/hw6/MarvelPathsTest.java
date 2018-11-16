@@ -14,11 +14,14 @@ public class MarvelPathsTest {
   public static final String SMALL_TEST_MALFORMED =
       "src/main/java/hw6/data/staffSuperheroes_malformed_version.tsv";
   public static final String MARVEL = "src/main/java/hw6/data/marvel.tsv";
-  public static final Graph<String, String>.Node ERNST = NodeTest.create("Ernst-the-Bicycling-Wizard");
-  public static final Graph<String, String>.Node NOTKIN = NodeTest.create("Notkin-of-the-Superhuman-Beard");
+  public static final Graph<String, String>.Node ERNST =
+      NodeTest.create("Ernst-the-Bicycling-Wizard");
+  public static final Graph<String, String>.Node NOTKIN =
+      NodeTest.create("Notkin-of-the-Superhuman-Beard");
   public static final Graph<String, String>.Node PERKINS =
       NodeTest.create("Perkins-the-Magical-Singing-Instructor");
-  public static final Graph<String, String>.Node GROSSMAN = NodeTest.create("Grossman-the-Youngest-of-them-all");
+  public static final Graph<String, String>.Node GROSSMAN =
+      NodeTest.create("Grossman-the-Youngest-of-them-all");
 
   private List<Graph<String, String>.Node> nodes;
 

@@ -25,7 +25,8 @@ public class EdgeTest {
    * @param label cost of the Edge.
    * @return a new Node with content as its description.
    */
-  public static Graph<String, String>.Edge create(Graph<String, String>.Node start, Graph<String, String>.Node end, String label) {
+  public static Graph<String, String>.Edge create(
+      Graph<String, String>.Node start, Graph<String, String>.Node end, String label) {
 
     return new Graph<String, String>().makeEdge(start, end, label);
   }

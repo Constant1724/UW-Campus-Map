@@ -1,7 +1,6 @@
 package hw7;
 
 import hw3.Graph;
-
 import java.io.*;
 import java.util.*;
 
@@ -21,7 +20,7 @@ public class HW7TestDriver {
 
       if (args.length == 0) {
         td =
-                new HW7TestDriver(new InputStreamReader(System.in), new OutputStreamWriter(System.out));
+            new HW7TestDriver(new InputStreamReader(System.in), new OutputStreamWriter(System.out));
       } else {
 
         String fileName = args[0];
@@ -57,7 +56,7 @@ public class HW7TestDriver {
 
   protected final BufferedReader input;
 
-    private static String path = "src/main/java/hw7/data/";
+  private static String path = "src/main/java/hw7/data/";
 
   /**
    * @spec.requires r != null && w != null
@@ -110,9 +109,9 @@ public class HW7TestDriver {
       } else if (command.equals("ListChildren")) {
         listChildren(arguments);
       } else if (command.equals("LoadGraph")) {
-          loadGraph(arguments);
+        loadGraph(arguments);
       } else if (command.equals("FindPath")) {
-          findPath(arguments);
+        findPath(arguments);
       } else {
         output.println("Unrecognized command: " + command);
       }
@@ -170,11 +169,10 @@ public class HW7TestDriver {
   private void addEdge(String graphName, String parentName, String childName, Double edgeLabel) {
     // Insert your code here.
     Graph<String, Double> graph = graphs.get(graphName);
-    graph.addEdge(
-            graph.makeEdge(graph.makeNode(parentName), graph.makeNode(childName), edgeLabel));
+    graph.addEdge(graph.makeEdge(graph.makeNode(parentName), graph.makeNode(childName), edgeLabel));
     String out =
-            String.format(
-                    "added edge %.3f from %s to %s in %s", edgeLabel, parentName, childName, graphName);
+        String.format(
+            "added edge %.3f from %s to %s in %s", edgeLabel, parentName, childName, graphName);
     output.println(out);
   }
 
@@ -216,16 +214,17 @@ public class HW7TestDriver {
     // Insert your code here.
     Graph<String, Double> graph = graphs.get(graphName);
     String out = String.format("the children of %s in %s are:", parentName, graphName);
-    List<Graph<String, Double>.Edge> list = new ArrayList<>(graph.getEdges(graph.makeNode(parentName)));
+    List<Graph<String, Double>.Edge> list =
+        new ArrayList<>(graph.getEdges(graph.makeNode(parentName)));
 
     list.sort(
-            (e1, e2) -> {
-              if (e1.getEnd().getContent().compareTo(e2.getEnd().getContent()) == 0) {
-                return e1.getLabel().compareTo(e2.getLabel());
-              } else {
-                return e1.getEnd().getContent().compareTo(e2.getEnd().getContent());
-              }
-            });
+        (e1, e2) -> {
+          if (e1.getEnd().getContent().compareTo(e2.getEnd().getContent()) == 0) {
+            return e1.getLabel().compareTo(e2.getLabel());
+          } else {
+            return e1.getEnd().getContent().compareTo(e2.getEnd().getContent());
+          }
+        });
 
     for (Graph<String, Double>.Edge edge : list) {
       out += String.format(" %s(%.3f)", edge.getEnd().getContent(), edge.getLabel());
@@ -234,31 +233,29 @@ public class HW7TestDriver {
   }
 
   /** This exception results when the input file cannot be parsed properly. */
-
-    private void loadGraph(List<String> arguments) {
-        if (arguments.size() != 2) {
-            throw new CommandException("Baz arguments to LoadGraph: " + arguments);
-        }
-        String graphName = arguments.get(0);
-        String fileName = arguments.get(1);
-        loadGraph(graphName, path + fileName);
+  private void loadGraph(List<String> arguments) {
+    if (arguments.size() != 2) {
+      throw new CommandException("Baz arguments to LoadGraph: " + arguments);
     }
+    String graphName = arguments.get(0);
+    String fileName = arguments.get(1);
+    loadGraph(graphName, path + fileName);
+  }
 
-    private void loadGraph(String graphName, String filePath) {
-        graphs.put(graphName, MarvelPaths2.loadData(filePath));
-        output.println("loaded graph " + graphName);
+  private void loadGraph(String graphName, String filePath) {
+    graphs.put(graphName, MarvelPaths2.loadData(filePath));
+    output.println("loaded graph " + graphName);
+  }
+
+  private void findPath(List<String> arguments) {
+    if (arguments.size() != 3) {
+      throw new CommandException("Baz arguments to FindPath: " + arguments);
     }
-
-
-    private void findPath(List<String> arguments) {
-        if (arguments.size() != 3) {
-            throw new CommandException("Baz arguments to FindPath: " + arguments);
-        }
-        String graphName = arguments.get(0);
-        String startNode = arguments.get(1).replace('_', ' ');
-        String endNode = arguments.get(2).replace('_', ' ');
-        findPath(graphName, startNode, endNode);
-    }
+    String graphName = arguments.get(0);
+    String startNode = arguments.get(1).replace('_', ' ');
+    String endNode = arguments.get(2).replace('_', ' ');
+    findPath(graphName, startNode, endNode);
+  }
 
   protected void findPath(String graphName, String startNode, String endNode) {
     Graph<String, Double> graph = graphs.get(graphName);
@@ -276,31 +273,31 @@ public class HW7TestDriver {
     if (ifBothNodesInGraph) {
       output.println(String.format("path from %s to %s:", startNode, endNode));
       List<Graph<String, Double>.Edge> path =
-              MarvelPaths2.findPath(graph, graph.makeNode(startNode), graph.makeNode(endNode));
+          MarvelPaths2.findPath(graph, graph.makeNode(startNode), graph.makeNode(endNode));
       if (path == null) {
         output.println("no path found");
       } else {
         for (Graph<String, Double>.Edge edge : path) {
           output.println(
-                  String.format(
-                          "%s to %s with weight %.3f",
-                          edge.getStart().getContent(), edge.getEnd().getContent(), edge.getLabel()));
+              String.format(
+                  "%s to %s with weight %.3f",
+                  edge.getStart().getContent(), edge.getEnd().getContent(), edge.getLabel()));
         }
         output.println(String.format("total cost: %.3f", MarvelPaths2.sumCost(path)));
       }
     }
   }
 
-    public static class CommandException extends RuntimeException {
+  public static class CommandException extends RuntimeException {
 
-        public CommandException() {
-            super();
-        }
-
-        public CommandException(String s) {
-            super(s);
-        }
-
-        public static final long serialVersionUID = 3495;
+    public CommandException() {
+      super();
     }
+
+    public CommandException(String s) {
+      super(s);
+    }
+
+    public static final long serialVersionUID = 3495;
+  }
 }

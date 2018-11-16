@@ -1,13 +1,12 @@
 package hw3;
 
+import java.util.*;
 import org.checkerframework.checker.initialization.qual.UnknownInitialization;
 import org.checkerframework.checker.nullness.qual.KeyFor;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.checkerframework.dataflow.qual.Pure;
 import org.checkerframework.dataflow.qual.SideEffectFree;
-
-import java.util.*;
 
 /**
  * Graph represents a mutable, directed and cyclic graph. Duplicate of nodes or edges in graph is
@@ -25,10 +24,10 @@ import java.util.*;
  * @spec.specfield Nodes : a set of Nodes // Represent all Nodes in this Graph.
  * @spec.specfield Edges : a set of Edges // Represent all Edges in this Graph.
  *     <p>Abstract Invariant: The two nodes of any Edge in Graph.Edges must be in Graph.Nodes.
- *
- *
- * @param <N> represents the type of data to be stored in single Node in the graph. N should be immutable
- * @param <E> represents the type of data ot be stored in single Edge in the graph. E should be immutable
+ * @param <N> represents the type of data to be stored in single Node in the graph. N should be
+ *     immutable
+ * @param <E> represents the type of data ot be stored in single Edge in the graph. E should be
+ *     immutable
  */
 public class Graph<N extends @NonNull Object, E extends @NonNull Object> {
   /** map represents the graph */
@@ -345,11 +344,11 @@ public class Graph<N extends @NonNull Object, E extends @NonNull Object> {
     @Override
     @Pure
     public boolean equals(@Nullable Object obj) {
-      if (!(obj instanceof Graph<?,?>.Node)) {
+      if (!(obj instanceof Graph<?, ?>.Node)) {
         return false;
       }
 
-      return this.content.equals(((Graph<?,?>.Node) obj).content);
+      return this.content.equals(((Graph<?, ?>.Node) obj).content);
     }
   }
 
@@ -392,7 +391,6 @@ public class Graph<N extends @NonNull Object, E extends @NonNull Object> {
       this.end = end;
       this.label = label;
       checkRep();
-
     }
 
     /** Checks that the representation invariant holds (if any). */
@@ -451,10 +449,10 @@ public class Graph<N extends @NonNull Object, E extends @NonNull Object> {
     @Override
     @Pure
     public boolean equals(@Nullable Object obj) {
-      if (!(obj instanceof Graph<?,?>.Edge)) {
+      if (!(obj instanceof Graph<?, ?>.Edge)) {
         return false;
       }
-      Graph<?,?>.Edge other = (Graph<?,?>.Edge) obj;
+      Graph<?, ?>.Edge other = (Graph<?, ?>.Edge) obj;
 
       return this.start.equals(other.getStart())
           && this.end.equals(other.getEnd())

@@ -2,6 +2,8 @@ package hw7;
 
 import static org.junit.Assert.assertEquals;
 
+import hw6.utils.LabelledParameterized;
+import hw6.utils.LabelledParameterized.*;
 import java.io.*;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
@@ -10,8 +12,6 @@ import java.util.List;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized.Parameters;
-import hw6.utils.LabelledParameterized;
-import hw6.utils.LabelledParameterized.*;
 
 /**
  * DO NOT MODIFY
@@ -192,5 +192,3 @@ public class ScriptFileTests {
     assertEquals(testScriptFile.getName(), fileContents(expected), runScriptFile());
   }
 }
-
-
