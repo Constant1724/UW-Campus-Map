@@ -104,6 +104,11 @@ public class MarvelPaths2 {
         Map<List<String>, Integer> counts = new HashMap<>();
 
         for (List<String> values: books.values()) {
+            // get rid of possible duplicate.
+            // TODO check piazza.
+            Set<String> uniqueValues = new HashSet<>(values);
+            values = new ArrayList<>(uniqueValues);
+
             for (int i = 0; i < values.size(); i++) {
                 for (int j = i + 1; j < values.size(); j++) {
                     List<String> tuple = new ArrayList<>();
@@ -161,7 +166,7 @@ public class MarvelPaths2 {
      *
      * <p>If such a path does not exist, it will return null.
      *
-     * @spec.requires graph != null and start != null and end != null
+     * @spec.requires graph != null and start != null and end != null and all edges should have non-negative label.
      * @param graph the graph to be searched in
      * @param start the start of the path to be searched.
      * @param end the end of the path to be searched

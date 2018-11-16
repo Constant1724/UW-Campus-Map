@@ -1,0 +1,24 @@
+# START_TEST
+# NAME AnotherSimpleTest
+# test a graph can be loaded and correctly find the path from A to B, with least
+# cost, as cost being the alphabetical ordering of edges and labels..
+
+# Create a graph
+CreateGraph graph1
+
+# AddNode
+AddNode graph1 A
+AddNode graph1 B
+AddNode graph1 C
+AddNode graph1 D
+
+AddEdge graph1 A B 10.000
+
+AddEdge graph1 A C 1.000
+
+AddEdge graph1 C D 1.000
+
+AddEdge graph1 D B 1.000
+
+FindPath graph1 A B
+# END_TEST
