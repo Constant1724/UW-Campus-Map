@@ -147,6 +147,15 @@ public class MarvelPaths2 {
   /**
    * Sum the cost of all edges in the given lst and return the answer.
    *
+   * Note that even in large graph with so many nodes and edges like marvel.tsv
+   * It is unlikely for a path from some node to some other node to have several thousands edge.
+   * For example, If I want to find a way from Seattle to NewYork in google map, though google map
+   * is really large, the path is unlikely to have more than 1000 steps.
+   *
+   * Therefore, in normal graphs, I assume that the majority of the paths have at most 1000 steps,
+   * and the cost to loop through it and sum up should be constant time. So, it makes sense to calculate
+   * the cost whenever needed rather than storing that cost.
+   *
    * @spec.requires lst != null
    * @param lst the list to be summed
    * @param <N> the generic type for the data type in Graph&lt;N, E&gt;.Node.
