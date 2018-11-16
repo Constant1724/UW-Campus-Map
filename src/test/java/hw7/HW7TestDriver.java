@@ -46,8 +46,8 @@ public class HW7TestDriver {
 
   protected static void printUsage() {
     System.err.println("Usage:");
-    System.err.println("to read from a file: java hw3.test.HW7TestDriver <name of input script>");
-    System.err.println("to read from standard in: java hw3.test.HW7TestDriver");
+    System.err.println("to read from a file: java hw7.test.HW7TestDriver <name of input script>");
+    System.err.println("to read from standard in: java hw7.test.HW7TestDriver");
   }
 
   /** String -> Graph: maps the names of graphs to the actual graph * */
@@ -58,6 +58,7 @@ public class HW7TestDriver {
   protected final BufferedReader input;
 
     private static String path = "src/main/java/hw7/data/";
+
   /**
    * @spec.requires r != null && w != null
    * @spec.effects Creates a new HW7TestDriver which reads command from <tt>r</tt> and writes
@@ -149,7 +150,7 @@ public class HW7TestDriver {
   private void addNode(String graphName, String nodeName) {
     // Insert your code here.
     Graph<String, Double> graph = graphs.get(graphName);
-    graph.addNode(createNode(nodeName));
+    graph.addNode(graph.makeNode(nodeName));
     output.println(String.format("added node %s to %s", nodeName, graphName));
   }
 
@@ -170,7 +171,7 @@ public class HW7TestDriver {
     // Insert your code here.
     Graph<String, Double> graph = graphs.get(graphName);
     graph.addEdge(
-            createEdge(createNode(parentName), createNode(childName), edgeLabel));
+            graph.makeEdge(graph.makeNode(parentName), graph.makeNode(childName), edgeLabel));
     String out =
             String.format(
                     "added edge %.3f from %s to %s in %s", edgeLabel, parentName, childName, graphName);
@@ -225,19 +226,11 @@ public class HW7TestDriver {
                 return e1.getEnd().getContent().compareTo(e2.getEnd().getContent());
               }
             });
+
     for (Graph<String, Double>.Edge edge : list) {
       out += String.format(" %s(%.3f)", edge.getEnd().getContent(), edge.getLabel());
     }
     output.println(out);
-  }
-
-  public static Graph<String, Double>.Node createNode(String content) {
-    return new Graph<String, Double>().makeNode(content);
-  }
-
-  public static Graph<String, Double>.Edge createEdge(Graph<String, Double>.Node start, Graph<String, Double>.Node end, Double label) {
-
-    return new Graph<String, Double>().makeEdge(start, end, label);
   }
 
   /** This exception results when the input file cannot be parsed properly. */

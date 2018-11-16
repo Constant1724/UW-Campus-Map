@@ -5,10 +5,12 @@
 # Create a graph and load data
 loaded graph heros
 
+added edge 0.800 from Ernst-the-Bicycling-Wizard to Perkins-the-Magical-Singing-Instructor in heros
 
+# test if can use new edges after graph has been loaded
 path from Ernst-the-Bicycling-Wizard to Perkins-the-Magical-Singing-Instructor:
-Ernst-the-Bicycling-Wizard to Perkins-the-Magical-Singing-Instructor with weight 1.000
-total cost: 1.000
+Ernst-the-Bicycling-Wizard to Perkins-the-Magical-Singing-Instructor with weight 0.800
+total cost: 0.800
 
 path from Ernst-the-Bicycling-Wizard to Notkin-of-the-Superhuman-Beard:
 Ernst-the-Bicycling-Wizard to Notkin-of-the-Superhuman-Beard with weight 0.500

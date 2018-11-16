@@ -5,7 +5,9 @@
 # Create a graph and load data
 LoadGraph heros staffSuperheroes.tsv
 
+AddEdge heros Ernst-the-Bicycling-Wizard Perkins-the-Magical-Singing-Instructor 0.800
 
+# test if can use new edges after graph has been loaded
 FindPath heros Ernst-the-Bicycling-Wizard Perkins-the-Magical-Singing-Instructor
 
 FindPath heros Ernst-the-Bicycling-Wizard Notkin-of-the-Superhuman-Beard
