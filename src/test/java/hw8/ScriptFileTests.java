@@ -14,8 +14,8 @@ import java.util.List;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized.Parameters;
-import utils.tests.LabelledParameterized;
-import utils.tests.LabelledParameterized.Labels;
+import hw6.utils.LabelledParameterized;
+import hw6.utils.LabelledParameterized.*
 
 /**
  * This class, along with HW8TestDriver, can be used to test your Campus Paths application. It is
