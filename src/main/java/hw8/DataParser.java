@@ -13,7 +13,8 @@ import java.nio.file.Paths;
 import java.util.*;
 
 public class DataParser {
-
+    // This is NOT an ADT!!
+    // This is NOT an ADT!!
     /**
      *  Reads Campus Path data set. Each line of the input file represents a path and is defined by:
      *      x1,y1   x2,y2   distance

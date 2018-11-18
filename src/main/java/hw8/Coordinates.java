@@ -36,6 +36,9 @@ public class Coordinates {
 
     @Override
     public boolean equals(@Nullable Object obj) {
+        if (!(obj instanceof Coordinates)){
+            return false;
+        }
         Coordinates other = (Coordinates) obj;
         return this.x == other.x && this.y == other.y;
     }
