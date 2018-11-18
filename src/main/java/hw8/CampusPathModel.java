@@ -11,16 +11,17 @@ import java.util.*;
  *
  * Specifically, it loads information about all paths and buildings.
  *      For any path, it loads the origin, destination and cost of that path.
- *      For any building, it loads both full name and abbreviated short name and a list of locations representing its entrances.
+ *      For any building, it loads both full name and abbreviated short name and a location representing its entrance.
+ *          If a building has multiple entrance, then its shortName and longName must be unique for each entrance.
+ *          For example: CHL (NE) and CHL (SE) represents different entrances of the same building.
  *
- * Note that not all locations need to have some path to/from them.
  *
  * Client can list all buildings in the campus and find a route from one building to another.
  *
  * Specification field:
  *
  * @spec.specfield Map : a map represents set of all edges in campus // A path should have an origin, destination and cost.
- * @spec.specfield Buildings : a set of all buildings in campus. // each building should have its full name abbreviated short name and a list of locations representing its entrances.
+ * @spec.specfield Buildings : a set of all buildings in campus. // each building should have its full name abbreviated short name and location representing its entrance.
  *
  */
 public class CampusPathModel {
@@ -42,9 +43,9 @@ public class CampusPathModel {
     private final Map<String, String> names;
 
     /**
-     * map from full name to list of locations for all buildings.
+     * map from full name to location for all buildings.
      */
-    private final Map<String, List<Coordinates>> locations;
+    private final Map<String, Coordinates> locations;
 
     /**
      * Creates an empty CampusPathModel.

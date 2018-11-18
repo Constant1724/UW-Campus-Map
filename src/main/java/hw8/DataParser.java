@@ -52,22 +52,24 @@ public class DataParser {
      *      shorName and longName are abbreviated and full name for a building.
      *      x and y represents the location of that building.
      *
+     *      If a building has multiple entrance, then its shortName and longName must be unique for each entrance.
+     *      For example: CHL (NE) and CHL (SE) represents different entrances of the same building.
+     *
      * @spec.requires filename is a valid file path
      * @param filename the name of the file that will be read
      * @param longNameToShort map from longName to short Name for all buildings appear in the data set;
      *                        typically empty when the routine is called
-     * @param longNameToLocation map from longName to a list of coordinates representing that building
+     * @param longNameToLocation map from longName to coordinate representing that building
      *                           for all buildings appear in the data set; typically empty when the routine is called.
-     *                              Note that, a building may have multiple entrances and any entrance can represent
-     *                              that building.
+     *
      * @spec.modifies longNameToShort, longNameToLocation
      * @spec.effects fills longNameToShort with a map from each longName of a building to its corresponding shortName.
      * @spec.effects fills longNameToLocation with a map from each longName of a building to
-     *                  all coordinates representing that building
+     *                  an coordinate representing that building
      *
      */
   public static void parseBuildingData(
-          String filename, Map<String, String> longNameToShort, Map<String, List<Coordinates>> longNameToLocation) {
+          String filename, Map<String, String> longNameToShort, Map<String, Coordinates> longNameToLocation) {
 
         CsvToBean<Building> csvToBean = null;
 
@@ -95,9 +97,8 @@ public class DataParser {
             }
 
             if (!longNameToLocation.containsKey(long_name)) {
-                longNameToLocation.put(long_name, new ArrayList<Coordinates>());
+                longNameToLocation.put(long_name, new Coordinates(x, y));
             }
-            longNameToLocation.get(long_name).add(new Coordinates(x, y));
         }
   }
 
