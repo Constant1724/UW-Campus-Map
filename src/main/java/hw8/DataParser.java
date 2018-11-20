@@ -1,14 +1,13 @@
 package hw8;
 
-import com.opencsv.bean.CsvBindByName;
-import com.opencsv.bean.CsvToBean;
-import com.opencsv.bean.CsvToBeanBuilder;
+import com.opencsv.bean.*;
+import com.opencsv.exceptions.CsvConstraintViolationException;
+import com.opencsv.exceptions.CsvDataTypeMismatchException;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
-import java.awt.geom.Arc2D;
 import java.io.IOException;
 import java.io.Reader;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
 
@@ -28,25 +27,28 @@ public class DataParser {
      * @param filename the name of the file that will be read
      * @return a list of CampusPath Objects,
      *          each one representing an edge defined by one line in the data set, respectively.
+     *          or null if there is an IOException
      */
-  public static List<CampusPath> parsePathData(String filename) {
+  public static @Nullable List<CampusPathForCsv> parsePathData(String filename) {
 
-    CsvToBean<CampusPath> csvToBean = null;
-
+      List<CampusPathForCsv> result;
     try (Reader reader = Files.newBufferedReader(Paths.get(filename))) {
-      csvToBean = new CsvToBeanBuilder<CampusPath>(reader)
-              .withType(CampusPath.class)
+        CsvToBean<CampusPathForCsv>  csvToBean = new CsvToBeanBuilder<CampusPathForCsv>(reader)
+              .withType(CampusPathForCsv.class)
+              .withSeparator('\t')
               .withIgnoreLeadingWhiteSpace(true)
               .build();
+      result = csvToBean.parse();
     } catch (IOException e) {
       System.err.println(e.toString());
       e.printStackTrace(System.err);
+      return null;
     }
-    return csvToBean.parse();
+    return result;
   }
 
     /**
-     *  Reads Campus Building data set. Each line of the input file represents a building and is defined by:
+     *  Reads Campus BuildingForCsv data set. Each line of the input file represents a building and is defined by:
      *      shortName   longName    x   y
      *
      *      shorName and longName are abbreviated and full name for a building.
@@ -54,6 +56,8 @@ public class DataParser {
      *
      *      If a building has multiple entrance, then its shortName and longName must be unique for each entrance.
      *      For example: CHL (NE) and CHL (SE) represents different entrances of the same building.
+     *
+     *  If there is an IOException while reading the file, none of the parameters will be changed.
      *
      * @spec.requires filename is a valid file path
      * @param filename the name of the file that will be read
@@ -69,23 +73,24 @@ public class DataParser {
      *
      */
   public static void parseBuildingData(
-          String filename, Map<String, String> longNameToShort, Map<String, Coordinates> longNameToLocation) {
+          String filename, Map<String, String> longNameToShort, Map<String, CoordinatesForCsv> longNameToLocation) {
 
-        CsvToBean<Building> csvToBean = null;
+      List<BuildingForCsv> result;
 
         try (Reader reader = Files.newBufferedReader(Paths.get(filename))) {
-            csvToBean = new CsvToBeanBuilder<Building>(reader)
-                    .withType(Building.class)
+            CsvToBean<BuildingForCsv> csvToBean = new CsvToBeanBuilder<BuildingForCsv>(reader)
+                    .withType(BuildingForCsv.class)
+                    .withSeparator('\t')
                     .withIgnoreLeadingWhiteSpace(true)
                     .build();
+            result = csvToBean.parse();
         } catch (IOException e) {
             System.err.println(e.toString());
             e.printStackTrace(System.err);
+            return;
         }
 
-      Iterator<Building> iterator = csvToBean.iterator();
-        while(iterator.hasNext()) {
-            Building building = iterator.next();
+      for(BuildingForCsv building : result) {
             String short_name = building.getShort_name();
             String long_name = building.getLong_name();
             Double x = Double.parseDouble(building.getX());
@@ -97,9 +102,132 @@ public class DataParser {
             }
 
             if (!longNameToLocation.containsKey(long_name)) {
-                longNameToLocation.put(long_name, new Coordinates(x, y));
+                longNameToLocation.put(long_name, new CoordinatesForCsv(x, y));
             }
         }
   }
+
+
+    public static class BuildingForCsv {
+        @CsvBindByName
+        private String short_name;
+
+        @CsvBindByName
+        private String long_name;
+
+        @CsvBindByName
+        private String x;
+
+        @CsvBindByName
+        private String y;
+
+        public String getShort_name() {
+            return short_name;
+        }
+
+        public void setShort_name(String short_name) {
+            this.short_name = short_name;
+        }
+
+        public String getLong_name() {
+            return long_name;
+        }
+
+        public void setLong_name(String long_name) {
+            this.long_name = long_name;
+        }
+
+        public String getX() {
+            return x;
+        }
+
+        public void setX(String x) {
+            this.x = x;
+        }
+
+        public String getY() {
+            return y;
+        }
+
+        public void setY(String y) {
+            this.y = y;
+        }
+    }
+
+
+    public static class CoordinateConverterForCsv extends AbstractBeanField<String> {
+        @Override
+        protected Object convert(String value) throws CsvDataTypeMismatchException, CsvConstraintViolationException {
+            try {
+                String[] parts = value.split(",");
+                return new CoordinatesForCsv(Double.parseDouble(parts[0]), Double.parseDouble(parts[1]));
+            } catch (RuntimeException e) {
+                throw new CsvDataTypeMismatchException(e.getMessage());
+            }
+        }
+    }
+
+    public static class CoordinatesForCsv {
+
+        private double x, y;
+
+        public CoordinatesForCsv(double x, double y) {
+            this.x = x;
+            this.y = y;
+        }
+
+        public double getX() {
+            return x;
+        }
+
+        public void setX(double x) {
+            this.x = x;
+        }
+
+        public double getY() {
+            return y;
+        }
+
+        public void setY(double y) {
+            this.y = y;
+        }
+
+    }
+
+    public static class CampusPathForCsv {
+
+        @CsvCustomBindByName(converter = CoordinateConverterForCsv.class)
+        private CoordinatesForCsv origin;
+
+        @CsvCustomBindByName(converter = CoordinateConverterForCsv.class)
+        private CoordinatesForCsv destination;
+
+        @CsvBindByName
+        private double distance;
+
+        public CoordinatesForCsv getOrigin() {
+            return origin;
+        }
+
+        public void setOrigin(CoordinatesForCsv origin) {
+            this.origin = origin;
+        }
+
+        public CoordinatesForCsv getDestination() {
+            return destination;
+        }
+
+        public void setDestination(CoordinatesForCsv destination) {
+            this.destination = destination;
+        }
+
+        public double getDistance() {
+            return distance;
+        }
+
+        public void setDistance(double distance) {
+            this.distance = distance;
+        }
+    }
 
 }

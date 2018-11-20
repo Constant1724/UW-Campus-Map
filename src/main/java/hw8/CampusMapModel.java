@@ -7,7 +7,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 import java.util.*;
 
 /**
- * CampusPathModel represents a map of the campus, by loading data from data set.
+ * CampusMapModel represents a map of the campus, by loading data from data set.
  *
  * Specifically, it loads information about all paths and buildings.
  *      For any path, it loads the origin, destination and cost of that path.
@@ -20,11 +20,12 @@ import java.util.*;
  *
  * Specification field:
  *
+ * @spec.specfield Coordinate : represents the location of a point in the campus. // It could be origin, destination of an edge, or location of a building.
  * @spec.specfield Map : a map represents set of all edges in campus // A path should have an origin, destination and cost.
  * @spec.specfield Buildings : a set of all buildings in campus. // each building should have its full name abbreviated short name and location representing its entrance.
  *
  */
-public class CampusPathModel {
+public class CampusMapModel {
 
     // Abstraction Function:
     //
@@ -50,27 +51,27 @@ public class CampusPathModel {
     /**
      * a graph represents all paths in the campus
      */
-    private final Graph<Coordinates, Double> graph;
+    private final Graph<Coordinate, Double> graph;
 
     /**
-     * map from full name to abbreviated short name for all buildings.
+     * map from full name to abbreviated short name for all Buildings.
      */
     private final Map<String, String> names;
 
     /**
-     * map from full name to location for all buildings.
+     * map from full name to location for all Buildings.
      */
-    private final Map<String, Coordinates> locations;
+    private final Map<String, Coordinate> locations;
 
     /** Test flag, whether to enable expensive checks. */
-    private static boolean TEST_FLAG = false;
+    private static boolean TEST_FLAG = true;
 
     /**
-     * Creates an empty CampusPathModel.
+     * Creates an empty CampusMapModel.
      *
-     * @spec.effects creates an empty CampusPathModel.
+     * @spec.effects creates an empty CampusMapModel.
      */
-    private CampusPathModel() {
+    private CampusMapModel() {
         names = new HashMap<>();
         locations = new HashMap<>();
         graph = new Graph<>();
@@ -79,16 +80,16 @@ public class CampusPathModel {
 
   /**
    * Factory method:
-   * Creates an instance of CampusPathModel with campus path data and campus building data.
+   * Creates an instance of CampusMapModel with campus path data and campus building data.
    *
    * @spec.requires pathFileName and buildingFileName are valid file paths.
    *
    * @param pathFileName the name of the file will be read that containing all information about campus paths.
-   * @param buildingFileName the name of the file will be read that containing all information about campus buildings.
-   * @return an instance of CampusPathModel with campus path data and campus building data.
+   * @param buildingFileName the name of the file will be read that containing all information about campus Buildings.
+   * @return an instance of CampusMapModel with campus path data and campus building data.
    */
-  public static CampusPathModel makeInstance(String pathFileName, String buildingFileName) {
-        CampusPathModel model = new CampusPathModel();
+  public static CampusMapModel makeInstance(String pathFileName, String buildingFileName) {
+        CampusMapModel model = new CampusMapModel();
         model.loadData(pathFileName, buildingFileName);
         return model;
     }
@@ -96,24 +97,24 @@ public class CampusPathModel {
   /**
    * Reads Campus Path and Building data set and load them to Map and Buildings, as defined in class annotations.
    *
-   * Note that all buildings are guaranteed to be in the Map, no matter there are edges to/from them or not.
+   * Note that all Buildings are guaranteed to be in the Map, no matter there are edges to/from them or not.
    *
    * @spec.requires pathFileName and buildingFileName are valid file paths.
    *
    * @param pathFileName the name of the file will be read that containing all information about campus paths.
-   * @param buildingFileName the name of the file will be read that containing all information about campus buildings.
+   * @param buildingFileName the name of the file will be read that containing all information about campus Buildings.
    */
   private void loadData(String pathFileName, String buildingFileName) {
 
-        List<CampusPath> edges = DataParser.parsePathData(pathFileName);
+        List<DataParser.CampusPathForCsv> edges = DataParser.parsePathData(pathFileName);
 
         // Since we just want to add all edges to the graph, it implies that both nodes of all edges must be in
         // the graph. As a result, if either start or end of an edge is not in the graph, we simply
         // add it to the graph.
-        for (CampusPath edge : edges) {
+        for (DataParser.CampusPathForCsv edge : edges) {
 
-            Graph<Coordinates, Double>.Node start = this.graph.makeNode(edge.getOrigin());
-            Graph<Coordinates, Double>.Node end = this.graph.makeNode(edge.getDestination());
+            Graph<Coordinate, Double>.Node start = this.graph.makeNode(new Coordinate(edge.getOrigin()));
+            Graph<Coordinate, Double>.Node end = this.graph.makeNode(new Coordinate(edge.getDestination()));
             Double cost = edge.getDistance();
 
             boolean result = true;
@@ -124,21 +125,25 @@ public class CampusPathModel {
             if(!this.graph.containNode(end)) {
                 result = this.graph.addNode(end) && result;
             }
+            // Path is bidirectional.
             result = this.graph.addEdge(this.graph.makeEdge(start, end, cost)) && result;
+            result = this.graph.addEdge(this.graph.makeEdge(end, start, cost)) && result;
 
             // Quick Sanity check, if all operations are good
             assert result;
         }
 
-
-        DataParser.parseBuildingData(buildingFileName, this.names, this.locations);
+        Map<String, DataParser.CoordinatesForCsv> tempLocations = new HashMap<>();
+        DataParser.parseBuildingData(buildingFileName, this.names, tempLocations);
 
         // Add all locations of buildings to the map, in case there is not an edge to/from some building.
-        for(Coordinates location : this.locations.values()) {
-            Graph<Coordinates, Double>.Node node = graph.makeNode(location);
+        // And fill this.locations with data from tempLocations. Specifically, use our Immutable Coordinate class.
+        for(Map.Entry<String, DataParser.CoordinatesForCsv> entry : tempLocations.entrySet()) {
+            Graph<Coordinate, Double>.Node node = graph.makeNode(new Coordinate(entry.getValue()));
             if (!graph.containNode(node)) {
                 graph.addNode(node);
             }
+            this.locations.put(entry.getKey(), new Coordinate(entry.getValue()));
         }
 
         // Quick Sanity check, if loading building data is good.
@@ -167,24 +172,38 @@ public class CampusPathModel {
      * @param end   the end of the path
      * @return a list holding the path from start to end if there exists one, or null otherwise.
      */
-    public @Nullable List<Graph<Coordinates, Double>.Edge> findPath (Coordinates start, Coordinates end) {
+    public @Nullable List<Graph<Coordinate, Double>.Edge> findPath (Coordinate start, Coordinate end) {
         checkRep();
-        List<Graph<Coordinates, Double>.Edge> result =
+        List<Graph<Coordinate, Double>.Edge> result =
                 MarvelPaths2.findPath(this.graph, graph.makeNode(start), graph.makeNode(end));
         checkRep();
         return result;
     }
 
     /**
-     * List the name of all buildings in the campus.
+     * List the name of all Buildings in the campus.
      *
-     * It returns an unmodifiable view of a mapping from longName to shortName for all buildings.
+     * It returns an unmodifiable view of a mapping from longName to shortName for all Buildings.
      *
-     * @return an unmodifiable view of mapping from longName to shortName for all buildings.
+     * @return an unmodifiable view of mapping from longName to shortName for all Buildings.
      */
     public Map<String, String> listBuildings() {
         checkRep();
         Map<String, String> result = Collections.unmodifiableMap(this.names);
+        checkRep();
+        return result;
+    }
+
+    /**
+     * List the Coordinate of all Buildings in the campus.
+     *
+     * It returns an unmodifiable view of a mapping from longName to coordinate for all Buildings.
+     *
+     * @return an unmodifiable view of mapping from longName to coordinate for all Buildings.
+     */
+    public Map<String, Coordinate> listLocations() {
+        checkRep();
+        Map<String, Coordinate> result = Collections.unmodifiableMap(this.locations);
         checkRep();
         return result;
     }
@@ -196,11 +215,46 @@ public class CampusPathModel {
 
         if (TEST_FLAG) {
             assert this.names.keySet().equals(this.locations.keySet());
-            for(Coordinates location : this.locations.values()) {
+            for(Coordinate location : this.locations.values()) {
                 assert graph.containNode(graph.makeNode(location));
             }
         }
 
+    }
+
+
+    public class Coordinate {
+        private final double x, y;
+
+        public Coordinate(double x, double y) {
+            this.x = x;
+            this.y = y;
+        }
+        public Coordinate(DataParser.CoordinatesForCsv parserCoordinate) {
+            this.x = parserCoordinate.getX();
+            this.y = parserCoordinate.getY();
+        }
+        public double getX() {
+            return x;
+        }
+
+        public double getY() {
+            return y;
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(x, y);
+        }
+
+        @Override
+        public boolean equals(Object obj) {
+            if (!(obj instanceof Coordinate)) {
+                return false;
+            }
+            Coordinate other = (Coordinate) obj;
+            return this.x == other.getX() && this.y == other.getY();
+        }
     }
 
 
