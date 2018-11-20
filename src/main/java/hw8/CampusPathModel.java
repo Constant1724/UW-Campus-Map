@@ -25,12 +25,25 @@ import java.util.*;
  *
  */
 public class CampusPathModel {
-    // checkRep: check if names and locations are good. they contain the same info. and if locations are in graph ??? really need it?.
+
     // Abstraction Function:
     //
     //      this.graph represents the campus map.
+    //          Edges in graph are actual paths in the campus map.
+    //          Nodes in graph are start and end points of all paths.
+    //              Some Nodes also represent entrances of buildings, if there is a path to/from that entrance of building.
     //
+    //      this.names represents a mapping from long name of a building to its short name.
     //
+    //      this.locations represents a mapping from long name of a building to its locations in the campus
+    //
+    // Representation Variation:
+    //      graph != null and names != null and locations != null
+    //      names.keySet().equals(locations.keySet())
+    //
+    // In other words:
+    //      graph, names and locations should not be null.
+    //      names and locations should have the exactly same set of keys.
 
     /**
      * a graph represents all paths in the campus
@@ -47,6 +60,9 @@ public class CampusPathModel {
      */
     private final Map<String, Coordinates> locations;
 
+    /** Test flag, whether to enable expensive checks. */
+    private static boolean TEST_FLAG = false;
+
     /**
      * Creates an empty CampusPathModel.
      *
@@ -56,6 +72,7 @@ public class CampusPathModel {
         names = new HashMap<>();
         locations = new HashMap<>();
         graph = new Graph<>();
+        checkRep();
     }
 
   /**
@@ -68,7 +85,7 @@ public class CampusPathModel {
    * @param buildingFileName the name of the file will be read that containing all information about campus buildings.
    * @return an instance of CampusPathModel with campus path data and campus building data.
    */
-  public CampusPathModel makeInstance(String pathFileName, String buildingFileName) {
+  public static CampusPathModel makeInstance(String pathFileName, String buildingFileName) {
         CampusPathModel model = new CampusPathModel();
         model.loadData(pathFileName, buildingFileName);
         return model;
@@ -139,7 +156,11 @@ public class CampusPathModel {
      * @return a list holding the path from start to end if there exists one, or null otherwise.
      */
     public @Nullable List<Graph<Coordinates, Double>.Edge> findPath (Coordinates start, Coordinates end) {
-      return MarvelPaths2.findPath(this.graph, graph.makeNode(start), graph.makeNode(end));
+        checkRep();
+        List<Graph<Coordinates, Double>.Edge> result =
+                MarvelPaths2.findPath(this.graph, graph.makeNode(start), graph.makeNode(end));
+        checkRep();
+        return result;
     }
 
     /**
@@ -150,13 +171,20 @@ public class CampusPathModel {
      * @return an unmodifiable view of mapping from longName to shortName for all buildings.
      */
     public Map<String, String> listBuildings() {
-        return Collections.unmodifiableMap(this.names);
+        checkRep();
+        Map<String, String> result = Collections.unmodifiableMap(this.names);
+        checkRep();
+        return result;
     }
 
     /** Checks that the representation invariant holds (if any). */
     private void checkRep() {
+        assert this.graph != null && this.locations != null && this.names != null;
         assert this.names.size() == this.locations.size();
-        assert this.names.keySet().equals(this.locations.keySet());
+
+        if (TEST_FLAG) {
+            assert this.names.keySet().equals(this.locations.keySet());
+        }
 
     }
 
