@@ -40,10 +40,12 @@ public class CampusPathModel {
     // Representation Variation:
     //      graph != null and names != null and locations != null
     //      names.keySet().equals(locations.keySet())
+    //      forall Coordinate in locations -> Coordinate must be in graph.
     //
     // In other words:
     //      graph, names and locations should not be null.
     //      names and locations should have the exactly same set of keys.
+    //      Every building should have its location as a node in this.graph.
 
     /**
      * a graph represents all paths in the campus
@@ -94,6 +96,8 @@ public class CampusPathModel {
   /**
    * Reads Campus Path and Building data set and load them to Map and Buildings, as defined in class annotations.
    *
+   * Note that all buildings are guaranteed to be in the Map, no matter there are edges to/from them or not.
+   *
    * @spec.requires pathFileName and buildingFileName are valid file paths.
    *
    * @param pathFileName the name of the file will be read that containing all information about campus paths.
@@ -128,6 +132,14 @@ public class CampusPathModel {
 
 
         DataParser.parseBuildingData(buildingFileName, this.names, this.locations);
+
+        // Add all locations of buildings to the map, in case there is not an edge to/from some building.
+        for(Coordinates location : this.locations.values()) {
+            Graph<Coordinates, Double>.Node node = graph.makeNode(location);
+            if (!graph.containNode(node)) {
+                graph.addNode(node);
+            }
+        }
 
         // Quick Sanity check, if loading building data is good.
         assert this.names.size() == this.locations.size();
@@ -184,6 +196,9 @@ public class CampusPathModel {
 
         if (TEST_FLAG) {
             assert this.names.keySet().equals(this.locations.keySet());
+            for(Coordinates location : this.locations.values()) {
+                assert graph.containNode(graph.makeNode(location));
+            }
         }
 
     }
