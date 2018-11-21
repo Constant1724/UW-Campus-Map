@@ -10,7 +10,6 @@ public class UserInterface {
     public static String campusBuildingFileName = "src/main/java/hw8/data/campus_buildings.tsv";
 
     public static void main(String[] args) {
-        long start = System.currentTimeMillis();
         CampusMapModel model = CampusMapModel.makeInstance(campusPathFileName, campusBuildingFileName);
         Scanner reader = new Scanner(System.in, "UTF-8"); // Reading from System.in
 
@@ -24,26 +23,32 @@ public class UserInterface {
         // Fill the shortToBuilding and formattedBuilding.
         for (Building building :  model.listBuildings()) {
             shortToBuilding.put(building.getShortName(), building);
-            formattedBuilding.add(String.format("%s: %s", building.getLongName(), building.getShortName()));
+            formattedBuilding.add(String.format("\t%s: %s", building.getShortName(), building.getLongName()));
         }
+        formattedBuilding.sort((o1, o2) -> {
+            String sub1 = o1.substring(0, o1.indexOf(":"));
+            String sub2 = o2.substring(0, o2.indexOf(":"));
+            return sub1.compareTo(sub2);
+        });
+
+
+
 
         // Quick sanity check.
         assert formattedBuilding.size() == shortToBuilding.size() && shortToBuilding.size() == model.listBuildings().size();
 
-        long times = System.currentTimeMillis() - start;
-        System.out.println("# Loading complete in " + times + " ms");
 
         printMenu();
+        System.out.println();
 
         while (true) {
             System.out.print("Enter an option ('m' to see the menu): ");
-            System.out.println();
 
             String command = reader.nextLine();
-//            while (command.startsWith("#") || command.isEmpty()) {
-//                System.out.println(command);
-//                command = reader.nextLine();
-//            }
+            while (command.startsWith("#") || command.isEmpty()) {
+                System.out.println(command);
+                command = reader.nextLine();
+            }
 
             switch (command) {
                 case "b" :
@@ -86,10 +91,8 @@ public class UserInterface {
     public static void printPaths(Scanner reader, Map<String, Building> shortToBuilding, CampusMapModel model) {
         System.out.print("Abbreviated name of starting building: ");
         String start = reader.nextLine();
-        System.out.println();
         System.out.print("Abbreviated name of ending building: ");
         String end = reader.nextLine();
-        System.out.println();
         boolean ifUnknownBuilding = false;
         if (!shortToBuilding.containsKey(start)) {
             System.out.println(String.format("Unknown building: %s", start));

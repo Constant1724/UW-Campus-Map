@@ -173,7 +173,8 @@ public class DataParser {
         @Override
         protected Object convert(String value) throws CsvDataTypeMismatchException, CsvConstraintViolationException {
             try {
-                String[] parts = value.split(",");
+                // TODO check
+                String[] parts = value.split(",", -1);
                 return new CoordinatesForCsv(Double.parseDouble(parts[0]), Double.parseDouble(parts[1]));
             } catch (RuntimeException e) {
                 String message = "";

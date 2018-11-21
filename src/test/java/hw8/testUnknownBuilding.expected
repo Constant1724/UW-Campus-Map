@@ -1,0 +1,16 @@
+Menu:
+	r to find a route
+	b to see a list of all buildings
+	q to quit
+
+Enter an option ('m' to see the menu): # Test Single Unknown Building
+Abbreviated name of starting building: Abbreviated name of ending building: Unknown building: CS
+
+Enter an option ('m' to see the menu): # Test Double Unknown Buildings
+Abbreviated name of starting building: Abbreviated name of ending building: Unknown building: PAP
+Unknown building: cse
+
+Enter an option ('m' to see the menu): Abbreviated name of starting building: Abbreviated name of ending building: Unknown building: PPP
+Unknown building: q
+
+Enter an option ('m' to see the menu): 
