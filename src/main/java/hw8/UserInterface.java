@@ -16,7 +16,7 @@ public class UserInterface {
         // Creates a new mapping from Building.shortName to Building.
         Map<String, Building> shortToBuilding = new HashMap<>();
 
-        // Creates a list of Building list in format shortName : longName for each Building.
+        // Creates a list of Building list in format "shortName: longName" for each Building.
         // Used when building list will be printOut.
         List<String> formattedBuilding = new ArrayList<>();
 
@@ -25,13 +25,13 @@ public class UserInterface {
             shortToBuilding.put(building.getShortName(), building);
             formattedBuilding.add(String.format("\t%s: %s", building.getShortName(), building.getLongName()));
         }
+
+        // Sort the formattedBuilding based on the alphabetical order of shortName.
         formattedBuilding.sort((o1, o2) -> {
             String sub1 = o1.substring(0, o1.indexOf(":"));
             String sub2 = o2.substring(0, o2.indexOf(":"));
             return sub1.compareTo(sub2);
         });
-
-
 
 
         // Quick sanity check.

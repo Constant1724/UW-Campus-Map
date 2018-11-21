@@ -26,7 +26,7 @@ import java.util.*;
  *
  * @spec.specfield Coordinate : represents the location of a point in the campus. // It could be origin, destination of an edge, or location of a building.
  * @spec.specfield Map : a map represents set of all edges in campus // A path should have an origin, destination and cost.
- * @spec.specfield Building : a set of all buildings in campus. // each building should have its full name abbreviated short name and location representing its entrance.
+ * @spec.specfield Building : a set of all buildings in campus. // Each building should have its full name abbreviated short name and location representing its entrance.
  *
  * Abstract Invariant:
  *      Locations of all Buildings Must be in Map, regardless there are paths to/from them.

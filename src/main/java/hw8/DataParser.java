@@ -12,6 +12,9 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.*;
 
+/**
+ * Parser utility to load the Campus Path and Building data sets.
+ */
 public class DataParser {
     // This is NOT an ADT!!
     // This is NOT an ADT!!
@@ -27,28 +30,28 @@ public class DataParser {
      *
      * @spec.requires filename is a valid file path and result != null
      * @param filename the name of the file that will be read
-     * @param result the list of CampusPath Objects, each one representing an edge defined by one line in the data set, respectively;
-     *               typically empty when the routine is called.
+     * @param result the list of CampusPath Objects, each one representing an edge defined by one line in the data set,
+     *               respectively; typically empty when the routine is called.
      *
      * @spec.modifies result
      * @spec.effects fills result with a list of CampusPathForCsv Object.
      * @throws RuntimeException if there is an IOException while reading the filename.
      */
-  public static void parsePathData(String filename, List<CampusPathForCsv> result) throws RuntimeException{
+    public static void parsePathData(String filename, List<CampusPathForCsv> result) throws RuntimeException{
 
-    try (Reader reader = Files.newBufferedReader(Paths.get(filename))) {
-        CsvToBean<CampusPathForCsv>  csvToBean = new CsvToBeanBuilder<CampusPathForCsv>(reader)
-              .withType(CampusPathForCsv.class)
-              .withSeparator('\t')
-              .withIgnoreLeadingWhiteSpace(true)
-              .build();
-      result.addAll(csvToBean.parse());
-    } catch (IOException e) {
-      System.err.println(e.toString());
-      e.printStackTrace(System.err);
-      throw new RuntimeException("Exception while trying to read: " + filename, e);
+        try (Reader reader = Files.newBufferedReader(Paths.get(filename))) {
+            CsvToBean<CampusPathForCsv>  csvToBean = new CsvToBeanBuilder<CampusPathForCsv>(reader)
+                    .withType(CampusPathForCsv.class)
+                    .withSeparator('\t')
+                    .withIgnoreLeadingWhiteSpace(true)
+                    .build();
+            result.addAll(csvToBean.parse());
+        } catch (IOException e) {
+            System.err.println(e.toString());
+            e.printStackTrace(System.err);
+            throw new RuntimeException("Exception while trying to read: " + filename, e);
+        }
     }
-  }
 
     /**
      *  Reads Campus BuildingForCsv data set. Each line of the input file represents a building and is defined by:
@@ -74,11 +77,13 @@ public class DataParser {
      * @spec.effects fills longNameToLocation with a map from each longName of a building to
      *                  an coordinate representing that building
      *
+     * @throws RuntimeException if there is an IOException while reading the filename.
      */
-  public static void parseBuildingData(
-          String filename, Map<String, String> longNameToShort, Map<@KeyFor("#2") String, CoordinatesForCsv> longNameToLocation) {
+    public static void parseBuildingData(
+            String filename, Map<String, String> longNameToShort,
+            Map<@KeyFor("#2") String, CoordinatesForCsv> longNameToLocation) throws RuntimeException {
 
-      List<BuildingForCsv> result;
+        List<BuildingForCsv> result;
 
         try (Reader reader = Files.newBufferedReader(Paths.get(filename))) {
             CsvToBean<BuildingForCsv> csvToBean = new CsvToBeanBuilder<BuildingForCsv>(reader)
@@ -90,41 +95,66 @@ public class DataParser {
         } catch (IOException e) {
             System.err.println(e.toString());
             e.printStackTrace(System.err);
-            return;
+            throw new RuntimeException("Exception while trying to read: " + filename, e);
         }
 
-      for(BuildingForCsv building : result) {
+        for(BuildingForCsv building : result) {
             String short_name = building.getShort_name();
             String long_name = building.getLong_name();
             Double x = Double.parseDouble(building.getX());
             Double y = Double.parseDouble(building.getY());
 
-            if (longNameToShort.containsKey(long_name)) {
-                assert short_name.equals(longNameToShort.get(long_name));
-            } else {
-                longNameToShort.put(long_name, short_name);
-            }
+            assert !longNameToShort.containsKey(long_name) && !longNameToLocation.containsKey(long_name);
 
-            if (!longNameToLocation.containsKey(long_name)) {
-                longNameToLocation.put(long_name, new CoordinatesForCsv(x, y));
-            }
+            longNameToShort.put(long_name, short_name);
+
+            longNameToLocation.put(long_name, new CoordinatesForCsv(x, y));
+
         }
-  }
+        // Quick sanity check to make sure we do not miss a building
+        assert longNameToShort.size() == longNameToLocation.size() && longNameToLocation.size() == result.size();
+    }
 
-
+    /**
+     * BuildingForCsv represents a model used by CsvToBean to parse the Campus Building data set.
+     *
+     *  It has getter and setter for all fields.
+     *
+     * Specification Field:
+     * @spec.specfield shortName : String // shortName of the BuildingForCsv.
+     * @spec.specfield longName  : String // longName of the BuildingForCsv.
+     * @spec.specfield x : String // x coordinate of the BuildingForCsv.
+     * @spec.specfield y : String // y coordinate of the BuildingForCsv.
+     *
+     */
     public static class BuildingForCsv {
+        /**
+         * shortName of the BuildingForCsv.
+         */
         @CsvBindByName
         private String short_name;
 
+        /**
+         * longName of the BuildingForCsv.
+         */
         @CsvBindByName
         private String long_name;
 
+        /**
+         * x coordinate of the BuildingForCsv.
+         */
         @CsvBindByName
         private String x;
 
+        /**
+         * y coordinate of the BuildingForCsv.
+         */
         @CsvBindByName
         private String y;
 
+        /**
+         * @spec.effects creates an instance of BuildingForCsv with all fields being empty String.
+         */
         public BuildingForCsv() {
             this.short_name = "";
             this.long_name = "";
@@ -132,44 +162,86 @@ public class DataParser {
             this.y = "";
         }
 
-        @Pure
+        /**
+         * get the shortName of the BuildingForCsv.
+         * @return the shortName of the BuildingForCsv.
+         */
         public String getShort_name() {
             return short_name;
         }
 
+        /**
+         * set the shortName of the BuildingForCsv
+         * @param short_name shortName of the BuildingForCsv
+         */
         public void setShort_name(String short_name) {
             this.short_name = short_name;
         }
 
-        @Pure
+        /**
+         * get the longName of the BuildingForCsv
+         * @return the longName of the BuildingForCsv to be set
+         */
         public String getLong_name() {
             return long_name;
         }
+
+        /**
+         * set the longName of the BuildingForCsv
+         * @param long_name the longName of the BuildingForCsv to be set
+         */
         public void setLong_name(String long_name) {
             this.long_name = long_name;
         }
 
-        @Pure
+        /**
+         * get the x coordinate of the BuildingForCsv
+         * @return the x coordinate of the BuildingForCsv.
+         */
         public String getX() {
             return x;
         }
 
+        /**
+         * set the x coordinate of the BuildingForCsv
+         * @param x the x coordinate of the BuildingForCsv to be set
+         */
         public void setX(String x) {
             this.x = x;
         }
 
-        @Pure
+        /**
+         * get the y coordinate of the BuildingForCsv
+         * @return the y coordinate of the BuildingForCsv
+         */
         public String getY() {
             return y;
         }
 
+        /**
+         * set the y coordinate of the BuildingForCsv
+         * @param y the y coordinate of the BuildingForCsv to be set
+         */
         public void setY(String y) {
             this.y = y;
         }
     }
 
-
+    /**
+     * Utility class used by CsvToBean to convert "x,y" into an instance of CoordinateForCsv(x,y).
+     */
     public static class CoordinateConverterForCsv extends AbstractBeanField<String> {
+        // This is NOT an ADT!!!
+        // This is NOT an ADT!!!
+
+        /**
+         * Method for converting from a string to the proper datatype of the destination field.
+         *
+         * @param value The string from the selected field of the CSV file
+         * @return An Object representing the input data converted into the proper type
+         * @throws CsvDataTypeMismatchException If the input string cannot be converted into the proper type
+         * @throws CsvConstraintViolationException When the internal structure of data would be violated by the data in the CSV file
+         */
         @Override
         protected Object convert(String value) throws CsvDataTypeMismatchException, CsvConstraintViolationException {
             try {
@@ -186,14 +258,33 @@ public class DataParser {
         }
     }
 
+    /**
+     * CoordinatesForCsv represents a model used by CsvToBean to parse the Campus Path data set.
+     *
+     *  It has getter and setter for all fields.
+     *
+     * Specification Field:
+     * @spec.specfield x : double // x coordinate of the CoordinatesForCsv
+     * @spec.specfield y : double // y coordinate of the CoordinatesForCsv
+     *
+     */
     public static class CoordinatesForCsv {
-
+        /**
+         * x and y coordinate of the CoordinatesForCsv
+         */
         private double x, y;
 
+        /**
+         *
+         * @param x x coordinate of the CoordinatesForCsv
+         * @param y y coordinate of the CoordinatesForCsv.
+         * @spec.effects creates an instance of CoordinatesForCsv with x and y as its coordinate
+         */
         public CoordinatesForCsv(double x, double y) {
             this.x = x;
             this.y = y;
         }
+
 
         public double getX() {
             return x;
@@ -230,7 +321,7 @@ public class DataParser {
             this.distance = 0.0;
         }
 
-        @Pure
+
         public CoordinatesForCsv getOrigin() {
             return origin;
         }
@@ -239,7 +330,7 @@ public class DataParser {
             this.origin = origin;
         }
 
-        @Pure
+
         public CoordinatesForCsv getDestination() {
             return destination;
         }
