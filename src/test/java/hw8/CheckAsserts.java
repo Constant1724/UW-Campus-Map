@@ -1,4 +1,4 @@
-package hw7;
+package hw8;
 
 import org.junit.Test;
 
