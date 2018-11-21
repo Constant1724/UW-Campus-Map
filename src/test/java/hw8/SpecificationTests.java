@@ -14,7 +14,7 @@ import org.junit.runners.Suite.SuiteClasses;
  * designed a different public API.
  */
 @RunWith(Suite.class)
-@SuiteClasses({ScriptFileTests.class})
+@SuiteClasses({CheckAsserts.class, ScriptFileTests.class})
 public final class SpecificationTests {
   // this class is a placeholder for the suite, so it has no members.
 }
