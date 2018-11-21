@@ -1,13 +1,16 @@
 package hw8;
 
 import hw3.Graph;
+import hw6.MarvelParser;
 import hw7.MarvelPaths2;
 import org.checkerframework.checker.initialization.qual.UnknownInitialization;
-import org.checkerframework.checker.nullness.qual.KeyFor;
-import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.nio.charset.Charset;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.*;
 
 /**
@@ -85,83 +88,156 @@ public class CampusMapModel {
    * @param buildingFileName the name of the file will be read that containing all information about campus Buildings.
    * @return an instance of CampusMapModel with campus path data and campus building data.
    */
-  public static CampusMapModel makeInstance(String pathFileName, String buildingFileName) {
+  public static CampusMapModel makeInstance(String pathFileName, String buildingFileName) throws RuntimeException {
         CampusMapModel model = new CampusMapModel();
-        model.loadData(pathFileName, buildingFileName);
+        try {
+            model.loadPathData(pathFileName);
+            model.loadBuildingData(buildingFileName);
+        } catch (MarvelParser.MalformedDataException e) {
+            throw new RuntimeException("Malformed data", e);
+        }
         return model;
     }
 
-  /**
-   * Reads Campus Path and Building data set and load them to Map and Buildings, as defined in class annotations.
-   *
-   * Note that all Buildings are guaranteed to be in the Map, no matter there are edges to/from them or not.
-   *
-   * @spec.requires pathFileName and buildingFileName are valid file paths.
-   *
-   * @param pathFileName the name of the file will be read that containing all information about campus paths.
-   * @param buildingFileName the name of the file will be read that containing all information about campus Buildings.
-   */
-  private void loadData(String pathFileName, String buildingFileName) {
+    /**
+     *  Reads Campus Path data set. Each line of the input file represents a path and is defined by:
+     *      x1,y1   x2,y2   distance
+     *
+     *      x1,y1 is the start and x2,y2 is the end. distance is the distance of from x1,y1 to x2,y2.
+     *      All separated by tab.
+     *
+     *      There should not be duplicate paths in data set.
+     *
+     * @spec.requires filename is a valid file path
+     * @param filename the name of the file that will be read
+     *
+     * @spec.modifies this.graph
+     * @spec.effects  fill graph with edges in the Campus Path data set, each edge is bidirectional.
+     * @throws MarvelParser.MalformedDataException if the file is not well-formed, see correct format above.
+     * @throws RuntimeException If there is an IOException while reading the file.
+     */
+    private void loadPathData(String filename) throws MarvelParser.MalformedDataException, RuntimeException {
+    try (BufferedReader reader =
+        Files.newBufferedReader(Paths.get(filename), Charset.defaultCharset())) {
 
-        List<DataParser.CampusPathForCsv> edges = new ArrayList<>();
-        DataParser.parsePathData(pathFileName, edges);
+            String inputLine;
 
-        // Since we just want to add all edges to the graph, it implies that both nodes of all edges must be in
-        // the graph. As a result, if either start or end of an edge is not in the graph, we simply
-        // add it to the graph.
-        for (DataParser.CampusPathForCsv edge : edges) {
+            // Skip the header.
+            reader.readLine();
 
-            Graph<Coordinate, Double>.Node start = this.graph.makeNode(new Coordinate(edge.getOrigin()));
-            Graph<Coordinate, Double>.Node end = this.graph.makeNode(new Coordinate(edge.getDestination()));
-            Double cost = edge.getDistance();
+            while ((inputLine = reader.readLine()) != null) {
 
-            boolean result = true;
+                // Parse the data, and throw an exception for malformed lines.
+                String[] tokens = inputLine.split("\t", -1);
+                if (tokens.length != 3) {
+                    throw new MarvelParser.MalformedDataException("Line should contain exactly 2 tab: " + inputLine);
+                }
 
-            if(!this.graph.containNode(start)) {
-                result = this.graph.addNode(start) && result;
+                // Split x,y into [x, y] for both origin and destination.
+                String[] origin = tokens[0].split(",", -1);
+                String[] destination = tokens[1].split(",", -1);
+                Double distance = Double.parseDouble(tokens[2]);
+
+                Coordinate originCoordinate =
+                        new Coordinate(Double.parseDouble(origin[0]), Double.parseDouble(origin[1]));
+                Coordinate destinationCoordinate =
+                        new Coordinate(Double.parseDouble(destination[0]), Double.parseDouble(destination[1]));
+
+                Graph<Coordinate, Double>.Node start = this.graph.makeNode(originCoordinate);
+                Graph<Coordinate, Double>.Node end = this.graph.makeNode(destinationCoordinate);
+                // Add the parsed data to the character and book collections.
+                boolean result = true;
+
+                if(!this.graph.containNode(start)) {
+                    result = this.graph.addNode(start) && result;
+                }
+                if(!this.graph.containNode(end)) {
+                    result = this.graph.addNode(end) && result;
+                }
+
+                // Path is bidirectional.
+                this.graph.addEdge(this.graph.makeEdge(start, end, distance));
+
+                this.graph.addEdge(this.graph.makeEdge(end, start, distance));
+
+                // Quick Sanity check, if all operations are good
+                assert result;
             }
-            if(!this.graph.containNode(end)) {
-                result = this.graph.addNode(end) && result;
-            }
-
-            // Path is bidirectional.
-            this.graph.addEdge(this.graph.makeEdge(start, end, cost));
-
-            this.graph.addEdge(this.graph.makeEdge(end, start, cost));
-
-            // Quick Sanity check, if all operations are good
-            assert result;
+        } catch (IOException e) {
+            System.err.println(e.toString());
+            e.printStackTrace(System.err);
+            throw new RuntimeException("Exception while trying to read: " + filename, e);
         }
+  }
 
-        Map<String, String> tempNames = new HashMap<>();
 
-        Map<@KeyFor("tempNames") String, DataParser.CoordinatesForCsv> tempLocations = new HashMap<>();
-        DataParser.parseBuildingData(buildingFileName, tempNames, tempLocations);
 
-        // Add all locations of buildings to the map, in case there is not an edge to/from some building.
-        // And fill this.locations with data from tempLocations. Specifically, use our Immutable Coordinate class.
-        for(Map.Entry<String, DataParser.CoordinatesForCsv> entry : tempLocations.entrySet()) {
-            Coordinate location = new Coordinate(entry.getValue());
+    /**
+     *  Reads Campus Building data set. Each line of the input file represents a building and is defined by:
+     *      shortName   longName    x   y
+     *
+     *      shorName and longName are abbreviated and full name for a building.
+     *      x and y represents the location of that building.
+     *
+     *      If a building has multiple entrance, then its shortName and longName must be unique for each entrance.
+     *      For example: CHL (NE) and CHL (SE) represents different entrances of the same building.
+     *
+     *  If there is an IOException while reading the file, a RuntimeException will be throwed
+     *  If any line of data is malformed
+     *
+     * @spec.requires filename is a valid file path
+     * @param filename the name of the file that will be read
+     *
+     * @spec.effects this.buildings, this.graph
+     * @spec.modifies fill this.buildings with shortName, longName and location for each Building
+     *                  in the Campus Building dataset.
+     * @spec.modifies add location of all buildings the this.graph if any location of a building is not in the graph.
+     *
+     * @throws MarvelParser.MalformedDataException if the file is not well-formed, see correct format above.
+     * @throws RuntimeException If there is an IOException while reading the file.
+     */
+  private void loadBuildingData(String filename) throws MarvelParser.MalformedDataException, RuntimeException {
+      try (BufferedReader reader =
+                   Files.newBufferedReader(Paths.get(filename), Charset.defaultCharset())) {
+          String inputLine;
 
-            // I add the KeyFor property such that any key in tempLocations must be key for tempNames.
-            // As a result, since entry.getKey is a key in tempLocations, it must also be a key for tempNames.
-            // In addition, tempNames does not allow null values,
-            //  therefore, there is no way for tempNames.get(entry.getKey()) to be null
-            @SuppressWarnings("incompatible")
-            @NonNull String shortName = tempNames.get(entry.getKey());
-            String longName = entry.getKey();
-            Graph<Coordinate, Double>.Node node = graph.makeNode(location);
-            if (!graph.containNode(node)) {
-                graph.addNode(node);
-            }
-            buildings.add(new Building(location, shortName, longName));
+          // Skip the header.
+          reader.readLine();
 
-        }
-   }
+          while ((inputLine = reader.readLine()) != null) {
+
+              // Parse the data, and throw an exception for malformed lines.
+              String[] tokens = inputLine.split("\t", -1);
+              if (tokens.length != 4) {
+                  throw new MarvelParser.MalformedDataException("Line should contain exactly 3 tab: " + inputLine);
+              }
+
+              String shortName = tokens[0];
+              String longName = tokens[1];
+              Double x = Double.parseDouble(tokens[2]);
+              Double y = Double.parseDouble(tokens[3]);
+              Coordinate location = new Coordinate(x, y);
+
+              // In case there is a building not in graph, add it to graph.
+              if (graph.containNode(graph.makeNode(location))) {
+                  graph.addNode(graph.makeNode(location));
+              }
+
+              this.buildings.add(new Building(location, shortName, longName));
+          }
+
+      } catch (IOException e) {
+          System.err.println(e.toString());
+          e.printStackTrace(System.err);
+          throw new RuntimeException("Exception while trying to read: " + filename, e);
+      }
+    }
 
     /**
      * Find the path in the graph from start-coordinate to end-coordinate.
      * Note that this guarantees to find the shortest path.
+     *
+     * A path consists of one or more CampusPath instances.
      *
      * If multiple least weight path exists, it will return any of them.
      *
@@ -181,12 +257,20 @@ public class CampusMapModel {
      * @param end   the end of the path
      * @return a list holding the path from start to end if there exists one, or null otherwise.
      */
-    public @Nullable List<Graph<Coordinate, Double>.Edge> findPath (Coordinate start, Coordinate end) {
+    public @Nullable List<CampusPath> findPath (Coordinate start, Coordinate end) {
         checkRep();
         List<Graph<Coordinate, Double>.Edge> result =
                 MarvelPaths2.findPath(this.graph, graph.makeNode(start), graph.makeNode(end));
+        if (result == null) {
+            return null;
+        }
+
+        List<CampusPath> paths = new ArrayList<>();
+        for (Graph<Coordinate, Double>.Edge edge : result) {
+            paths.add(new CampusPath(edge.getStart().getContent(), edge.getEnd().getContent(), edge.getLabel()));
+        }
         checkRep();
-        return result;
+        return paths;
     }
 
     /**

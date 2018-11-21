@@ -1,14 +1,41 @@
 package hw8;
 
-import hw3.Graph;
 import org.checkerframework.checker.nullness.qual.NonNull;
 
 import java.util.*;
 
+/**
+ * A simple text user interface allowing client to
+ *      list buildings
+ *      find path between buildings
+ *      print menu
+ *      quit the program
+ *
+ * throw command line text interface.
+ */
 public class UserInterface {
+    /**
+     * file name for campus path data set.
+     */
     public static String campusPathFileName = "src/main/java/hw8/data/campus_paths.tsv";
+
+    /**
+     * file name for campus building data set.
+     */
     public static String campusBuildingFileName = "src/main/java/hw8/data/campus_buildings.tsv";
 
+    /**
+     * Stand main method. read in user Input and perform corresponding functions.
+     *
+     *      b lists all buildings in the form abbreviated name: long name.
+     *              Buildings are listed in alphabetical order of abbreviated name.
+     *      r prompts the user for the abbreviated names of two buildings and prints directions
+     *              for the shortest route between them.
+     *      q quits the program.
+     *      m prints a menu of all commands.
+     *
+     * @param args list of command line arguments
+     */
     public static void main(String[] args) {
         CampusMapModel model = CampusMapModel.makeInstance(campusPathFileName, campusBuildingFileName);
         Scanner reader = new Scanner(System.in, "UTF-8"); // Reading from System.in
@@ -88,6 +115,13 @@ public class UserInterface {
         System.out.println("\tq to quit");
     }
 
+    /**
+     * take user input and find and printout a path from one Building to another.
+     *
+     * @param reader read user input.
+     * @param shortToBuilding  map from abbreviated name to Building for all buildings.
+     * @param model the campus map used to find a path from one Building to another.
+     */
     public static void printPaths(Scanner reader, Map<String, Building> shortToBuilding, CampusMapModel model) {
         System.out.print("Abbreviated name of starting building: ");
         String start = reader.nextLine();
@@ -118,7 +152,7 @@ public class UserInterface {
 
         System.out.println(String.format("Path from %s to %s:", startBuilding.getLongName(), endBuilding.getLongName()));
 
-        List<Graph<Coordinate, Double>.Edge> results = model.findPath
+        List<CampusPath> results = model.findPath
                 (startBuilding.getLocation(), endBuilding.getLocation());
 
         if (results == null) {
@@ -128,20 +162,33 @@ public class UserInterface {
 
         double totalCost = 0;
 
-        for (Graph<Coordinate, Double>.Edge edge : results) {
-            totalCost += edge.getLabel();
-            System.out.println(formatPath(edge));
+        for (CampusPath path : results) {
+            totalCost += path.getCost();
+            System.out.println(formatPath(path));
         }
         System.out.println(String.format("Total distance: %.0f feet", totalCost));
     }
 
-    private static String formatPath(Graph<Coordinate, Double>.Edge edge) {
+    /**
+     * Format a CampusPath into:
+     *      Walk CampusPath.getCost() feet someDirection to
+     *          (CampusPath.getDestination.getX(), CampusPath.getDestination.getY())
+     *
+     *      For example:
+     *          Walk 36 feet NW to (2187, 950)
+     *
+     *      All number should round to the nearest integer.
+     *
+     * @param path CampusPath instance to be formatted
+     * @return formatted string of a path, as described above.
+     */
+    private static String formatPath(CampusPath path) {
         String direction;
 
-        Double endX = edge.getEnd().getContent().getX();
-        Double endY = edge.getEnd().getContent().getY();
-        Double startX = edge.getStart().getContent().getX();
-        Double startY = edge.getStart().getContent().getY();
+        Double endX = path.getDestination().getX();
+        Double endY = path.getDestination().getY();
+        Double startX = path.getOrigin().getX();
+        Double startY = path.getOrigin().getY();
 
         Double directionCost = Math.atan2(startY - endY, endX - startX) / (Math.PI / 8);
 
@@ -171,7 +218,7 @@ public class UserInterface {
             }
         }
 
-        String verboseStep = String.format("\tWalk %.0f feet %s to (%.0f, %.0f)", edge.getLabel(), direction, endX, endY);
+        String verboseStep = String.format("\tWalk %.0f feet %s to (%.0f, %.0f)", path.getCost(), direction, endX, endY);
         return verboseStep;
     }
 }
