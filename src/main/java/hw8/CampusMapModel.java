@@ -2,8 +2,12 @@ package hw8;
 
 import hw3.Graph;
 import hw7.MarvelPaths2;
+import org.checkerframework.checker.initialization.qual.UnknownInitialization;
+import org.checkerframework.checker.nullness.qual.KeyFor;
+import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
+import java.io.IOException;
 import java.util.*;
 
 /**
@@ -22,8 +26,10 @@ import java.util.*;
  *
  * @spec.specfield Coordinate : represents the location of a point in the campus. // It could be origin, destination of an edge, or location of a building.
  * @spec.specfield Map : a map represents set of all edges in campus // A path should have an origin, destination and cost.
- * @spec.specfield Buildings : a set of all buildings in campus. // each building should have its full name abbreviated short name and location representing its entrance.
+ * @spec.specfield Building : a set of all buildings in campus. // each building should have its full name abbreviated short name and location representing its entrance.
  *
+ * Abstract Invariant:
+ *      Locations of all Buildings Must be in Map, regardless there are paths to/from them.
  */
 public class CampusMapModel {
 
@@ -34,18 +40,15 @@ public class CampusMapModel {
     //          Nodes in graph are start and end points of all paths.
     //              Some Nodes also represent entrances of buildings, if there is a path to/from that entrance of building.
     //
-    //      this.names represents a mapping from long name of a building to its short name.
+    //      this.buildings represents the set of all Buildings in the campus map.
     //
-    //      this.locations represents a mapping from long name of a building to its locations in the campus
     //
     // Representation Variation:
-    //      graph != null and names != null and locations != null
-    //      names.keySet().equals(locations.keySet())
-    //      forall Coordinate in locations -> Coordinate must be in graph.
+    //      graph != null and buildings != null
+    //      forall building in buildings -> building.location must be in graph.
     //
     // In other words:
-    //      graph, names and locations should not be null.
-    //      names and locations should have the exactly same set of keys.
+    //      graph, buildings should not be null.
     //      Every building should have its location as a node in this.graph.
 
     /**
@@ -54,14 +57,9 @@ public class CampusMapModel {
     private final Graph<Coordinate, Double> graph;
 
     /**
-     * map from full name to abbreviated short name for all Buildings.
+     * a set of all Buildings in the Map.
      */
-    private final Map<String, String> names;
-
-    /**
-     * map from full name to location for all Buildings.
-     */
-    private final Map<String, Coordinate> locations;
+    private final Set<Building> buildings;
 
     /** Test flag, whether to enable expensive checks. */
     private static boolean TEST_FLAG = true;
@@ -72,9 +70,8 @@ public class CampusMapModel {
      * @spec.effects creates an empty CampusMapModel.
      */
     private CampusMapModel() {
-        names = new HashMap<>();
-        locations = new HashMap<>();
         graph = new Graph<>();
+        buildings = new HashSet<>();
         checkRep();
     }
 
@@ -106,7 +103,8 @@ public class CampusMapModel {
    */
   private void loadData(String pathFileName, String buildingFileName) {
 
-        List<DataParser.CampusPathForCsv> edges = DataParser.parsePathData(pathFileName);
+        List<DataParser.CampusPathForCsv> edges = new ArrayList<>();
+        DataParser.parsePathData(pathFileName, edges);
 
         // Since we just want to add all edges to the graph, it implies that both nodes of all edges must be in
         // the graph. As a result, if either start or end of an edge is not in the graph, we simply
@@ -125,30 +123,41 @@ public class CampusMapModel {
             if(!this.graph.containNode(end)) {
                 result = this.graph.addNode(end) && result;
             }
+
             // Path is bidirectional.
-            result = this.graph.addEdge(this.graph.makeEdge(start, end, cost)) && result;
-            result = this.graph.addEdge(this.graph.makeEdge(end, start, cost)) && result;
+            this.graph.addEdge(this.graph.makeEdge(start, end, cost));
+
+            this.graph.addEdge(this.graph.makeEdge(end, start, cost));
 
             // Quick Sanity check, if all operations are good
             assert result;
         }
 
-        Map<String, DataParser.CoordinatesForCsv> tempLocations = new HashMap<>();
-        DataParser.parseBuildingData(buildingFileName, this.names, tempLocations);
+        Map<String, String> tempNames = new HashMap<>();
+
+        Map<@KeyFor("tempNames") String, DataParser.CoordinatesForCsv> tempLocations = new HashMap<>();
+        DataParser.parseBuildingData(buildingFileName, tempNames, tempLocations);
 
         // Add all locations of buildings to the map, in case there is not an edge to/from some building.
         // And fill this.locations with data from tempLocations. Specifically, use our Immutable Coordinate class.
         for(Map.Entry<String, DataParser.CoordinatesForCsv> entry : tempLocations.entrySet()) {
-            Graph<Coordinate, Double>.Node node = graph.makeNode(new Coordinate(entry.getValue()));
+            Coordinate location = new Coordinate(entry.getValue());
+
+            // I add the KeyFor property such that any key in tempLocations must be key for tempNames.
+            // As a result, since entry.getKey is a key in tempLocations, it must also be a key for tempNames.
+            // In addition, tempNames does not allow null values,
+            //  therefore, there is no way for tempNames.get(entry.getKey()) to be null
+            @SuppressWarnings("incompatible")
+            @NonNull String shortName = tempNames.get(entry.getKey());
+            String longName = entry.getKey();
+            Graph<Coordinate, Double>.Node node = graph.makeNode(location);
             if (!graph.containNode(node)) {
                 graph.addNode(node);
             }
-            this.locations.put(entry.getKey(), new Coordinate(entry.getValue()));
-        }
+            buildings.add(new Building(location, shortName, longName));
 
-        // Quick Sanity check, if loading building data is good.
-        assert this.names.size() == this.locations.size();
-    }
+        }
+   }
 
     /**
      * Find the path in the graph from start-coordinate to end-coordinate.
@@ -181,82 +190,29 @@ public class CampusMapModel {
     }
 
     /**
-     * List the name of all Buildings in the campus.
+     * List all Buildings in the campus.
      *
-     * It returns an unmodifiable view of a mapping from longName to shortName for all Buildings.
+     * It returns an unmodifiable view of a mapping from abbreviated name to Building for all Buildings.
      *
-     * @return an unmodifiable view of mapping from longName to shortName for all Buildings.
+     * @return an unmodifiable view of a mapping from abbreviated name to Building for all Buildings.
      */
-    public Map<String, String> listBuildings() {
+    public Set<Building> listBuildings() {
         checkRep();
-        Map<String, String> result = Collections.unmodifiableMap(this.names);
-        checkRep();
-        return result;
-    }
-
-    /**
-     * List the Coordinate of all Buildings in the campus.
-     *
-     * It returns an unmodifiable view of a mapping from longName to coordinate for all Buildings.
-     *
-     * @return an unmodifiable view of mapping from longName to coordinate for all Buildings.
-     */
-    public Map<String, Coordinate> listLocations() {
-        checkRep();
-        Map<String, Coordinate> result = Collections.unmodifiableMap(this.locations);
+        Set<Building> result = Collections.unmodifiableSet(this.buildings);
         checkRep();
         return result;
     }
 
     /** Checks that the representation invariant holds (if any). */
-    private void checkRep() {
-        assert this.graph != null && this.locations != null && this.names != null;
-        assert this.names.size() == this.locations.size();
-
+    private void checkRep(@UnknownInitialization(CampusMapModel.class) CampusMapModel this) {
+        assert this.graph != null && this.buildings != null;
         if (TEST_FLAG) {
-            assert this.names.keySet().equals(this.locations.keySet());
-            for(Coordinate location : this.locations.values()) {
-                assert graph.containNode(graph.makeNode(location));
+
+            for(Building building : this.buildings) {
+                assert graph.containNode(graph.makeNode(building.getLocation()));
             }
         }
 
     }
 
-
-    public class Coordinate {
-        private final double x, y;
-
-        public Coordinate(double x, double y) {
-            this.x = x;
-            this.y = y;
-        }
-        public Coordinate(DataParser.CoordinatesForCsv parserCoordinate) {
-            this.x = parserCoordinate.getX();
-            this.y = parserCoordinate.getY();
-        }
-        public double getX() {
-            return x;
-        }
-
-        public double getY() {
-            return y;
-        }
-
-        @Override
-        public int hashCode() {
-            return Objects.hash(x, y);
-        }
-
-        @Override
-        public boolean equals(Object obj) {
-            if (!(obj instanceof Coordinate)) {
-                return false;
-            }
-            Coordinate other = (Coordinate) obj;
-            return this.x == other.getX() && this.y == other.getY();
-        }
-    }
-
-
-
-}
+ }

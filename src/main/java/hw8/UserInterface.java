@@ -1,6 +1,7 @@
 package hw8;
 
 import hw3.Graph;
+import org.checkerframework.checker.nullness.qual.NonNull;
 
 import java.util.*;
 
@@ -9,32 +10,49 @@ public class UserInterface {
     public static String campusBuildingFileName = "src/main/java/hw8/data/campus_buildings.tsv";
 
     public static void main(String[] args) {
+        long start = System.currentTimeMillis();
         CampusMapModel model = CampusMapModel.makeInstance(campusPathFileName, campusBuildingFileName);
         Scanner reader = new Scanner(System.in, "UTF-8"); // Reading from System.in
-        Map<String, String> fullToShort = model.listBuildings();
-        Map<String, CampusMapModel.Coordinate> fullToLocation = model.listLocations();
-        Map<String, String> shortToFull = new HashMap<>();
-        List<String> buildings = new ArrayList<>();
 
-        for (Map.Entry<String, String> entry : fullToShort.entrySet()) {
-            shortToFull.put(entry.getValue(), entry.getKey());
-            buildings.add(String.format("%s: %s", entry.getValue(), entry.getKey()));
+        // Creates a new mapping from Building.shortName to Building.
+        Map<String, Building> shortToBuilding = new HashMap<>();
+
+        // Creates a list of Building list in format shortName : longName for each Building.
+        // Used when building list will be printOut.
+        List<String> formattedBuilding = new ArrayList<>();
+
+        // Fill the shortToBuilding and formattedBuilding.
+        for (Building building :  model.listBuildings()) {
+            shortToBuilding.put(building.getShortName(), building);
+            formattedBuilding.add(String.format("%s: %s", building.getLongName(), building.getShortName()));
         }
 
-        assert fullToShort.size() == shortToFull.size();
+        // Quick sanity check.
+        assert formattedBuilding.size() == shortToBuilding.size() && shortToBuilding.size() == model.listBuildings().size();
+
+        long times = System.currentTimeMillis() - start;
+        System.out.println("# Loading complete in " + times + " ms");
 
         printMenu();
+
         while (true) {
             System.out.print("Enter an option ('m' to see the menu): ");
+            System.out.println();
+
             String command = reader.nextLine();
+//            while (command.startsWith("#") || command.isEmpty()) {
+//                System.out.println(command);
+//                command = reader.nextLine();
+//            }
+
             switch (command) {
                 case "b" :
-                    for (String line : buildings) {
+                    for (String line : formattedBuilding) {
                         System.out.println(line);
                     }
                     break;
                 case "r" :
-                    printPaths(reader, shortToFull, fullToLocation, model);
+                    printPaths(reader, shortToBuilding, model);
                     break;
                 case "q" :
                     return;
@@ -49,44 +67,73 @@ public class UserInterface {
         }
 
     }
-    private static void printMenu() {
+
+  /**
+   * Prints the menu out to System.out.
+   *
+   * Menu:
+   *    r to find a route
+   *    b to see a list of all buildings
+   *    q to quit
+   */
+  private static void printMenu() {
         System.out.println("Menu:");
         System.out.println("\tr to find a route");
         System.out.println("\tb to see a list of all buildings");
         System.out.println("\tq to quit");
     }
 
-    public static void printPaths(Scanner reader, Map<String, String> shortToFull, Map<String, CampusMapModel.Coordinate> fullToLocation, CampusMapModel model) {
+    public static void printPaths(Scanner reader, Map<String, Building> shortToBuilding, CampusMapModel model) {
         System.out.print("Abbreviated name of starting building: ");
         String start = reader.nextLine();
+        System.out.println();
         System.out.print("Abbreviated name of ending building: ");
         String end = reader.nextLine();
+        System.out.println();
         boolean ifUnknownBuilding = false;
-        if (!shortToFull.containsKey(start)) {
+        if (!shortToBuilding.containsKey(start)) {
             System.out.println(String.format("Unknown building: %s", start));
             ifUnknownBuilding = true;
         }
-        if (!shortToFull.containsKey(end)) {
+        if (!shortToBuilding.containsKey(end)) {
             System.out.println(String.format("Unknown building: %s", end));
             ifUnknownBuilding = true;
         }
         if (ifUnknownBuilding) {
             return;
         }
-        List<Graph<CampusMapModel.Coordinate, Double>.Edge> results = model.findPath(
-                fullToLocation.get(shortToFull.get(start)), fullToLocation.get(shortToFull.get(end)));
 
-        System.out.println(String.format("Path from %s to %s:", shortToFull.get(start), shortToFull.get(end)));
+        // We can prove that if either start or end is not a key in the shortToBuilding, ifUnknownBuilding must be true.
+        // Then the method will definitely return before the following to shortToBuilding.get method.
+        // Otherwise, start and end must be key for shortBuilding,
+        //      as a result there is no way for shortToBuilding.get to return null
+        @SuppressWarnings("incompatible")
+        @NonNull Building startBuilding = shortToBuilding.get(start);
+
+        @SuppressWarnings("incompatible")
+        @NonNull Building endBuilding = shortToBuilding.get(end);
+
+        System.out.println(String.format("Path from %s to %s:", startBuilding.getLongName(), endBuilding.getLongName()));
+
+        List<Graph<Coordinate, Double>.Edge> results = model.findPath
+                (startBuilding.getLocation(), endBuilding.getLocation());
+
+        if (results == null) {
+            System.out.println("no path found");
+            return;
+        }
+
         double totalCost = 0;
-        for (Graph<CampusMapModel.Coordinate, Double>.Edge edge : results) {
+
+        for (Graph<Coordinate, Double>.Edge edge : results) {
             totalCost += edge.getLabel();
             System.out.println(formatPath(edge));
         }
         System.out.println(String.format("Total distance: %.0f feet", totalCost));
     }
 
-    private static String formatPath(Graph<CampusMapModel.Coordinate, Double>.Edge edge) {
-        String direction = "";
+    private static String formatPath(Graph<Coordinate, Double>.Edge edge) {
+        String direction;
 
         Double endX = edge.getEnd().getContent().getX();
         Double endY = edge.getEnd().getContent().getY();

@@ -3,7 +3,8 @@ package hw8;
 import com.opencsv.bean.*;
 import com.opencsv.exceptions.CsvConstraintViolationException;
 import com.opencsv.exceptions.CsvDataTypeMismatchException;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.checker.nullness.qual.*;
+import org.checkerframework.dataflow.qual.Pure;
 
 import java.io.IOException;
 import java.io.Reader;
@@ -14,6 +15,7 @@ import java.util.*;
 public class DataParser {
     // This is NOT an ADT!!
     // This is NOT an ADT!!
+
     /**
      *  Reads Campus Path data set. Each line of the input file represents a path and is defined by:
      *      x1,y1   x2,y2   distance
@@ -23,28 +25,29 @@ public class DataParser {
      *
      *      There should not be duplicate paths in data set.
      *
-     * @spec.requires filename is a valid file path.
+     * @spec.requires filename is a valid file path and result != null
      * @param filename the name of the file that will be read
-     * @return a list of CampusPath Objects,
-     *          each one representing an edge defined by one line in the data set, respectively.
-     *          or null if there is an IOException
+     * @param result the list of CampusPath Objects, each one representing an edge defined by one line in the data set, respectively;
+     *               typically empty when the routine is called.
+     *
+     * @spec.modifies result
+     * @spec.effects fills result with a list of CampusPathForCsv Object.
+     * @throws RuntimeException if there is an IOException while reading the filename.
      */
-  public static @Nullable List<CampusPathForCsv> parsePathData(String filename) {
+  public static void parsePathData(String filename, List<CampusPathForCsv> result) throws RuntimeException{
 
-      List<CampusPathForCsv> result;
     try (Reader reader = Files.newBufferedReader(Paths.get(filename))) {
         CsvToBean<CampusPathForCsv>  csvToBean = new CsvToBeanBuilder<CampusPathForCsv>(reader)
               .withType(CampusPathForCsv.class)
               .withSeparator('\t')
               .withIgnoreLeadingWhiteSpace(true)
               .build();
-      result = csvToBean.parse();
+      result.addAll(csvToBean.parse());
     } catch (IOException e) {
       System.err.println(e.toString());
       e.printStackTrace(System.err);
-      return null;
+      throw new RuntimeException("Exception while trying to read: " + filename, e);
     }
-    return result;
   }
 
     /**
@@ -73,7 +76,7 @@ public class DataParser {
      *
      */
   public static void parseBuildingData(
-          String filename, Map<String, String> longNameToShort, Map<String, CoordinatesForCsv> longNameToLocation) {
+          String filename, Map<String, String> longNameToShort, Map<@KeyFor("#2") String, CoordinatesForCsv> longNameToLocation) {
 
       List<BuildingForCsv> result;
 
@@ -95,6 +98,7 @@ public class DataParser {
             String long_name = building.getLong_name();
             Double x = Double.parseDouble(building.getX());
             Double y = Double.parseDouble(building.getY());
+
             if (longNameToShort.containsKey(long_name)) {
                 assert short_name.equals(longNameToShort.get(long_name));
             } else {
@@ -121,6 +125,14 @@ public class DataParser {
         @CsvBindByName
         private String y;
 
+        public BuildingForCsv() {
+            this.short_name = "";
+            this.long_name = "";
+            this.x = "";
+            this.y = "";
+        }
+
+        @Pure
         public String getShort_name() {
             return short_name;
         }
@@ -129,14 +141,15 @@ public class DataParser {
             this.short_name = short_name;
         }
 
+        @Pure
         public String getLong_name() {
             return long_name;
         }
-
         public void setLong_name(String long_name) {
             this.long_name = long_name;
         }
 
+        @Pure
         public String getX() {
             return x;
         }
@@ -145,6 +158,7 @@ public class DataParser {
             this.x = x;
         }
 
+        @Pure
         public String getY() {
             return y;
         }
@@ -162,7 +176,11 @@ public class DataParser {
                 String[] parts = value.split(",");
                 return new CoordinatesForCsv(Double.parseDouble(parts[0]), Double.parseDouble(parts[1]));
             } catch (RuntimeException e) {
-                throw new CsvDataTypeMismatchException(e.getMessage());
+                String message = "";
+                if (e.getMessage() != null) {
+                    message = e.getMessage();
+                }
+                throw new CsvDataTypeMismatchException(message);
             }
         }
     }
@@ -205,6 +223,13 @@ public class DataParser {
         @CsvBindByName
         private double distance;
 
+        public CampusPathForCsv() {
+            this.origin = new CoordinatesForCsv(0, 0);
+            this.destination = new CoordinatesForCsv(0, 0);
+            this.distance = 0.0;
+        }
+
+        @Pure
         public CoordinatesForCsv getOrigin() {
             return origin;
         }
@@ -213,6 +238,7 @@ public class DataParser {
             this.origin = origin;
         }
 
+        @Pure
         public CoordinatesForCsv getDestination() {
             return destination;
         }

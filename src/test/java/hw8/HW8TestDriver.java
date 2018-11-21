@@ -39,7 +39,7 @@ public class HW8TestDriver {
     // TODO: add a line here to call your main method. For example, if your
     // main class is called CampusPaths, write:
     // CampusPaths.main(new String[0]);
-
+    UserInterface.main(new String[0]);
     // Restore standard I/O streams.
     System.setIn(stdin);
     System.setOut(stdout);
