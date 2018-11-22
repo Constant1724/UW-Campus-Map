@@ -6,11 +6,19 @@ import static org.junit.Assert.*;
 
 public class BuildingTest {
 
-    private Building makeBuilding() {
+  /**
+   * create an instance of Building with some hard-coded value.
+   * @return an instance of Building with some hard-coded value.
+   */
+  protected static Building makeBuilding() {
         return new Building(new Coordinate(0.0, 0.0), "ah", "AHH");
     }
 
-    private Building makeAnotherBuilding() {
+    /**
+     * create an instance of Building with some hard-coded value.
+     * @return an instance of Building with some hard-coded value.
+     */
+    protected static Building makeAnotherBuilding() {
         return new Building(new Coordinate(0.0, 0.0), "eihei", "EIHEIHEI");
     }
 
