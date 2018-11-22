@@ -11,7 +11,7 @@ import java.util.*;
  *      print menu
  *      quit the program
  *
- * throw command line text interface.
+ * through command line text interface.
  */
 public class UserInterface {
     /**
@@ -25,7 +25,8 @@ public class UserInterface {
     public static String campusBuildingFileName = "src/main/java/hw8/data/campus_buildings.tsv";
 
     /**
-     * Stand main method. read in user Input and perform corresponding functions.
+     * Standard main method. read user input from System.in and
+     *  perform corresponding functions and output result to System.out
      *
      *      b lists all buildings in the form abbreviated name: long name.
      *              Buildings are listed in alphabetical order of abbreviated name.

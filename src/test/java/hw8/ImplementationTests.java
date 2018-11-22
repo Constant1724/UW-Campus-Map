@@ -13,7 +13,7 @@ import org.junit.runners.Suite.*;
  */
 @RunWith(Suite.class)
 @SuiteClasses({
-  /* list classes here */
+        BuildingTest.class
 })
 public final class ImplementationTests {
   // this class is a placeholder for the suite, so it has no members.

@@ -13,4 +13,8 @@ Unknown building: cse
 Enter an option ('m' to see the menu): Abbreviated name of starting building: Abbreviated name of ending building: Unknown building: PPP
 Unknown building: q
 
+Enter an option ('m' to see the menu): # Test Empty Input
+Abbreviated name of starting building: Abbreviated name of ending building: Unknown building: 
+Unknown building: 
+
 Enter an option ('m' to see the menu): 

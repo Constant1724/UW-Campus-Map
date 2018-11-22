@@ -264,7 +264,7 @@ public class CampusMapModel {
         if (result == null) {
             return null;
         }
-
+        // Change to List<CampusPath> in order to decrease coupling between model part and view part.
         List<CampusPath> paths = new ArrayList<>();
         for (Graph<Coordinate, Double>.Edge edge : result) {
             paths.add(new CampusPath(edge.getStart().getContent(), edge.getEnd().getContent(), edge.getLabel()));
