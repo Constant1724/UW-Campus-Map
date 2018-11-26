@@ -10,7 +10,7 @@ import java.io.PrintStream;
 import org.junit.Test;
 
 /**
- * HolaWorldTest is a simple test of the HolaWorld class that you are to fix. This test just makes
+ * HolaWorldTest is a simple testPathAllBuildings.test of the HolaWorld class that you are to fix. This testPathAllBuildings.test just makes
  * sure that the program does not crash and that the correct greeting is printed.
  */
 public class HolaWorldTest {

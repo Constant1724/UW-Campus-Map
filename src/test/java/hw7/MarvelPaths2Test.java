@@ -10,7 +10,7 @@ public class MarvelPaths2Test extends MarvelPathsTest {
   public static final String MARVEL = "src/main/java/hw7/data/marvel.tsv";
 
   /**
-   * test additional behavior of loadData, specifically, if data is well-formed it should return a
+   * testPathAllBuildings.test additional behavior of loadData, specifically, if data is well-formed it should return a
    * non-null grah. if data is mal-formed it should return null.
    */
   @Test

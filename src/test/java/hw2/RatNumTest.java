@@ -7,12 +7,12 @@ import org.junit.Before;
 import org.junit.Test;
 
 /**
- * This class contains a set of test cases that can be used to test the implementation of the RatNum
+ * This class contains a set of testPathAllBuildings.test cases that can be used to testPathAllBuildings.test the implementation of the RatNum
  * class.
  *
  * <p>RatNum is implemented for you, so it should already pass all the tests in this suite. This
- * test is provided to give you (1) examples of using the RatNum class, albeit in the context of a
- * test driver and (2) an example of a test suite.
+ * testPathAllBuildings.test is provided to give you (1) examples of using the RatNum class, albeit in the context of a
+ * testPathAllBuildings.test driver and (2) an example of a testPathAllBuildings.test suite.
  *
  * <p>
  */
@@ -76,46 +76,46 @@ public final class RatNumTest {
 
   /**
    * Asserts that RatNum.toString() is equal to rep. This method depends on the implementation of
-   * RatNum's "toString" and "equals" methods. Therefore, one should verify (test) those methods
+   * RatNum's "toString" and "equals" methods. Therefore, one should verify (testPathAllBuildings.test) those methods
    * before using this method is in tests.
    */
   private void eq(RatNum ratNum, String rep) {
     assertEquals(rep, ratNum.toString());
   }
 
-  // The actual test cases are below.
+    // The actual testPathAllBuildings.test cases are below.
   //
-  // The order of the test cases is important for producing useful
-  // output. If a test uses a method of RatNum, it should test that
-  // method before hand. For example, suppose one of the test cases
+    // The order of the testPathAllBuildings.test cases is important for producing useful
+    // output. If a testPathAllBuildings.test uses a method of RatNum, it should testPathAllBuildings.test that
+    // method before hand. For example, suppose one of the testPathAllBuildings.test cases
   // for "negate" is:
   //
   // "(new RatNum(1)).negate().equals(new RatNum(-1))"
   //
-  // In this case, the test case relies on RatNum's "equals" method
-  // in addition to "negate"; therefore, one should test "equals"
+    // In this case, the testPathAllBuildings.test case relies on RatNum's "equals" method
+    // in addition to "negate"; therefore, one should testPathAllBuildings.test "equals"
   // before "negate". Otherwise, it will be unclear if failing the
-  // "negate" test is due "negate" having a bug or "equals" having a
-  // bug. (Furthermore, the test depends on RatNum's constructor,
+    // "negate" testPathAllBuildings.test is due "negate" having a bug or "equals" having a
+    // bug. (Furthermore, the testPathAllBuildings.test depends on RatNum's constructor,
   // so it should also be tested beforehand.)
   //
-  // In general, it is best to have as few dependences in your test
+    // In general, it is best to have as few dependences in your testPathAllBuildings.test
   // cases as possible. Doing so, will reduce the number of methods
-  // that could cause a test case to fail, making it easier to find
+    // that could cause a testPathAllBuildings.test case to fail, making it easier to find
   // the faulty method. In practice, one will usually need to
   // depend on a few core methods such as the constructors and
-  // "equals" methods. Also, some of the test cases below depend on
+    // "equals" methods. Also, some of the testPathAllBuildings.test cases below depend on
   // the "toString" method because it made the cases easier to write.
   //
   // As a secondary concern to above, if one has access to the
   // source code of a class (as under glass box testing) one should
   // order tests such that a method is tested after all the methods
   // it depends on are tested. For example, in RatNum, the "sub"
-  // method calls the "negate" method; therefore, one should test
+    // method calls the "negate" method; therefore, one should testPathAllBuildings.test
   // "negate" before "sub". Following this methodology will make it
   // more clear that one should fix bugs in "negate" before looking
-  // at the results of "sub" test because, "sub" could be correctly
-  // written and the "sub" test case fails only be "negate" is
+    // at the results of "sub" testPathAllBuildings.test because, "sub" could be correctly
+    // written and the "sub" testPathAllBuildings.test case fails only be "negate" is
   // broken.
   //
   // If one does not have access to the source code (as is the case
@@ -124,7 +124,7 @@ public final class RatNumTest {
   // which methods depend on other methods, but don't worry about
   // getting it perfect.
 
-  // First, we test the constructors in isolation of (without
+    // First, we testPathAllBuildings.test the constructors in isolation of (without
   // depending on) all other RatNum methods.
   //
   // Unfortunately, without using any of RatNum's methods, all we
@@ -135,16 +135,16 @@ public final class RatNumTest {
   // RatNum, r would pass "checkRep" but would be the wrong RatNum
   // in most cases.
   //
-  // Given that we are unable to fully test the constructors, when
-  // any other test case fails, it could be due to an error in the
-  // constructor instead of an error in method the test case is
+    // Given that we are unable to fully testPathAllBuildings.test the constructors, when
+    // any other testPathAllBuildings.test case fails, it could be due to an error in the
+    // constructor instead of an error in method the testPathAllBuildings.test case is
   // testing.
   //
   // If RatNum had public fields, this problem would not exist,
   // because we could check if the fields were set to the correct
   // values. This problem is really a case of a more general
-  // problem of being unable to test private fields and methods of
-  // classes. For example, we are also unable to test the gcd
+    // problem of being unable to testPathAllBuildings.test private fields and methods of
+    // classes. For example, we are also unable to testPathAllBuildings.test the gcd
   // method because it is private. Solutions to this general
   // problem include:
   //
@@ -153,24 +153,24 @@ public final class RatNumTest {
   // general because private fields have many benefits as will
   // be discussed in class.
   //
-  // (2) Move the test suite code into RatNum and, thus, it would
+    // (2) Move the testPathAllBuildings.test suite code into RatNum and, thus, it would
   // have access to private memebers. (Maybe as a static inner
   // class [Don't worry if you don't know what this means yet.])
   // This is not done in general because it clutters the class
   // being tested, making it harder to understand.
   //
   // In practice, while testing, you may find it necessary to do (1)
-  // or (2) temporarily with a test case that accesses private
+    // or (2) temporarily with a testPathAllBuildings.test case that accesses private
   // fields or methods to track down a bug. But after finding the
   // bug, remember to revert your code back. Also for future
-  // problem sets where you will be writing your own test suites,
-  // make sure that your test suite runs correctly without (1) or
+    // problem sets where you will be writing your own testPathAllBuildings.test suites,
+    // make sure that your testPathAllBuildings.test suite runs correctly without (1) or
   // (2) being true.
 
   // (Note, all of these objects were already constructed above as
   // fields of this class (RatNumTest); thus, one could argue that
-  // this test case is redundant. We included this test case anyhow
-  // to give you an example of such a test case and because the
+    // this testPathAllBuildings.test case is redundant. We included this testPathAllBuildings.test case anyhow
+    // to give you an example of such a testPathAllBuildings.test case and because the
   // implementation of this class could change eliminating the
   // fields above.)
 
@@ -219,7 +219,7 @@ public final class RatNumTest {
   ////  IsNaN Test
   ///////////////////////////////////////////////////////////////////////////////////////
 
-  // Next, we test isNaN because it can be tested in isolation from
+    // Next, we testPathAllBuildings.test isNaN because it can be tested in isolation from
   // everything except the constructors. (All instance method tests
   // will depend on a constructor.)
   @Test
@@ -240,7 +240,7 @@ public final class RatNumTest {
   ////  Test is Polarity, IsPositive, IsNegative
   ///////////////////////////////////////////////////////////////////////////////////////
 
-  // Next, we test isPos and isNeg because we can easily test these
+    // Next, we testPathAllBuildings.test isPos and isNeg because we can easily testPathAllBuildings.test these
   // methods without depending on any other methods (except the
   // constructors).
   private void assertPos(RatNum n) {
@@ -296,7 +296,7 @@ public final class RatNumTest {
   ////  Double Value
   ///////////////////////////////////////////////////////////////////////////////////////
 
-  // Next, we test doubleValue because the test does not require any
+    // Next, we testPathAllBuildings.test doubleValue because the testPathAllBuildings.test does not require any
   // other RatNum methods (other than constructors).
 
   // asserts that two double's are within .0000001 of one another.
@@ -463,13 +463,15 @@ public final class RatNumTest {
   ////  Equals
   ///////////////////////////////////////////////////////////////////////////////////////
 
-  // Next, we test the equals method because that can be tested in
+    // Next, we testPathAllBuildings.test the equals method because that can be tested in
   // isolation from everything except the constructor and maybe
   // isNaN, which we just tested.
   // Additionally, this method will be very useful for testing other
   // methods.
 
-  /** This test check is equals is reflexive. In other words that x.equals(x) is always true. */
+    /**
+     * This testPathAllBuildings.test check is equals is reflexive. In other words that x.equals(x) is always true.
+     */
   @Test
   public void testEqualsReflexive() {
     for (int i = 0; i < ratNums.length; i++) {
@@ -558,7 +560,7 @@ public final class RatNumTest {
   // Now that we have verified equals, we will use it in the
   // rest or our tests.
 
-  // Next, we test the toString and valueOf methods because we can test
+    // Next, we testPathAllBuildings.test the toString and valueOf methods because we can testPathAllBuildings.test
   // them isolation of everything except the constructor and equals,
   // and they will be useful methods to aid with testing other
   // methods. (In some cases, it is easier to use valueOf("1/2") than
@@ -702,9 +704,9 @@ public final class RatNumTest {
   ////  Negate
   ///////////////////////////////////////////////////////////////////////////////////////
 
-  // Next, we test the arithmetic operations.
-  //
-  // We test them in our best guess of increasing difficultly and
+    // Next, we testPathAllBuildings.test the arithmetic operations.
+    //
+    // We testPathAllBuildings.test them in our best guess of increasing difficultly and
   // likelihood of having depend on a previous method. (For
   // example, add could use sub as a subroutine.
   //
@@ -776,7 +778,7 @@ public final class RatNumTest {
 
   @Test
   public void testAddOnNaN() {
-    // each test case (addend, augend) drawn from the set
+      // each testPathAllBuildings.test case (addend, augend) drawn from the set
     // ratNums x ratNaNs
 
     for (int i = 0; i < ratNums.length; i++) {
@@ -1048,7 +1050,7 @@ public final class RatNumTest {
 
   @Test
   public void testDivOnNaN() {
-    // each test case (addend, augend) drawn from the set
+      // each testPathAllBuildings.test case (addend, augend) drawn from the set
     // ratNums x ratNaNs
 
     for (int i = 0; i < ratNums.length; i++) {
@@ -1088,8 +1090,8 @@ public final class RatNumTest {
   ////  Compare Test
   ///////////////////////////////////////////////////////////////////////////////////////
 
-  // Finally, we test compare. We do so last, because compare may
-  // depend on sub, isNaN, and/or equals, so we want to test those
+    // Finally, we testPathAllBuildings.test compare. We do so last, because compare may
+    // depend on sub, isNaN, and/or equals, so we want to testPathAllBuildings.test those
   // methods first.
 
   private void assertGreater(RatNum larger, RatNum smaller) {

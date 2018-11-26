@@ -87,6 +87,7 @@ public class CampusMapModel {
    * @param pathFileName the name of the file will be read that containing all information about campus paths.
    * @param buildingFileName the name of the file will be read that containing all information about campus Buildings.
    * @return an instance of CampusMapModel with campus path data and campus building data.
+   * @throws RuntimeException If there is an IOException while reading the file OR data file is malformed.
    */
   public static CampusMapModel makeInstance(String pathFileName, String buildingFileName) throws RuntimeException {
         CampusMapModel model = new CampusMapModel();

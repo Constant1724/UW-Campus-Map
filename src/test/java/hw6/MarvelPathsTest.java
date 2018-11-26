@@ -35,7 +35,7 @@ public class MarvelPathsTest {
   }
 
   /**
-   * test additional behavior of loadData, specifically, if data is well-formed it should return a
+   * testPathAllBuildings.test additional behavior of loadData, specifically, if data is well-formed it should return a
    * non-null grah. if data is mal-formed it should return null.
    */
   @Test
@@ -46,7 +46,7 @@ public class MarvelPathsTest {
   }
 
   /**
-   * test additional behavior of findPath, specifically, if it returns empty list for self edge and
+   * testPathAllBuildings.test additional behavior of findPath, specifically, if it returns empty list for self edge and
    * returns null for no path exists.
    */
   @Test

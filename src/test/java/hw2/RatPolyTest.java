@@ -6,7 +6,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 /**
- * This class contains a set of test cases that can be used to test the implementation of the
+ * This class contains a set of testPathAllBuildings.test cases that can be used to testPathAllBuildings.test the implementation of the
  * RatPoly class.
  *
  * <p>
@@ -290,7 +290,7 @@ public final class RatPolyTest {
   ////  Degree Test
   ///////////////////////////////////////////////////////////////////////////////////////
 
-  @Test // test degree is zero when it should be
+    @Test // testPathAllBuildings.test degree is zero when it should be
   public void testDegreeZero() {
     assertEquals("x^0 degree 0", 0, poly(1, 0).degree());
     assertEquals("0*x^100 degree 0", 0, poly(0, 100).degree());
@@ -303,7 +303,7 @@ public final class RatPolyTest {
     assertEquals("x^100 degree 100", 100, poly(1, 100).degree());
   }
 
-  @Test // test degree for multi termed polynomial
+    @Test // testPathAllBuildings.test degree for multi termed polynomial
   public void testDegreeNonZeroMultiTerm() {
     assertEquals(poly1.toString() + " has Correct Degree", 5, poly1.degree());
     assertEquals(poly2.toString() + " has Correct Degree", 4, poly2.degree());
@@ -313,24 +313,24 @@ public final class RatPolyTest {
   ////  Negate Tests
   ///////////////////////////////////////////////////////////////////////////////////////
 
-  @Test // test degree is zero when it should be
+    @Test // testPathAllBuildings.test degree is zero when it should be
   public void testNegateZero() {
     assertEquals(RatPoly.ZERO, RatPoly.ZERO.negate());
   }
 
-  @Test // test degree is zero when it should be
+    @Test // testPathAllBuildings.test degree is zero when it should be
   public void testNegateNaN() {
     assertEquals(RatPoly.NaN, RatPoly.NaN.negate());
   }
 
-  @Test // test degree is zero when it should be
+    @Test // testPathAllBuildings.test degree is zero when it should be
   public void testNegatePosToNeg() {
     assertEquals(RatPoly.valueOf("-x-2*x^2-3*x^3-4*x^4-5*x^5"), poly1.negate());
     assertEquals(RatPoly.valueOf("-6*x^2-7*x^3-8*x^4"), poly2.negate());
     assertEquals(RatPoly.valueOf("-9*x^3-10*x^4"), poly3.negate());
   }
 
-  @Test // test degree is zero when it should be
+    @Test // testPathAllBuildings.test degree is zero when it should be
   public void testNegatNegToPos() {
     assertEquals(poly1, RatPoly.valueOf("-x-2*x^2-3*x^3-4*x^4-5*x^5").negate());
     assertEquals(poly2, RatPoly.valueOf("-6*x^2-7*x^3-8*x^4").negate());
@@ -456,7 +456,7 @@ public final class RatPolyTest {
     assertEquals(RatPoly.ZERO, RatPoly.ZERO.sub(RatPoly.ZERO));
   }
 
-  // Following test method depends on correctness of negate
+    // Following testPathAllBuildings.test method depends on correctness of negate
   @Test // p - ZeroPolynomial == t && ZeroPolynomial - p == -p
   public void testSubtractZeroAndNonZero() {
     assertEquals(neg_poly1, RatPoly.ZERO.sub(poly1));
@@ -475,16 +475,16 @@ public final class RatPolyTest {
   }
 
   ///////////////////////////////////////////////////////////////////////////////////////
-  ////  Remove zero when appropriate test
+    ////  Remove zero when appropriate testPathAllBuildings.test
   ///////////////////////////////////////////////////////////////////////////////////////
 
   @Test
   public void testZeroElim() {
     // make sure zeros are removed from poly
     eqP("1+0", 0, new int[] {1});
-    // test zero-elimination from intermediate result of sub
+      // testPathAllBuildings.test zero-elimination from intermediate result of sub
     eq(quadPoly(1, 1, 1).sub(poly(1, 1)), "x^2+1");
-    // test internal cancellation of terms in mul.  (x+1)*(x-1)=x^2-1
+      // testPathAllBuildings.test internal cancellation of terms in mul.  (x+1)*(x-1)=x^2-1
     eq(poly(1, 1).add(poly(1, 0)).mul(poly(1, 1).sub(poly(1, 0))), "x^2-1");
   }
 
@@ -673,7 +673,7 @@ public final class RatPolyTest {
 
   @Test
   public void testDivExamplesFromSpec() {
-    // seperated this test case out because it has a dependency on
+      // seperated this testPathAllBuildings.test case out because it has a dependency on
     // both "valueOf" and "div" functioning properly
 
     // example 1 from spec
@@ -718,7 +718,7 @@ public final class RatPolyTest {
     assertEquals(RatPoly.NaN, RatPoly.ZERO.div(RatPoly.ZERO));
   }
 
-  // Following test method depends on correctness of negate
+    // Following testPathAllBuildings.test method depends on correctness of negate
   @Test // p / Zero Polynomial == NaN && Zero Polynomial / p == 0
   public void testDivisionZeroAndNonZero() {
     assertEquals(RatPoly.ZERO, RatPoly.ZERO.div(poly1));
@@ -746,7 +746,7 @@ public final class RatPolyTest {
 
   @Test
   public void testImmutabilityOfOperations() {
-    // not the most thorough test possible, but hopefully will
+      // not the most thorough testPathAllBuildings.test possible, but hopefully will
     // catch the easy cases early on...
     RatPoly one = poly(1, 0);
     RatPoly two = poly(2, 0);

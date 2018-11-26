@@ -267,7 +267,7 @@ public class GraphTest {
     for (Graph<String, String>.Node node : Nodes) {
       Set<Graph<String, String>.Edge> edges = graph.getEdges(node);
 
-      // test if the return view only contains edges, whose start.equals(node)
+        // testPathAllBuildings.test if the return view only contains edges, whose start.equals(node)
       for (Graph<String, String>.Edge edge : edges) {
         assertEquals(edge.getStart(), node);
       }

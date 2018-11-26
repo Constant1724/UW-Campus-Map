@@ -6,7 +6,9 @@ import hw1.*;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-/** BallTest is a simple clearbox test of the {@link hw1.Ball} class. */
+/**
+ * BallTest is a simple clearbox testPathAllBuildings.test of the {@link hw1.Ball} class.
+ */
 public class BallTest {
 
   private static Ball b = null;

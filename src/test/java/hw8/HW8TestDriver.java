@@ -7,7 +7,7 @@ import java.io.InputStream;
 import java.io.PrintStream;
 
 /**
- * This class can be used to test your Campus Paths main application. It redirects System.out and
+ * This class can be used to testPathAllBuildings.test your Campus Paths main application. It redirects System.out and
  * System.in to input and output files, then invokes the application's main method. This allows the
  * output of a set of commands to be compared against the expected output without user intervention.
  */

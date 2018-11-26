@@ -22,6 +22,31 @@ public class CampusPathTest {
     }
 
     /**
+     * Test hashcode method is implemented properly.
+     */
+    @Test
+    public void testHashCode() {
+        assertEquals(makeCampusPath().hashCode(), makeCampusPath().hashCode());
+        assertNotEquals(makeCampusPath().hashCode(), makeAnotherCampusPath().hashCode());
+    }
+
+    /**
+     * Test equals method is implemented properly.
+     */
+    @Test
+    public void testEquals() {
+        // Two same buildings should be equal
+        assertEquals(makeCampusPath(), makeCampusPath());
+
+        // Two different buildings should not be equal
+        assertNotEquals(makeCampusPath(), makeAnotherCampusPath());
+
+        // null should not be equal to any instance.
+        assertFalse(makeCampusPath().equals(null));
+        assertFalse(makeAnotherCampusPath().equals(null));
+    }
+    
+    /**
      * Test getOrigin method is implemented properly.
      */
     @Test

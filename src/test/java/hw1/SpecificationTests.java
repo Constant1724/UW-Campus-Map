@@ -5,7 +5,7 @@ import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 
 /**
- * SpecificationTests is a simple test suite to test your problem set against the provided
+ * SpecificationTests is a simple testPathAllBuildings.test suite to testPathAllBuildings.test your problem set against the provided
  * specifications. You do not need to modify this file for Homework 1.
  */
 @RunWith(Suite.class)

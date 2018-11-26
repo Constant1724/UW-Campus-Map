@@ -10,7 +10,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 /**
- * BallContainerTest is a clearbox test of the BallContainer class.
+ * BallContainerTest is a clearbox testPathAllBuildings.test of the BallContainer class.
  *
  * <p>Recall that {@link hw1.BallContainer} is a container for {@link hw1.Ball}s. However, you can
  * only put a Ball into a BallContainer once. After you put the Ball into the BallContainer, further
@@ -29,7 +29,7 @@ public class BallContainerTest {
   @BeforeClass
   public static void setupForTests() throws Exception {
     assertThat(
-        "Test case error, you must test at least 1 Ball!!", NUM_BALLS_TO_TEST, greaterThan(0));
+            "Test case error, you must testPathAllBuildings.test at least 1 Ball!!", NUM_BALLS_TO_TEST, greaterThan(0));
     ballcontainer = new BallContainer();
 
     // Let's create the balls we need.

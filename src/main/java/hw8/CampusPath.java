@@ -1,9 +1,14 @@
 package hw8;
 
 import org.checkerframework.checker.initialization.qual.UnknownInitialization;
+import org.checkerframework.checker.nullness.qual.Nullable;
+
+import java.util.Objects;
 
 /**
  * CampusPath is an immutable representation of a path in Campus.
+ *
+ * This class is used to isolate view part away from model part.
  *
  * Specification fields:
  * @spec.specfield origin      : Coordinate  // start of a path in campus
@@ -71,6 +76,33 @@ public class CampusPath {
      */
     public double getCost() {
         return cost;
+    }
+
+    /**
+     * Standard hashCode function.
+     *
+     * @return an int that all objects equal to this will also return.
+     */
+    @Override
+    public int hashCode() {
+        return Objects.hash(origin, destination, cost);
+    }
+
+    /**
+     * Standard equality operation.
+     *
+     * @param obj The object to be compared for equality.
+     * @return true if and only if 'this' and 'obj' represent the same Edge.
+     */
+    @Override
+    public boolean equals(@Nullable Object obj) {
+        if (!(obj instanceof CampusPath)) {
+            return false;
+        }
+        CampusPath other = (CampusPath) obj;
+        return origin.equals(other.getOrigin()) &&
+                destination.equals(other.getDestination()) &&
+                cost == other.getCost();
     }
 
     /** Checks that the representation invariant holds (if any). */
