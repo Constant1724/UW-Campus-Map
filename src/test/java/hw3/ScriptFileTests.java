@@ -12,14 +12,14 @@ import utils.tests.LabelledParameterized;
 import utils.tests.LabelledParameterized.Labels;
 
 /**
- * This class, along with a complete HW3TestDriver implementation, can be used to testPathAllBuildings.test the your
+ * This class, along with a complete HW3TestDriver implementation, can be used to test the your
  * implementations of Graph and the path finding algorithm using the script file format described in
  * the problem set. It is assumed that the files are located in the same directory as this class.
  *
- * <p>It works by parameterizing testPathAllBuildings.test methods over some data values, and then creating an instance
- * for the cross-product of testPathAllBuildings.test methods and data values. In this case, it will create one
+ * <p>It works by parameterizing test methods over some data values, and then creating an instance
+ * for the cross-product of test methods and data values. In this case, it will create one
  * ScriptFileTests instance per .expected file, and for each of those it will run the
- * checkAgainstExpectedOutput() testPathAllBuildings.test. See the JUnit4 Javadocs for more information, or Google for
+ * checkAgainstExpectedOutput() test. See the JUnit4 Javadocs for more information, or Google for
  * more examples.
  */
 @RunWith(LabelledParameterized.class)
@@ -30,17 +30,17 @@ public class ScriptFileTests {
       new FileFilter() {
         @Override
         public boolean accept(File file) {
-            return file.getName().endsWith(".testPathAllBuildings.test");
+          return file.getName().endsWith(".test");
         }
       };
   private static List<String> testScriptNames = null; // not yet calculated
   private static List<File> testScriptFiles = null; // not yet calculated
 
-    // used by the actual testPathAllBuildings.test instance
+  // used by the actual test instance
   private final File testScriptFile;
 
   /**
-   * This method searches for and creates file handles for each script testPathAllBuildings.test. It only searches the
+   * This method searches for and creates file handles for each script test. It only searches the
    * immediate directory where the ScriptFileTests.class classfile is located.
    */
   public static void calculateTestFiles() {
@@ -72,7 +72,7 @@ public class ScriptFileTests {
    * This method is called in the constructor of Parameterized.
    *
    * @return list of argument arrays that should be invoked on the ScriptFileTests constructor by
-   *     the Parameterized testPathAllBuildings.test runner. Since that runner's constructor has one parameter, the array
+   *     the Parameterized test runner. Since that runner's constructor has one parameter, the array
    *     only has one element.
    */
   @Parameters
@@ -80,7 +80,7 @@ public class ScriptFileTests {
     ScriptFileTests.calculateTestFiles();
 
     if (ScriptFileTests.testScriptFiles == null) {
-        throw new IllegalStateException("Did not initialise any files to testPathAllBuildings.test");
+      throw new IllegalStateException("Did not initialise any files to test");
     }
 
     // we have to wrap testScriptFiles here so Parameterized.class receives a list of arg array.
@@ -95,15 +95,15 @@ public class ScriptFileTests {
   /**
    * This method is called in the constructor of LabelledParameterized. Since getTestFiles (and thus
    * calculateTestFiles()) should have already been called by the Parameterized constructor, the
-   * testPathAllBuildings.test script names should already have been computed.
+   * test script names should already have been computed.
    *
    * @return list of labels to be used as names for each of the parameterized tests. These names are
-   *     the same as the script file used to run the testPathAllBuildings.test.
+   *     the same as the script file used to run the test.
    */
   @Labels
   public static List<String> getTestLabels() {
     if (ScriptFileTests.testScriptNames == null) {
-        throw new IllegalStateException("Must initialize list of testPathAllBuildings.test names before creating tests.");
+      throw new IllegalStateException("Must initialize list of test names before creating tests.");
     }
 
     return ScriptFileTests.testScriptNames;
@@ -111,7 +111,7 @@ public class ScriptFileTests {
 
   /**
    * This constructor is reflectively called by the Parameterized runner. It creates a script file
-   * testPathAllBuildings.test instance, representing one script file to be tested.
+   * test instance, representing one script file to be tested.
    */
   public ScriptFileTests(File testScriptFile) {
     this.testScriptFile = testScriptFile;
@@ -146,8 +146,8 @@ public class ScriptFileTests {
 
   /**
    * @throws IOException
-   * @spec.requires there exists a testPathAllBuildings.test file indicated by testScriptFile
-   * @spec.effects runs the testPathAllBuildings.test in filename, and output its results to a file in the same directory
+   * @spec.requires there exists a test file indicated by testScriptFile
+   * @spec.effects runs the test in filename, and output its results to a file in the same directory
    *     with name filename+".actual"; if that file already exists, it will be overwritten.
    * @returns the contents of the output file
    */
@@ -169,19 +169,19 @@ public class ScriptFileTests {
 
   /**
    * @param newSuffix
-   * @return a File with the same name as testScriptFile, except that the testPathAllBuildings.test suffix is replaced by
+   * @return a File with the same name as testScriptFile, except that the test suffix is replaced by
    *     the given suffix
    */
   private File fileWithSuffix(String newSuffix) {
     File parent = testScriptFile.getParentFile();
     String driverName = testScriptFile.getName();
-      String baseName = driverName.substring(0, driverName.length() - "testPathAllBuildings.test".length());
+    String baseName = driverName.substring(0, driverName.length() - "test".length());
 
     return new File(parent, baseName + newSuffix);
   }
 
   /**
-   * The only testPathAllBuildings.test that is run: run a script file and testPathAllBuildings.test its output.
+   * The only test that is run: run a script file and test its output.
    *
    * @throws IOException
    */

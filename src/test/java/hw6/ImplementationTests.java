@@ -5,7 +5,7 @@ import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 
 /**
- * ImplementationTests is a testPathAllBuildings.test suite used to encapsulate all tests specific to your implementation
+ * ImplementationTests is a test suite used to encapsulate all tests specific to your implementation
  * of this problem set.
  *
  * <p>For instance, unit tests for your individual methods would go here.

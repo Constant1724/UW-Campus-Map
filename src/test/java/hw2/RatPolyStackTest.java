@@ -7,7 +7,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 /**
- * This class contains a set of testPathAllBuildings.test cases that can be used to testPathAllBuildings.test the implementation of the
+ * This class contains a set of test cases that can be used to test the implementation of the
  * RatPolyStack class.
  *
  * <p>Some Test Methods are relatively longer in order to simulate proper stack functionality

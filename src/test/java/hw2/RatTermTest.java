@@ -7,7 +7,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 /**
- * This class contains a set of testPathAllBuildings.test cases that can be used to testPathAllBuildings.test the implementation of the
+ * This class contains a set of test cases that can be used to test the implementation of the
  * RatPoly class.
  */
 public final class RatTermTest {
@@ -48,8 +48,8 @@ public final class RatTermTest {
 
   // Is it good style to include these constructor tests? Explicit constructor
   // tests are often not needed. Generally we advise you to have at
-  // least one assertion in every testPathAllBuildings.test unless testing that an exception IS
-  // thrown (via the "expected" testPathAllBuildings.test parameter). The constructor tests below
+  // least one assertion in every test unless testing that an exception IS
+  // thrown (via the "expected" test parameter). The constructor tests below
   // violate this rule, but we chose to include them in this assignment in
   // case they help you isolate constructor errors as you write your code.
   @Test
@@ -437,7 +437,7 @@ public final class RatTermTest {
     assertEquals(zeroTerm, zeroTerm.sub(zeroTerm));
   }
 
-    // Following testPathAllBuildings.test method depends on correctness of negate
+  // Following test method depends on correctness of negate
   @Test // t - Zero Term == t && Zero Term - t == -t
   public void testSubtractZeroAndNonZero() {
     RatTerm t = term(-2, 3);
@@ -552,7 +552,7 @@ public final class RatTermTest {
     assertEquals(nanTerm, zeroTerm.div(zeroTerm));
   }
 
-    // Following testPathAllBuildings.test method depends on correctness of negate
+  // Following test method depends on correctness of negate
   @Test // t / Zero Term == NaN && Zero Term / t == 0
   public void testDivisionZeroAndNonZero() {
     RatTerm t = term(-2, 3);

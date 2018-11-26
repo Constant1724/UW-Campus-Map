@@ -7,7 +7,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 /**
- * FibonacciTest is a clearbox testPathAllBuildings.test of the {@link hw1.Fibonacci} class.
+ * FibonacciTest is a clearbox test of the {@link hw1.Fibonacci} class.
  *
  * <p>Recall that the Fibonacci sequence is a recursive sequence where the first two terms of the
  * sequence are 1 and all subsequent terms are the sum of the previous two terms.
@@ -34,14 +34,14 @@ public class FibonacciTest {
   @Test
   public void testThrowsIllegalArgumentException() {
 
-      // testPathAllBuildings.test 0
+    // test 0
     try {
       fib.getFibTerm(0);
     } catch (IllegalArgumentException ex) {
       fail("Threw IllegalArgumentException for 0 but 0 is nonnegative: " + ex);
     }
 
-      // testPathAllBuildings.test 1
+    // test 1
     try {
       fib.getFibTerm(1);
     } catch (IllegalArgumentException ex) {

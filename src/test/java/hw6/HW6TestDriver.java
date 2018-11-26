@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * This class implements a testing driver which reads testPathAllBuildings.test scripts from files for testing Graph, the
+ * This class implements a testing driver which reads test scripts from files for testing Graph, the
  * Marvel parser, and your BFS algorithm.
  */
 public class HW6TestDriver extends HW3TestDriver {

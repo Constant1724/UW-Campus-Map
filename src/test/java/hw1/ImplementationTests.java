@@ -5,7 +5,7 @@ import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 
 /**
- * ImplementationTest is a simple testPathAllBuildings.test suite to testPathAllBuildings.test the implementation of each homework. You do not
+ * ImplementationTest is a simple test suite to test the implementation of each homework. You do not
  * need to modify this file for Homework 0.
  */
 @RunWith(Suite.class)

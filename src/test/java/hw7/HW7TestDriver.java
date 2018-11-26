@@ -5,7 +5,7 @@ import java.io.*;
 import java.util.*;
 
 /**
- * This class implements a testing driver which reads testPathAllBuildings.test scripts from files for your graph ADT and
+ * This class implements a testing driver which reads test scripts from files for your graph ADT and
  * improved MarvelPaths application using Dijkstra's algorithm.
  */
 public class HW7TestDriver {
@@ -45,8 +45,8 @@ public class HW7TestDriver {
 
   protected static void printUsage() {
     System.err.println("Usage:");
-      System.err.println("to read from a file: java hw7.testPathAllBuildings.test.HW7TestDriver <name of input script>");
-      System.err.println("to read from standard in: java hw7.testPathAllBuildings.test.HW7TestDriver");
+    System.err.println("to read from a file: java hw7.test.HW7TestDriver <name of input script>");
+    System.err.println("to read from standard in: java hw7.test.HW7TestDriver");
   }
 
   /** String -> Graph: maps the names of graphs to the actual graph * */

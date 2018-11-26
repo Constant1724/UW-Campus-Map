@@ -13,7 +13,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 /**
- * BoxTest is a clearbox testPathAllBuildings.test of the Box class.
+ * BoxTest is a clearbox test of the Box class.
  *
  * <p>Recall that like a {@link hw1.BallContainer}, the {@link hw1.Box} is a container for {@link
  * hw1.Ball}s and you can only put a Ball into a Box once. After you put the Ball into the Box,
@@ -38,9 +38,9 @@ public class BoxTest {
   @BeforeClass
   public static void setupBeforeTests() throws Exception {
     assertThat(
-            "Test case error, you must testPathAllBuildings.test at least 1 Ball!!", NUM_BALLS_TO_TEST, greaterThan(0));
+        "Test case error, you must test at least 1 Ball!!", NUM_BALLS_TO_TEST, greaterThan(0));
     assertThat(
-            "This testPathAllBuildings.test case is set up assuming that the box cannot contain all the balls, please check and change parameters!",
+        "This test case is set up assuming that the box cannot contain all the balls, please check and change parameters!",
         NUM_BALLS_TO_TEST,
         greaterThan(BOX_CAPACITY));
 
@@ -121,7 +121,7 @@ public class BoxTest {
   /**
    * Test to check that Box.remove(Ball) is implemented correctly. Depending on how <code>
    * getBallsFromSmallest()</code> is implemented, remove() might have to be overridden and this
-   * testPathAllBuildings.test helps ensure that remove() is not broken in the process.
+   * test helps ensure that remove() is not broken in the process.
    */
   @Test
   public void testRemove() {

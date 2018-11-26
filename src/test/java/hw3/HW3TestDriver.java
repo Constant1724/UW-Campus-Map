@@ -3,9 +3,7 @@ package hw3;
 import java.io.*;
 import java.util.*;
 
-/**
- * This class implements a testing driver which reads testPathAllBuildings.test scripts from files for testing Graph.
- */
+/** This class implements a testing driver which reads test scripts from files for testing Graph. */
 public class HW3TestDriver {
 
   public static void main(String args[]) {
@@ -44,8 +42,8 @@ public class HW3TestDriver {
 
   protected static void printUsage() {
     System.err.println("Usage:");
-      System.err.println("to read from a file: java hw3.testPathAllBuildings.test.HW3TestDriver <name of input script>");
-      System.err.println("to read from standard in: java hw3.testPathAllBuildings.test.HW3TestDriver");
+    System.err.println("to read from a file: java hw3.test.HW3TestDriver <name of input script>");
+    System.err.println("to read from standard in: java hw3.test.HW3TestDriver");
   }
 
   /** String -> Graph: maps the names of graphs to the actual graph * */
