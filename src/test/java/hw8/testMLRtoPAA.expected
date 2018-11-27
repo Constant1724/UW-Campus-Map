@@ -1,0 +1,37 @@
+Menu:
+	r to find a route
+	b to see a list of all buildings
+	q to quit
+
+Enter an option ('m' to see the menu): #Find Path from MUS to MGH
+Abbreviated name of starting building: Abbreviated name of ending building: Path from Miller Hall to Physics/Astronomy Building A:
+	Walk 52 feet NW to (2167, 1027)
+	Walk 113 feet W to (2111, 1023)
+	Walk 129 feet SW to (2066, 1068)
+	Walk 144 feet SW to (2015, 1118)
+	Walk 58 feet SW to (1994, 1139)
+	Walk 67 feet SW to (1971, 1161)
+	Walk 25 feet SW to (1960, 1171)
+	Walk 78 feet SW to (1930, 1198)
+	Walk 88 feet SW to (1901, 1228)
+	Walk 72 feet SW to (1886, 1259)
+	Walk 417 feet SW to (1732, 1387)
+	Walk 58 feet S to (1733, 1415)
+	Walk 47 feet S to (1727, 1437)
+	Walk 72 feet SW to (1700, 1457)
+	Walk 58 feet S to (1700, 1485)
+	Walk 100 feet S to (1696, 1531)
+	Walk 33 feet S to (1695, 1548)
+	Walk 72 feet S to (1695, 1582)
+	Walk 75 feet S to (1695, 1618)
+	Walk 32 feet S to (1694, 1633)
+	Walk 80 feet S to (1698, 1672)
+	Walk 75 feet S to (1699, 1707)
+	Walk 22 feet SW to (1691, 1714)
+	Walk 49 feet S to (1691, 1737)
+	Walk 35 feet W to (1675, 1743)
+	Walk 48 feet SW to (1655, 1754)
+	Walk 87 feet SW to (1625, 1784)
+Total distance: 2187 feet
+
+Enter an option ('m' to see the menu): 
