@@ -8,5 +8,5 @@ the controller, or none of these.  (See the assignment for details.)
 
 Model : Coordinate, Building, CampusPath, CampusMapModel
 In class UserInferface:
-    Controller: line: 41, 74, 77, 127, 128 (Basically only when reader.nextLine() is called)
+    Controller: line: 42, 76, 79, 129, 131 (Basically only when reader.nextLine() is called)
     View: Everything besides Controller.
