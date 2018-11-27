@@ -13,7 +13,10 @@ import org.junit.runners.Suite.*;
  */
 @RunWith(Suite.class)
 @SuiteClasses({
-        BuildingTest.class, CoordinateTest.class, CampusPathTest.class, CampusMapModelTest.class
+  BuildingTest.class,
+  CoordinateTest.class,
+  CampusPathTest.class,
+  CampusMapModelTest.class
 })
 public final class ImplementationTests {
   // this class is a placeholder for the suite, so it has no members.
