@@ -65,6 +65,7 @@ public class UserInterface {
         // Quick sanity check.
         assert formattedBuilding.size() == shortToBuilding.size() && shortToBuilding.size() == model.listBuildings().size();
 
+        formattedBuilding.add(0, "Buildings:");
 
         printMenu();
         System.out.println();
