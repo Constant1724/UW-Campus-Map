@@ -1,4 +1,15 @@
 // Students should not edit this file.
+buildscript {
+  ext {
+    springBootVersion = '2.1.0.RELEASE'
+  }
+  repositories {
+    mavenCentral()
+  }
+  dependencies {
+    classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+  }
+}
 
 plugins {
   id "net.ltgt.errorprone-base" version "0.0.13"
@@ -7,9 +18,14 @@ plugins {
 }
 apply plugin: 'java'
 apply from: "gradle/checkerframework.gradle"
+apply plugin: 'eclipse'
+apply plugin: 'org.springframework.boot'
+apply plugin: 'io.spring.dependency-management'
 
 import org.ajoberstar.grgit.Grgit
 
+group = ''
+version = '0.0.1-SNAPSHOT'
 sourceCompatibility = 1.8
 
 repositories {
@@ -33,6 +49,9 @@ dependencies {
 
   // For this build file
   implementation 'org.ajoberstar:grgit:2.3.0'
+  implementation('org.springframework.boot:spring-boot-starter-data-rest')
+  implementation('org.springframework.boot:spring-boot-starter-web')
+  testImplementation('org.springframework.boot:spring-boot-starter-test')
 }
 
 ///
@@ -73,6 +92,24 @@ task copyHw8TestScripts(type: Copy) {
   from "src/test/java/hw8"
   include "*.test", "*.expected"
   into "${buildDir}/classes/java/test/hw8/"
+}
+
+task copyHw8TestData(type: Copy) {
+  from "src/staffTest/java/hw8/data"
+  include "*.tsv"
+  into "src/main/java/hw8/data"
+}
+
+task copyHw8StaffTestScripts(type: Copy) {
+  from "src/staffTest/java/hw8"
+  include "*.test", "*.expected"
+  into "${buildDir}/classes/java/staffTest/hw8/"
+}
+
+task copyHW8TestDriver(type: Copy) {
+  from "src/test/java/hw8"
+  include "HW8TestDriver.java"
+  into "src/staffTest/java/hw8"
 }
 
 test {
@@ -121,6 +158,9 @@ tasks.withType(Javadoc) {
   options.addStringOption('Xwerror', '-quiet')
 }
 
+task run {
+  dependsOn bootRun
+}
 
 ///
 /// Extra code quality checks
@@ -155,6 +195,7 @@ tasks.create(name: 'runErrorProne', type: JavaCompile, group: 'Validation') {
   options.compilerArgs = [
     '-Werror',
     '-Xep:ClassCanBeStatic:OFF',
+    '-Xep:StringSplitter:OFF',
   ]
 }
 build.dependsOn runErrorProne
@@ -354,8 +395,8 @@ task javadocPublic(type: Javadoc) {
 sourceSets {
   staffTest {
     java {
-      compileClasspath += main.output
-      runtimeClasspath += main.output
+      compileClasspath += main.output + test.output
+      runtimeClasspath += main.output + test.output
     }
   }
 }
@@ -377,6 +418,7 @@ task staffTest(type: Test) {
     showStandardStreams = true
   }
 }
-staffTest.dependsOn copyHw6StaffTestScripts
-staffTest.dependsOn copyHw6TestData
+staffTest.dependsOn copyHw8StaffTestScripts
+staffTest.dependsOn copyHw8TestData
+staffTest.dependsOn copyHW8TestDriver
 
