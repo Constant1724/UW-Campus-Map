@@ -54,7 +54,7 @@ dependencies {
 // To typecheck only the current project's main source set (in a multi-project
 // build), use this instead:
 compileJava {
-  ext.checker_force = true
+  ext.checker_force = false
   if (project.hasProperty("noChecker")) {
     ext.checker_force = false
   }
