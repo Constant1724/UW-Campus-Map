@@ -11,6 +11,9 @@ import java.nio.file.Paths;
 import java.util.*;
 import org.checkerframework.checker.initialization.qual.UnknownInitialization;
 import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.checker.units.qual.A;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 /**
  * CampusMapModel represents a map of the campus, by loading data from data set.
@@ -34,6 +37,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  *     <p>Abstract Invariant: Locations of all Buildings Must be in Map, regardless there are paths
  *     to/from them.
  */
+@Service
 public class CampusMapModel {
 
   // Abstraction Function:
@@ -64,176 +68,102 @@ public class CampusMapModel {
   /** Test flag, whether to enable expensive checks. */
   private static boolean TEST_FLAG = true;
 
+  /** a parser that reads and parse data from disk.*/
+  @Autowired
+  private DataParser parser;
+
   /**
    * Creates an empty CampusMapModel.
    *
    * @spec.effects creates an empty CampusMapModel.
    */
-  private CampusMapModel() {
+  public CampusMapModel() {
     graph = new Graph<>();
     buildings = new HashSet<>();
+    this.run();
     checkRep();
   }
 
+//  /**
+//   * Factory method: Creates an instance of CampusMapModel with campus path data and campus building
+//   * data.
+//   *
+//   * @spec.requires pathFileName and buildingFileName are valid file paths.
+//   * @param pathFileName the name of the file will be read that containing all information about
+//   *     campus paths.
+//   * @param buildingFileName the name of the file will be read that containing all information about
+//   *     campus Buildings.
+//   * @return an instance of CampusMapModel with campus path data and campus building data.
+//   * @throws RuntimeException If there is an IOException while reading the file OR data file is
+//   *     malformed.
+//   */
+//  public static CampusMapModel makeInstance(String pathFileName, String buildingFileName)
+//      throws RuntimeException {
+//    CampusMapModel model = new CampusMapModel();
+//
+//    DataParser parser;
+//    model.addPath(parser.getPaths());
+//    model.addBuilding(parser.getBuildings());
+//    return model;
+//  }
+
   /**
-   * Factory method: Creates an instance of CampusMapModel with campus path data and campus building
-   * data.
-   *
-   * @spec.requires pathFileName and buildingFileName are valid file paths.
-   * @param pathFileName the name of the file will be read that containing all information about
-   *     campus paths.
-   * @param buildingFileName the name of the file will be read that containing all information about
-   *     campus Buildings.
-   * @return an instance of CampusMapModel with campus path data and campus building data.
-   * @throws RuntimeException If there is an IOException while reading the file OR data file is
-   *     malformed.
+   * load and initialize a bunch of stuff.
    */
-  public static CampusMapModel makeInstance(String pathFileName, String buildingFileName)
-      throws RuntimeException {
-    CampusMapModel model = new CampusMapModel();
-    try {
-      model.loadPathData(pathFileName);
-      model.loadBuildingData(buildingFileName);
-    } catch (MarvelParser.MalformedDataException e) {
-      throw new RuntimeException("Malformed data", e);
-    }
-    return model;
+  private void run() {
+    this.addPath(parser.getPaths());
+    this.addBuilding(parser.getBuildings());
   }
 
   /**
-   * Reads Campus Path data set. Each line of the input file represents a path and is defined by:
-   * x1,y1 x2,y2 distance
+   * add Campus paths in given parameter to the model.
    *
-   * <p>x1,y1 is the start and x2,y2 is the end. distance is the distance of from x1,y1 to x2,y2.
-   * All separated by tab.
-   *
-   * <p>There should not be duplicate paths in data set.
-   *
-   * @spec.requires filename is a valid file path
-   * @param filename the name of the file that will be read
    * @spec.modifies this.graph
-   * @spec.effects fill graph with edges in the Campus Path data set, each edge is bidirectional.
-   * @throws MarvelParser.MalformedDataException if the file is not well-formed, see correct format
-   *     above.
-   * @throws RuntimeException If there is an IOException while reading the file.
+   * @spec.effects fill graph with edges in the given paths, each edge is bidirectional.
+   * @param paths
    */
-  private void loadPathData(String filename)
-      throws MarvelParser.MalformedDataException, RuntimeException {
-    try (BufferedReader reader =
-        Files.newBufferedReader(Paths.get(filename), Charset.defaultCharset())) {
+  private void addPath(Set<CampusPath> paths) {
+    for (CampusPath path : paths) {
+      Graph<Coordinate, Double>.Node start = this.graph.makeNode(path.getOrigin());
+      Graph<Coordinate, Double>.Node end = this.graph.makeNode(path.getDestination());
+      // Add the parsed data to the character and book collections.
+      boolean result = true;
 
-      String inputLine;
-
-      // Skip the header.
-      reader.readLine();
-
-      while ((inputLine = reader.readLine()) != null) {
-
-        // Parse the data, and throw an exception for malformed lines.
-        String[] tokens = inputLine.split("\t", -1);
-        if (tokens.length != 3) {
-          throw new MarvelParser.MalformedDataException(
-              "Line should contain exactly 2 tab: " + inputLine);
-        }
-
-        // Split x,y into [x, y] for both origin and destination.
-        String[] origin = tokens[0].split(",", -1);
-        String[] destination = tokens[1].split(",", -1);
-        Double distance = Double.parseDouble(tokens[2]);
-
-        Coordinate originCoordinate =
-            new Coordinate(Double.parseDouble(origin[0]), Double.parseDouble(origin[1]));
-        Coordinate destinationCoordinate =
-            new Coordinate(Double.parseDouble(destination[0]), Double.parseDouble(destination[1]));
-
-        Graph<Coordinate, Double>.Node start = this.graph.makeNode(originCoordinate);
-        Graph<Coordinate, Double>.Node end = this.graph.makeNode(destinationCoordinate);
-        // Add the parsed data to the character and book collections.
-        boolean result = true;
-
-        if (!this.graph.containNode(start)) {
-          result = this.graph.addNode(start) && result;
-        }
-        if (!this.graph.containNode(end)) {
-          result = this.graph.addNode(end) && result;
-        }
-
-        // Path is bidirectional.
-        this.graph.addEdge(this.graph.makeEdge(start, end, distance));
-
-        this.graph.addEdge(this.graph.makeEdge(end, start, distance));
-
-        // Quick Sanity check, if all operations are good
-        assert result;
+      if (!this.graph.containNode(start)) {
+        result = this.graph.addNode(start) && result;
       }
-    } catch (IOException e) {
-      System.err.println(e.toString());
-      e.printStackTrace(System.err);
-      throw new RuntimeException("Exception while trying to read: " + filename, e);
+      if (!this.graph.containNode(end)) {
+        result = this.graph.addNode(end) && result;
+      }
+
+      // Path is bidirectional.
+      this.graph.addEdge(this.graph.makeEdge(start, end, path.getCost()));
+
+      this.graph.addEdge(this.graph.makeEdge(end, start, path.getCost()));
+
+      // Quick Sanity check, if all operations are good
+      assert result;
     }
   }
 
   /**
-   * Reads Campus Building data set. Each line of the input file represents a building and is
-   * defined by: shortName longName x y
+   * add Campus buildings in given parameter to the model.
    *
-   * <p>shorName and longName are abbreviated and full name for a building. x and y represents the
-   * location of that building.
-   *
-   * <p>If a building has multiple entrance, then its shortName and longName must be unique for each
-   * entrance. For example: CHL (NE) and CHL (SE) represents different entrances of the same
-   * building.
-   *
-   * <p>If there is an IOException while reading the file, a RuntimeException will be throwed If any
-   * line of data is malformed
-   *
-   * @spec.requires filename is a valid file path
-   * @param filename the name of the file that will be read
    * @spec.effects this.buildings, this.graph
    * @spec.modifies fill this.buildings with shortName, longName and location for each Building in
    *     the Campus Building dataset.
    * @spec.modifies add location of all buildings the this.graph if any location of a building is
    *     not in the graph.
-   * @throws MarvelParser.MalformedDataException if the file is not well-formed, see correct format
-   *     above.
-   * @throws RuntimeException If there is an IOException while reading the file.
+   * @param buildings
    */
-  private void loadBuildingData(String filename)
-      throws MarvelParser.MalformedDataException, RuntimeException {
-    try (BufferedReader reader =
-        Files.newBufferedReader(Paths.get(filename), Charset.defaultCharset())) {
-      String inputLine;
-
-      // Skip the header.
-      reader.readLine();
-
-      while ((inputLine = reader.readLine()) != null) {
-
-        // Parse the data, and throw an exception for malformed lines.
-        String[] tokens = inputLine.split("\t", -1);
-        if (tokens.length != 4) {
-          throw new MarvelParser.MalformedDataException(
-              "Line should contain exactly 3 tab: " + inputLine);
-        }
-
-        String shortName = tokens[0];
-        String longName = tokens[1];
-        Double x = Double.parseDouble(tokens[2]);
-        Double y = Double.parseDouble(tokens[3]);
-        Coordinate location = new Coordinate(x, y);
-
-        // In case there is a building not in graph, add it to graph.
-        if (graph.containNode(graph.makeNode(location))) {
-          graph.addNode(graph.makeNode(location));
-        }
-
-        this.buildings.add(new Building(location, shortName, longName));
+  private void addBuilding(Set<Building> buildings) {
+    // In case there is a building not in graph, add it to graph.
+    for (Building building : buildings) {
+      if (graph.containNode(graph.makeNode(building.getLocation()))) {
+        graph.addNode(graph.makeNode(building.getLocation()));
       }
 
-    } catch (IOException e) {
-      System.err.println(e.toString());
-      e.printStackTrace(System.err);
-      throw new RuntimeException("Exception while trying to read: " + filename, e);
+      this.buildings.add(building);
     }
   }
 

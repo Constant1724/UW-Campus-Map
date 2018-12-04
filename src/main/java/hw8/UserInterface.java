@@ -28,7 +28,8 @@ public class UserInterface {
    * @param args list of command line arguments
    */
   public static void main(String[] args) {
-    CampusMapModel model = CampusMapModel.makeInstance(campusPathFileName, campusBuildingFileName);
+//    CampusMapModel model = CampusMapModel.makeInstance(campusPathFileName, campusBuildingFileName);
+    CampusMapModel model = new CampusMapModel();
     Scanner reader = new Scanner(System.in, "UTF-8"); // Reading from System.in
 
     // Creates a new mapping from Building.shortName to Building.
