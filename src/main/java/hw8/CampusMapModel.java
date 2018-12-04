@@ -37,7 +37,6 @@ import org.springframework.stereotype.Service;
  *     <p>Abstract Invariant: Locations of all Buildings Must be in Map, regardless there are paths
  *     to/from them.
  */
-@Service
 public class CampusMapModel {
 
   // Abstraction Function:
@@ -68,52 +67,44 @@ public class CampusMapModel {
   /** Test flag, whether to enable expensive checks. */
   private static boolean TEST_FLAG = true;
 
-  /** a parser that reads and parse data from disk.*/
-  @Autowired
-  private DataParser parser;
 
   /**
    * Creates an empty CampusMapModel.
    *
    * @spec.effects creates an empty CampusMapModel.
    */
-  public CampusMapModel() {
+  private CampusMapModel() {
     graph = new Graph<>();
     buildings = new HashSet<>();
-    this.run();
     checkRep();
   }
 
-//  /**
-//   * Factory method: Creates an instance of CampusMapModel with campus path data and campus building
-//   * data.
-//   *
-//   * @spec.requires pathFileName and buildingFileName are valid file paths.
-//   * @param pathFileName the name of the file will be read that containing all information about
-//   *     campus paths.
-//   * @param buildingFileName the name of the file will be read that containing all information about
-//   *     campus Buildings.
-//   * @return an instance of CampusMapModel with campus path data and campus building data.
-//   * @throws RuntimeException If there is an IOException while reading the file OR data file is
-//   *     malformed.
-//   */
-//  public static CampusMapModel makeInstance(String pathFileName, String buildingFileName)
-//      throws RuntimeException {
-//    CampusMapModel model = new CampusMapModel();
-//
-//    DataParser parser;
-//    model.addPath(parser.getPaths());
-//    model.addBuilding(parser.getBuildings());
-//    return model;
-//  }
-
   /**
-   * load and initialize a bunch of stuff.
+   * Factory method: Creates an instance of CampusMapModel with campus path data and campus building
+   * data.
+   *
+   * @spec.requires pathFileName and buildingFileName are valid file paths.
+   * @param pathFileName the name of the file will be read that containing all information about
+   *     campus paths.
+   * @param buildingFileName the name of the file will be read that containing all information about
+   *     campus Buildings.
+   * @return an instance of CampusMapModel with campus path data and campus building data.
+   * @throws RuntimeException If there is an IOException while reading the file OR data file is
+   *     malformed.
    */
-  private void run() {
-    this.addPath(parser.getPaths());
-    this.addBuilding(parser.getBuildings());
+  public static CampusMapModel makeInstance(String pathFileName, String buildingFileName)
+          throws RuntimeException {
+    CampusMapModel model = new CampusMapModel();
+    try {
+      model.addPath(DataParser.loadPathData(pathFileName));
+      model.addBuilding(DataParser.loadBuildingData(buildingFileName));
+    } catch (MarvelParser.MalformedDataException e) {
+      throw new RuntimeException("Malformed data", e);
+    }
+    return model;
   }
+
+
 
   /**
    * add Campus paths in given parameter to the model.
@@ -209,10 +200,9 @@ public class CampusMapModel {
   /**
    * List all Buildings in the campus.
    *
-   * <p>It returns an unmodifiable view of a mapping from abbreviated name to Building for all
-   * Buildings.
+   * <p>It returns an unmodifiable view of all Buildings, each with its own short name, full name and cost.
    *
-   * @return an unmodifiable view of a mapping from abbreviated name to Building for all Buildings.
+   * @return an unmodifiable view of all Buildings, each with its own short name, full name and cost.
    */
   public Set<Building> listBuildings() {
     checkRep();

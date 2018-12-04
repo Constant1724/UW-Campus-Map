@@ -13,40 +13,6 @@ import java.util.Set;
 
 @Repository
 public class DataParser {
-    /** file name for campus path data set. */
-    public static String campusPathFileName = "src/main/java/hw8/data/campus_paths.tsv";
-
-    /** file name for campus building data set. */
-    public static String campusBuildingFileName = "src/main/java/hw8/data/campus_buildings.tsv";
-
-    private Set<CampusPath> paths;
-    private Set<Building> buildings;
-
-    public DataParser() {
-        paths = new HashSet<>();
-        buildings = new HashSet<>();
-        this.run();
-    }
-
-    /**
-     *
-     * @return
-     * @throws RuntimeException If there is an IOException while reading the file OR data file is
-     *     malformed.
-     */
-    private void run() throws RuntimeException {
-//        DataParser parser = new DataParser();
-
-        try {
-            this.loadPathData(campusPathFileName);
-            this.loadBuildingData(campusBuildingFileName);
-        } catch (MarvelParser.MalformedDataException e) {
-            throw new RuntimeException("Malformed data", e);
-        }
-
-//        return parser;
-    }
-
     /**
      * Reads Campus Path data set from disk. Each line of the input file represents a path and is defined by:
      * x1,y1 x2,y2 distance
@@ -58,16 +24,16 @@ public class DataParser {
      *
      * @spec.requires filename is a valid file path
      * @param filename the name of the file that will be read
-     * @spec.modifies this.paths
-     * @spec.effects fill this.paths with start, end and cost of each CampusPath in the Campus path data set.
+     * @return a set of all paths in campus, each with a start, an end and a distance
      * @throws MarvelParser.MalformedDataException if the file is not well-formed, see correct format
      *     above.
      * @throws RuntimeException If there is an IOException while reading the file.
      */
-    private void loadPathData(String filename)
+    public static Set<CampusPath> loadPathData(String filename)
             throws MarvelParser.MalformedDataException, RuntimeException {
         try (BufferedReader reader =
                      Files.newBufferedReader(Paths.get(filename), Charset.defaultCharset())) {
+            Set<CampusPath> paths = new HashSet<>();
 
             String inputLine;
 
@@ -93,11 +59,13 @@ public class DataParser {
                 Coordinate destinationCoordinate =
                         new Coordinate(Double.parseDouble(destination[0]), Double.parseDouble(destination[1]));
 
-                boolean result = this.paths.add(new CampusPath(originCoordinate, destinationCoordinate, distance));
+                boolean result = paths.add(new CampusPath(originCoordinate, destinationCoordinate, distance));
                 // Quick Sanity check to make sure there is no duplicate.
                 assert result;
 
             }
+
+            return paths;
         } catch (IOException e) {
             System.err.println(e.toString());
             e.printStackTrace(System.err);
@@ -121,17 +89,17 @@ public class DataParser {
      *
      * @spec.requires filename is a valid file path
      * @param filename the name of the file that will be read
-     * @spec.effects this.buildings
-     * @spec.modifies fill this.buildings with shortName, longName and location for each Building in
-     *     the Campus Building dataset.
+     * @return a set of buildings in campus, each with a full name, abbreviated name and a cost.
      * @throws MarvelParser.MalformedDataException if the file is not well-formed, see correct format
      *     above.
      * @throws RuntimeException If there is an IOException while reading the file.
      */
-    private void loadBuildingData(String filename)
+    public static Set<Building> loadBuildingData(String filename)
             throws MarvelParser.MalformedDataException, RuntimeException {
         try (BufferedReader reader =
                      Files.newBufferedReader(Paths.get(filename), Charset.defaultCharset())) {
+
+            Set<Building> buildings = new HashSet<>();
             String inputLine;
 
             // Skip the header.
@@ -152,9 +120,10 @@ public class DataParser {
                 Double y = Double.parseDouble(tokens[3]);
                 Coordinate location = new Coordinate(x, y);
 
-                this.buildings.add(new Building(location, shortName, longName));
-
+                buildings.add(new Building(location, shortName, longName));
             }
+
+            return buildings;
 
         } catch (IOException e) {
             System.err.println(e.toString());
@@ -163,12 +132,4 @@ public class DataParser {
         }
     }
 
-
-    public Set<CampusPath> getPaths() {
-        return paths;
-    }
-
-    public Set<Building> getBuildings() {
-        return buildings;
-    }
 }
