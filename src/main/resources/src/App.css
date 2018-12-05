@@ -22,6 +22,9 @@
   color: #61dafb;
 }
 
+.Canvas {
+    background-image: url('campus_map.jpg');
+}
 @keyframes App-logo-spin {
   from {
     transform: rotate(0deg);

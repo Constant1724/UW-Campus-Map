@@ -11,6 +11,9 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 import java.util.Set;
 
+/**
+ * This class controls the Rest API for the Application
+ */
 @RestController
 @CrossOrigin("http://localhost:3000")
 public class PublicApi {
