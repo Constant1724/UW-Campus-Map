@@ -14,10 +14,20 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
 public class ServerSideException extends Exception {
 
+    /**
+     * Constructs an instance of exception with message.
+     * @spec.effects: create an instance of exception with message.
+     * @param message the message about the exception.
+     */
     public ServerSideException(String message) {
         super(message);
     }
 
+    /**
+     * Constructs an instance of exception with given exception.
+     * @spec.effects: create an instance of exception with given exception.
+     * @param e the given exception
+     */
     public ServerSideException(Exception e) {
         super(e);
     }
