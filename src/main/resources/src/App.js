@@ -13,9 +13,11 @@ class App extends Component {
     constructor(props) {
         super(props);
         this.canvas = null;
+        this.image = null;
         this.setCanvas = canvas => {
             this.canvas = canvas;
         };
+
 
         this.state = {
             start: '',
@@ -30,7 +32,6 @@ class App extends Component {
     update = (buildings) => {
         const result = [];
 
-        console.log(buildings.length)
         for (let i = 0; i < buildings.length; i++) {
             const building = buildings[i];
             result.push(
@@ -40,40 +41,40 @@ class App extends Component {
         }
 
         return result;
-    }
+    };
 
     componentWillMount() {
         fetch('http://localhost:8080/listBuilding')
             .then(res => res.json())
-            // .then(json => {
-            //     const result = new Map();
-            //     json.forEach(building => {
-            //         result.set(building['shortName'], building);
-            //     });
-            //     this.setState({buildings: {result}});
-            //     console.log(result);
-            // });
             .then(json => this.setState({buildings: json}));
 
-
     }
-        highLightBuilding = (shortName, buildings, ctx) => {
-            console.log("Drawing" + shortName);
-            const building = buildings.find(element => element['shortName'] === shortName);
-            const x = parseFloat(building['location']['x']);
-            const y = parseFloat(building['location']['y']);
-            ctx.beginPath();
-            ctx.arc(x, y, 50 ,0 , 2*Math.PI);
-            ctx.stroke();
+
+    componentDidMount() {
+        const image = new Image();
+        image.src = map;
+        this.image = image;
+        image.onload = () => {
+            this.canvas.width = this.image.naturalWidth;
+            this.canvas.height = this.image.naturalHeight;
+            this.canvas.getContext('2d').drawImage(this.image, 0, 0);
         };
+    }
+
+    highLightBuilding = (shortName, buildings, ctx) => {
+        const location = buildings.find(element => element['shortName'] === shortName)['location'];
+
+        ctx.beginPath();
+        ctx.arc(location['x'], location['y'], 22 ,0 , 2*Math.PI);
+        ctx.fill();
+    };
 
     drawBuildings = (state) =>{
-        console.log('drawing');
-        console.log(state);
         const ctx = this.canvas.getContext('2d');
-        ctx.strokeStyle = "#FF0000";
+        ctx.fillStyle = "#FF0000";
 
         ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+        ctx.drawImage(this.image, 0, 0);
         if (state.start) {
             this.highLightBuilding(state.start, state.buildings, ctx);
         }
@@ -86,78 +87,89 @@ class App extends Component {
         fetch(`http://localhost:8080/findPath?start=${state.start}&end=${state.end}`)
             .then(res => res.json())
             .then(json => {
-                if (!(json)) {
-                    console.log(json);
-                    return;
+                if (json.length !== 0) {
+                    const ctx = this.canvas.getContext('2d');
+                    ctx.beginPath();
+                    ctx.lineWidth = '10';
+                    ctx.lineJoin = 'round';
+                    ctx.strokeStyle = '#FF0000';
+                    const origin = json[0]['origin'];
+                    ctx.moveTo(origin['x'], origin['y']);
+                    json.forEach(element => {
+                        const destination = element['destination'];
+                        ctx.lineTo(destination['x'], destination['y']);
+                    });
+                    ctx.stroke();
                 }
-                const ctx = this.canvas.getContext('2d');
-                ctx.beginPath();
-                const origin = json[0]['origin'];
-                ctx.moveTo(parseFloat(origin['x']), parseFloat(origin['y']));
-                json.forEach(element => {
-                    const destination = element['destination'];
-                    ctx.lineTo(destination['x'], destination['y']);
-                })
-                ctx.stroke();
+
             });
-    }
+    };
 
   render() {
     return (
       <div>
-              <FormControl className={'DropDownMenu'}>
-                  <InputLabel >Start</InputLabel>
-                  <Select
-                      value={this.state.start}
-                      onChange={(event) => {
-                          this.setState({start: event.target.value});
-                      }}
-                  >
-                      {this.update(this.state.buildings)}
-
-                  </Select>
-                  <FormHelperText>Select a Start Building</FormHelperText>
-              </FormControl>
-
-              <FormControl className={'DropDownMenu'}>
-                  <InputLabel >End</InputLabel>
-                  <Select
-                      value={this.state.end}
-                      onChange={(event) => {this.setState({end: event.target.value})}}
-                  >
-                      {this.update(this.state.buildings)}
-
-                  </Select>
-                  <FormHelperText>Select a End Building</FormHelperText>
-              </FormControl>
-
-
-              <Button
-                  variant='contained'
-                  color='primary'
-                  onClick={ () => {
-                      (state => {
-                          this.drawBuildings(state);
-                          this.getAndPrintPath(state);
-                      }) (this.state);
+          <FormControl className={'DropDownMenu'} required>
+              <InputLabel >Start</InputLabel>
+              <Select
+                  value={this.state.start}
+                  onChange={(event) => {
+                      this.setState({start: event.target.value});
                   }}
-                  className={'Button'}
               >
-                  Submit
-              </ Button>
+                  {this.update(this.state.buildings)}
 
-              <Button
-                  variant='contained'
-                  color='primary'
-                  onClick={() => {this.canvas.getContext('2d').clearRect(0, 0, this.canvas.width, this.canvas.height)}}
-                  className={'Button'}
+              </Select>
+              <FormHelperText>Select a Start Building</FormHelperText>
+          </FormControl>
+          <FormControl className={'DropDownMenu'} required>
+              <InputLabel >End</InputLabel>
+              <Select
+                  value={this.state.end}
+                  onChange={(event) => {this.setState({end: event.target.value})}}
               >
-                  Reset
-              </ Button>
+                  {this.update(this.state.buildings)}
 
-          <div>
-            <canvas ref={this.setCanvas} width={'4330'} height={'2960'}  className={'Canvas'}/>
+              </Select>
+              <FormHelperText>Select a End Building</FormHelperText>
+          </FormControl>
+
+              <div>
+                  <Button
+                      variant='contained'
+                      color='primary'
+                      onClick={ () => {
+                          (state => {
+                              if (!state.start || !state.end) {
+                                  alert("Please Select Building");
+                              } else {
+                                  this.drawBuildings(state);
+                                  this.getAndPrintPath(state);
+                              }
+
+                          }) (this.state);
+                      }}
+                      className={'Button'}
+                  >
+                      Find Path
+                  </ Button>
+
+                  <Button
+                      variant='contained'
+                      color='primary'
+                      onClick={() => {
+                          const ctx = this.canvas.getContext('2d');
+                          ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+                          ctx.drawImage(this.image, 0, 0);
+                      }}
+                      className={'Button'}
+                  >
+                      Reset
+                  </ Button>
           </div>
+        <div>
+            <canvas ref={this.setCanvas}/>
+        </div>
+        {/*<canvas ref={this.setCanvas} width={'4330'} height={'2960'}  className={'Canvas'}/>*/}
 
       </div>
     );

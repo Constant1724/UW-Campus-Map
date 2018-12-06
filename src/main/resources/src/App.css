@@ -22,19 +22,11 @@
   color: #61dafb;
 }
 
-.Canvas {
-    background-image: url('campus_map.jpg');
-  /*background-size: cover;*/
-  /*background-repeat: no-repeat;*/
-  /*background-position: center;*/
-  /*height: auto;*/
-  /*width: 100%;*/
-}
 
-/*.DropDownMenu .Button {*/
-    /*align-items: center;*/
-    /*margin: auto;*/
-/*}*/
+canvas {
+  max-width: 100%;
+  height: auto;
+}
 @keyframes App-logo-spin {
   from {
     transform: rotate(0deg);
