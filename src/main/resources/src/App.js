@@ -8,6 +8,50 @@ import InputLabel from '@material-ui/core/InputLabel';
 import Select from '@material-ui/core/Select';
 import FormHelperText from '@material-ui/core/FormHelperText';
 import FormControl from '@material-ui/core/FormControl';
+class DropDownMenu extends Component {
+
+    constructor(props) {
+        super(props);
+        this.state = {
+            name: '',
+        }
+    }
+
+     generateListItems = () => {
+        const result = [];
+        const buildings = this.props.buildings;
+
+        for (let i = 0; i < buildings.length; i++) {
+            const building = buildings[i];
+            result.push(
+                <MenuItem value={building['shortName']} >
+                    {building['shortName'] + ' - ' + building['longName']}
+                </MenuItem>)
+        }
+        return result;
+    };
+
+
+    render() {
+        return (
+            <FormControl required>
+                <InputLabel>{this.props.label}</InputLabel>
+                <Select
+                    value={this.state.name}
+                    onChange={ (event) => {
+                        this.setState({name: event.target.value});
+                        this.props.callback(event.target.value);
+                    }}
+                >
+
+                    {this.generateListItems()}
+
+                </Select>
+                <FormHelperText>{this.props.helperText}</FormHelperText>
+            </FormControl>
+        );
+    }
+}
 
 class App extends Component {
     constructor(props) {
@@ -28,20 +72,20 @@ class App extends Component {
         this.getAndPrintPath = this.getAndPrintPath.bind(this);
         this.highLightBuilding = this.highLightBuilding.bind(this);
     }
-
-    update = (buildings) => {
-        const result = [];
-
-        for (let i = 0; i < buildings.length; i++) {
-            const building = buildings[i];
-            result.push(
-                <MenuItem value={building['shortName']} >
-                    {building['shortName'] + ' - ' + building['longName']}
-                </MenuItem>)
-        }
-
-        return result;
-    };
+    //
+    // update = (buildings) => {
+    //     const result = [];
+    //
+    //     for (let i = 0; i < buildings.length; i++) {
+    //         const building = buildings[i];
+    //         result.push(
+    //             <MenuItem value={building['shortName']} >
+    //                 {building['shortName'] + ' - ' + building['longName']}
+    //             </MenuItem>)
+    //     }
+    //
+    //     return result;
+    // };
 
     componentWillMount() {
         fetch('http://localhost:8080/listBuilding')
@@ -63,7 +107,6 @@ class App extends Component {
 
     highLightBuilding = (shortName, buildings, ctx) => {
         const location = buildings.find(element => element['shortName'] === shortName)['location'];
-
         ctx.beginPath();
         ctx.arc(location['x'], location['y'], 22 ,0 , 2*Math.PI);
         ctx.fill();
@@ -108,30 +151,38 @@ class App extends Component {
   render() {
     return (
       <div>
-          <FormControl className={'DropDownMenu'} required>
-              <InputLabel >Start</InputLabel>
-              <Select
-                  value={this.state.start}
-                  onChange={(event) => {
-                      this.setState({start: event.target.value});
-                  }}
-              >
-                  {this.update(this.state.buildings)}
 
-              </Select>
-              <FormHelperText>Select a Start Building</FormHelperText>
-          </FormControl>
-          <FormControl className={'DropDownMenu'} required>
-              <InputLabel >End</InputLabel>
-              <Select
-                  value={this.state.end}
-                  onChange={(event) => {this.setState({end: event.target.value})}}
-              >
-                  {this.update(this.state.buildings)}
+          <DropDownMenu buildings={((state) => state.buildings) (this.state)}
+                        label={'Start'} helperText={'Select a Start Building'}
+                        callback={(value) => this.setState({start: value})}/>
 
-              </Select>
-              <FormHelperText>Select a End Building</FormHelperText>
-          </FormControl>
+          <DropDownMenu buildings={((state) => state.buildings) (this.state)}
+                        label={'End'} helperText={'Select an End Building'}
+                        callback={(value) => this.setState({end: value})}/>
+          {/*<FormControl className={'DropDownMenu'} required>*/}
+              {/*<InputLabel >Start</InputLabel>*/}
+              {/*<Select*/}
+                  {/*value={this.state.start}*/}
+                  {/*onChange={(event) => {*/}
+                      {/*this.setState({start: event.target.value});*/}
+                  {/*}}*/}
+              {/*>*/}
+                  {/*{this.update(this.state.buildings)}*/}
+
+              {/*</Select>*/}
+              {/*<FormHelperText>Select a Start Building</FormHelperText>*/}
+          {/*</FormControl>*/}
+          {/*<FormControl className={'DropDownMenu'} required>*/}
+              {/*<InputLabel >End</InputLabel>*/}
+              {/*<Select*/}
+                  {/*value={this.state.end}*/}
+                  {/*onChange={(event) => {this.setState({end: event.target.value})}}*/}
+              {/*>*/}
+                  {/*{this.update(this.state.buildings)}*/}
+
+              {/*</Select>*/}
+              {/*<FormHelperText>Select a End Building</FormHelperText>*/}
+          {/*</FormControl>*/}
 
               <div>
                   <Button
