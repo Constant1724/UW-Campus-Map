@@ -1,5 +1,6 @@
-package campuspaths;
+package campuspaths.service;
 
+import campuspaths.model.ServerSideException;
 import hw8.Building;
 import hw8.CampusMapModel;
 import hw8.CampusPath;
