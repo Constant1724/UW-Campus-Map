@@ -9,28 +9,6 @@ import Select from '@material-ui/core/Select';
 import FormHelperText from '@material-ui/core/FormHelperText';
 import FormControl from '@material-ui/core/FormControl';
 
-// class Canvas extends Component {
-//     constructor(props) {
-//         super(props);
-//         this.canvas = null;
-//         this.setCanvas = canvas => {
-//             this.canvas = canvas;
-//         };
-//
-//     }
-//
-//     highLightSingleBuilding(x, y) {
-//
-//     }
-//
-//
-//
-//     render() {
-//         const ctx = this.props.ctx;
-//         return (
-//         )
-//     }
-// }
 class App extends Component {
     constructor(props) {
         super(props);
@@ -38,15 +16,18 @@ class App extends Component {
         this.setCanvas = canvas => {
             this.canvas = canvas;
         };
+
         this.state = {
             start: '',
             end: '',
             buildings: []
         };
+        this.drawBuildings = this.drawBuildings.bind(this);
+        this.getAndPrintPath = this.getAndPrintPath.bind(this);
+        this.highLightBuilding = this.highLightBuilding.bind(this);
     }
 
-    update = (state) => {
-        const buildings = state.buildings;
+    update = (buildings) => {
         const result = [];
 
         console.log(buildings.length)
@@ -76,24 +57,23 @@ class App extends Component {
 
 
     }
-        highLightBuilding = (shortName, buildings) => {
+        highLightBuilding = (shortName, buildings, ctx) => {
             console.log("Drawing" + shortName);
-            const ctx = this.canvas.getContext('2d');
             const building = buildings.find(element => element['shortName'] === shortName);
             const x = parseFloat(building['location']['x']);
             const y = parseFloat(building['location']['y']);
             ctx.beginPath();
             ctx.arc(x, y, 50 ,0 , 2*Math.PI);
-            ctx.fill();
+            ctx.stroke();
         };
 
     drawBuildings = (state) =>{
-        //TODO dynamically change to the size of canvas
-        console.log('drawing')
+        console.log('drawing');
+        console.log(state);
         const ctx = this.canvas.getContext('2d');
-        ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-        this.highLightBuilding('SUZ', state.buildings, ctx);
+        ctx.strokeStyle = "#FF0000";
 
+        ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
         if (state.start) {
             this.highLightBuilding(state.start, state.buildings, ctx);
         }
@@ -101,48 +81,84 @@ class App extends Component {
             this.highLightBuilding(state.end, state.buildings, ctx);
         }
     };
+
+    getAndPrintPath = state => {
+        fetch(`http://localhost:8080/findPath?start=${state.start}&end=${state.end}`)
+            .then(res => res.json())
+            .then(json => {
+                if (!(json)) {
+                    console.log(json);
+                    return;
+                }
+                const ctx = this.canvas.getContext('2d');
+                ctx.beginPath();
+                const origin = json[0]['origin'];
+                ctx.moveTo(parseFloat(origin['x']), parseFloat(origin['y']));
+                json.forEach(element => {
+                    const destination = element['destination'];
+                    ctx.lineTo(destination['x'], destination['y']);
+                })
+                ctx.stroke();
+            });
+    }
+
   render() {
     return (
       <div>
-          <FormControl>
-              <InputLabel >Start</InputLabel>
-              <Select
-                  value={this.state.start}
-                  onChange={(event) => {
-                      this.setState({start: event.target.value});
-                      this.drawBuildings(this.state);
+              <FormControl className={'DropDownMenu'}>
+                  <InputLabel >Start</InputLabel>
+                  <Select
+                      value={this.state.start}
+                      onChange={(event) => {
+                          this.setState({start: event.target.value});
+                      }}
+                  >
+                      {this.update(this.state.buildings)}
+
+                  </Select>
+                  <FormHelperText>Select a Start Building</FormHelperText>
+              </FormControl>
+
+              <FormControl className={'DropDownMenu'}>
+                  <InputLabel >End</InputLabel>
+                  <Select
+                      value={this.state.end}
+                      onChange={(event) => {this.setState({end: event.target.value})}}
+                  >
+                      {this.update(this.state.buildings)}
+
+                  </Select>
+                  <FormHelperText>Select a End Building</FormHelperText>
+              </FormControl>
+
+
+              <Button
+                  variant='contained'
+                  color='primary'
+                  onClick={ () => {
+                      (state => {
+                          this.drawBuildings(state);
+                          this.getAndPrintPath(state);
+                      }) (this.state);
                   }}
+                  className={'Button'}
               >
-                  {this.update(this.state)}
+                  Submit
+              </ Button>
 
-              </Select>
-              <FormHelperText>Select a Start Building</FormHelperText>
-          </FormControl>
-
-          <FormControl>
-              <InputLabel >End</InputLabel>
-              <Select
-                  value={this.state.end}
-                  onChange={(event) => {this.setState({end: event.target.value})}}
+              <Button
+                  variant='contained'
+                  color='primary'
+                  onClick={() => {this.canvas.getContext('2d').clearRect(0, 0, this.canvas.width, this.canvas.height)}}
+                  className={'Button'}
               >
-                  {this.update(this.state)}
+                  Reset
+              </ Button>
 
-              </Select>
-              <FormHelperText>Select a End Building</FormHelperText>
-          </FormControl>
-
-          <Button
-              variant='contained'
-              color='primary'
-              // onClick={}
-          >
-              Submit
-          </ Button>
-          <div className='Image'>
-              {/*<img src={map} alt='loading..'/>*/}
-              <canvas ref={this.setCanvas} width={4330} height={2964} className={'Canvas'}/>
-
+          <div>
+            <canvas ref={this.setCanvas} width={'4330'} height={'2960'}  className={'Canvas'}/>
           </div>
+
       </div>
     );
   }

@@ -90,7 +90,7 @@ public class CampusService {
         if (!shortToBuilding.containsKey(end)) {
             errorMessage += "Unknown Building\t" + end + "\n";
         }
-        if (errorMessage.isEmpty()) {
+        if (!errorMessage.isEmpty()) {
             throw new ServerSideException(errorMessage);
         }
 
