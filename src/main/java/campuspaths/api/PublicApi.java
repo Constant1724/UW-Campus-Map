@@ -45,7 +45,7 @@ public class PublicApi {
    * @param start the short Name (abbreviated name) of Start Building
    * @param end the short Name (abbreviated name) of end Building
    * @return a list holding the path from Start Building to End Building if there exists one, or null otherwise.
-   * @throws ServerSideException if short name of either is invalid
+   * @throws ServerSideException if short name of either building is invalid
    *              (i.e not found or does not have a corresponding full name)
    */
   @GetMapping("/findPath")

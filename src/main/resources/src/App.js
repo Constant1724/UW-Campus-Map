@@ -8,6 +8,7 @@ import InputLabel from '@material-ui/core/InputLabel';
 import Select from '@material-ui/core/Select';
 import FormHelperText from '@material-ui/core/FormHelperText';
 import FormControl from '@material-ui/core/FormControl';
+
 class DropDownMenu extends Component {
 
     constructor(props) {
@@ -16,7 +17,7 @@ class DropDownMenu extends Component {
             name: '',
         }
     }
-
+    // Generate buildings into an array of MenuItem.
      generateListItems = () => {
         const result = [];
         const buildings = this.props.buildings;
@@ -24,7 +25,9 @@ class DropDownMenu extends Component {
         for (let i = 0; i < buildings.length; i++) {
             const building = buildings[i];
             result.push(
-                <MenuItem value={building['shortName']} >
+                <MenuItem value={building['shortName']}
+                          key={building['shortName'] + this.props.label}
+                >
                     {building['shortName'] + ' - ' + building['longName']}
                 </MenuItem>)
         }
@@ -54,10 +57,14 @@ class DropDownMenu extends Component {
 }
 
 class App extends Component {
+
     constructor(props) {
         super(props);
+        // this.canvas is the canvas we will drawing on
         this.canvas = null;
+        // the campus map image.
         this.image = null;
+
         this.setCanvas = canvas => {
             this.canvas = canvas;
         };
@@ -66,27 +73,17 @@ class App extends Component {
         this.state = {
             start: '',
             end: '',
-            buildings: []
+            buildings: [],
+            disableSubmit: false,
+            disableReset: false
         };
+
         this.drawBuildings = this.drawBuildings.bind(this);
         this.getAndPrintPath = this.getAndPrintPath.bind(this);
         this.highLightBuilding = this.highLightBuilding.bind(this);
     }
-    //
-    // update = (buildings) => {
-    //     const result = [];
-    //
-    //     for (let i = 0; i < buildings.length; i++) {
-    //         const building = buildings[i];
-    //         result.push(
-    //             <MenuItem value={building['shortName']} >
-    //                 {building['shortName'] + ' - ' + building['longName']}
-    //             </MenuItem>)
-    //     }
-    //
-    //     return result;
-    // };
 
+    // Before rendering, make the initial request to get a list of buildings.
     componentWillMount() {
         fetch('http://localhost:8080/listBuilding')
             .then(res => res.json())
@@ -94,6 +91,7 @@ class App extends Component {
 
     }
 
+    // After rendering, we may load the image and draw it to the canvas
     componentDidMount() {
         const image = new Image();
         image.src = map;
@@ -105,6 +103,7 @@ class App extends Component {
         };
     }
 
+    // Simply put a dot on the location of the building.
     highLightBuilding = (shortName, buildings, ctx) => {
         const location = buildings.find(element => element['shortName'] === shortName)['location'];
         ctx.beginPath();
@@ -112,6 +111,7 @@ class App extends Component {
         ctx.fill();
     };
 
+    // Draw two buildings on the campus map.
     drawBuildings = (state) =>{
         const ctx = this.canvas.getContext('2d');
         ctx.fillStyle = "#FF0000";
@@ -126,8 +126,17 @@ class App extends Component {
         }
     };
 
+    // Make request to find path between two buildings and print them out.
     getAndPrintPath = state => {
-        fetch(`http://localhost:8080/findPath?start=${state.start}&end=${state.end}`)
+        this.setState({disableSubmit: true});
+        // fetch(`http://localhost:8080/findPath?start=${state.start}&end=${state.end}`)
+        fetch(`http://localhost:8080/findPath?start=aaa&end=${state.end}`)
+            .then(res => {
+                if (!res.ok) {
+                    throw res;
+                }
+                return res;
+            })
             .then(res => res.json())
             .then(json => {
                 if (json.length !== 0) {
@@ -145,7 +154,14 @@ class App extends Component {
                     ctx.stroke();
                 }
 
-            });
+            })
+            .catch(err => {
+                if (err.code === 500) {
+
+                    // alert("Local website is corrupted please refresh");
+                    console.log(err);
+            }})
+            .finally(() => this.setState({disableSubmit: false}));
     };
 
   render() {
@@ -159,30 +175,6 @@ class App extends Component {
           <DropDownMenu buildings={((state) => state.buildings) (this.state)}
                         label={'End'} helperText={'Select an End Building'}
                         callback={(value) => this.setState({end: value})}/>
-          {/*<FormControl className={'DropDownMenu'} required>*/}
-              {/*<InputLabel >Start</InputLabel>*/}
-              {/*<Select*/}
-                  {/*value={this.state.start}*/}
-                  {/*onChange={(event) => {*/}
-                      {/*this.setState({start: event.target.value});*/}
-                  {/*}}*/}
-              {/*>*/}
-                  {/*{this.update(this.state.buildings)}*/}
-
-              {/*</Select>*/}
-              {/*<FormHelperText>Select a Start Building</FormHelperText>*/}
-          {/*</FormControl>*/}
-          {/*<FormControl className={'DropDownMenu'} required>*/}
-              {/*<InputLabel >End</InputLabel>*/}
-              {/*<Select*/}
-                  {/*value={this.state.end}*/}
-                  {/*onChange={(event) => {this.setState({end: event.target.value})}}*/}
-              {/*>*/}
-                  {/*{this.update(this.state.buildings)}*/}
-
-              {/*</Select>*/}
-              {/*<FormHelperText>Select a End Building</FormHelperText>*/}
-          {/*</FormControl>*/}
 
               <div>
                   <Button
@@ -200,6 +192,7 @@ class App extends Component {
                           }) (this.state);
                       }}
                       className={'Button'}
+                      disabled={this.state.disableSubmit}
                   >
                       Find Path
                   </ Button>
@@ -217,10 +210,10 @@ class App extends Component {
                       Reset
                   </ Button>
           </div>
+
         <div>
             <canvas ref={this.setCanvas}/>
         </div>
-        {/*<canvas ref={this.setCanvas} width={'4330'} height={'2960'}  className={'Canvas'}/>*/}
 
       </div>
     );

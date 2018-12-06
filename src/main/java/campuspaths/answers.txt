@@ -1,0 +1,16 @@
+1. How has the View and Controller been split in your code? Think about how React splits up the same.
+
+2. What decisions did you make when you refactored your code to work with Spring?
+    I did not refactor my previous code as doing that will affect backward compatibility.
+    Instead, i make a service wrapper for CampusMapModel.
+
+3. What decisions did you make when designing your API?
+    First, i reason about what functionality does the web UI requires.
+    It turns out the basic functionality is to get a list of available buildings
+    and to find Path between any two buildings.
+    As a result, my design only consists of theses two methods.
+
+    Since the API accepts parameter from web request, which will be String, I decide to
+    make the corresponding back-end method to take Strings as parameter.
+
+4. What additional functionality did you add that you would like us to consider for Extra Credit?
