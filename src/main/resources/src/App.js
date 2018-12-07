@@ -166,8 +166,8 @@ class App extends Component {
             end: '',
             buildings: [],
             paths: [],
-            // disableSubmit: false,
-            // disableReset: false
+            isHidden: false,
+            disableSubmit: false,
         };
 
         this.getPath = this.getPath.bind(this);
@@ -185,6 +185,13 @@ class App extends Component {
     loadImage = () => {
         const image = new Image();
         image.src = map;
+        image.onerror = () => {
+            // if image is absent, hide the whole thing.
+            this.setState({isHidden: true});
+            alert("Image does not found due to server error. \n" +
+                "All functionality will not be available. \n" +
+                "Sorry for your inconvenience. \n")
+        };
         return image;
     };
 
@@ -211,47 +218,62 @@ class App extends Component {
 
     render() {
         return (
-              <div>
-
-                  <DropDownMenu buildings={((state) => state.buildings) (this.state)}
-                                label={'Start'} helperText={'Select a Start Building'}
-                                currentDisplayValue={this.state.start}
-                                onChange={(value) => this.setState({start: value, paths:[]})}/>
-
-                  <DropDownMenu buildings={((state) => state.buildings) (this.state)}
-                                label={'End'} helperText={'Select an End Building'}
-                                currentDisplayValue={this.state.end}
-                                onChange={(value) => this.setState({end: value, paths:[]})}/>
-
-                  <div>
-                      <SubmitButton start={this.state.start}
-                                    end={this.state.end}
-                                    getPath={this.getPath}
-                                    disableSubmit={this.state.disableSubmit}
-                      />
-
-                      <Button
-                          variant='contained'
-                          color='primary'
-                          onClick={() => {
-                              this.setState({start: '', end: '', paths:[]})
-                          }}
-                          className={'Button'}
-                      >
-                          Reset
-                      </ Button>
-                  </div>
-
+            <div>
+                {!this.state.isHidden &&
                 <div>
 
-                    <MyCanvas start={this.state.start} end={this.state.end}
-                                        buildings={this.state.buildings}
-                                        paths={this.state.paths} loadImage={this.loadImage}
-                                        canvas = {this.canvas}
-                    />
-                </div>
+                    <DropDownMenu buildings={((state) => state.buildings)(this.state)}
+                                  label={'Start'} helperText={'Select a Start Building'}
+                                  currentDisplayValue={this.state.start}
+                                  onChange={(value) => this.setState({start: value, paths: []})}/>
 
-              </div>
+                    <DropDownMenu buildings={((state) => state.buildings)(this.state)}
+                                  label={'End'} helperText={'Select an End Building'}
+                                  currentDisplayValue={this.state.end}
+                                  onChange={(value) => this.setState({end: value, paths: []})}/>
+
+                    <div>
+                        <SubmitButton start={this.state.start}
+                                      end={this.state.end}
+                                      getPath={this.getPath}
+                                      disableSubmit={this.state.disableSubmit}
+                        />
+
+                        <Button
+                            variant='contained'
+                            color='primary'
+                            onClick={() => {
+                                this.setState({start: '', end: '', paths: []})
+                            }}
+                            className={'Button'}
+                        >
+                            Reset
+                        </ Button>
+                    </div>
+
+                    <div>
+
+                        <MyCanvas start={this.state.start} end={this.state.end}
+                                  buildings={this.state.buildings}
+                                  paths={this.state.paths} loadImage={this.loadImage}
+                                  canvas={this.canvas}
+                        />
+                    </div>
+
+
+                </div>
+                }
+
+                {this.state.isHidden &&
+                <div>
+                    <p>Image does not found due to server error.</p>
+                    <p>All functionality will be unavailable </p>
+                    <p>Sorry for your inconvenience</p>
+                </div>
+                }
+            </div>
+
+
     );
   }
 }

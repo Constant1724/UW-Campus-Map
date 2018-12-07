@@ -9,7 +9,6 @@ import org.springframework.test.context.junit4.SpringRunner;
 @SpringBootTest(classes = CampusPathsApplication.class)
 public class CampusPathsApplicationTest {
 
-    @Test
-    public void contextLoads() {
-    }
+  @Test
+  public void contextLoads() {}
 }

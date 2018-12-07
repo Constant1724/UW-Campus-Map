@@ -89,7 +89,7 @@ public class CampusMapModel {
    *     malformed.
    */
   public static CampusMapModel makeInstance(String pathFileName, String buildingFileName)
-          throws RuntimeException {
+      throws RuntimeException {
     CampusMapModel model = new CampusMapModel();
     try {
       model.loadPathData(pathFileName);
@@ -118,9 +118,9 @@ public class CampusMapModel {
    * @throws RuntimeException If there is an IOException while reading the file.
    */
   private void loadPathData(String filename)
-          throws MarvelParser.MalformedDataException, RuntimeException {
+      throws MarvelParser.MalformedDataException, RuntimeException {
     try (BufferedReader reader =
-                 Files.newBufferedReader(Paths.get(filename), Charset.defaultCharset())) {
+        Files.newBufferedReader(Paths.get(filename), Charset.defaultCharset())) {
 
       String inputLine;
 
@@ -133,7 +133,7 @@ public class CampusMapModel {
         String[] tokens = inputLine.split("\t", -1);
         if (tokens.length != 3) {
           throw new MarvelParser.MalformedDataException(
-                  "Line should contain exactly 2 tab: " + inputLine);
+              "Line should contain exactly 2 tab: " + inputLine);
         }
 
         // Split x,y into [x, y] for both origin and destination.
@@ -142,9 +142,9 @@ public class CampusMapModel {
         Double distance = Double.parseDouble(tokens[2]);
 
         Coordinate originCoordinate =
-                new Coordinate(Double.parseDouble(origin[0]), Double.parseDouble(origin[1]));
+            new Coordinate(Double.parseDouble(origin[0]), Double.parseDouble(origin[1]));
         Coordinate destinationCoordinate =
-                new Coordinate(Double.parseDouble(destination[0]), Double.parseDouble(destination[1]));
+            new Coordinate(Double.parseDouble(destination[0]), Double.parseDouble(destination[1]));
 
         Graph<Coordinate, Double>.Node start = this.graph.makeNode(originCoordinate);
         Graph<Coordinate, Double>.Node end = this.graph.makeNode(destinationCoordinate);
@@ -199,9 +199,9 @@ public class CampusMapModel {
    * @throws RuntimeException If there is an IOException while reading the file.
    */
   private void loadBuildingData(String filename)
-          throws MarvelParser.MalformedDataException, RuntimeException {
+      throws MarvelParser.MalformedDataException, RuntimeException {
     try (BufferedReader reader =
-                 Files.newBufferedReader(Paths.get(filename), Charset.defaultCharset())) {
+        Files.newBufferedReader(Paths.get(filename), Charset.defaultCharset())) {
       String inputLine;
 
       // Skip the header.
@@ -213,7 +213,7 @@ public class CampusMapModel {
         String[] tokens = inputLine.split("\t", -1);
         if (tokens.length != 4) {
           throw new MarvelParser.MalformedDataException(
-                  "Line should contain exactly 3 tab: " + inputLine);
+              "Line should contain exactly 3 tab: " + inputLine);
         }
 
         String shortName = tokens[0];
@@ -261,7 +261,7 @@ public class CampusMapModel {
   public @Nullable List<CampusPath> findPath(Coordinate start, Coordinate end) {
     checkRep();
     List<Graph<Coordinate, Double>.Edge> result =
-            MarvelPaths2.findPath(this.graph, graph.makeNode(start), graph.makeNode(end));
+        MarvelPaths2.findPath(this.graph, graph.makeNode(start), graph.makeNode(end));
     if (result == null) {
       return null;
     }
@@ -269,8 +269,8 @@ public class CampusMapModel {
     List<CampusPath> paths = new ArrayList<>();
     for (Graph<Coordinate, Double>.Edge edge : result) {
       paths.add(
-              new CampusPath(
-                      edge.getStart().getContent(), edge.getEnd().getContent(), edge.getLabel()));
+          new CampusPath(
+              edge.getStart().getContent(), edge.getEnd().getContent(), edge.getLabel()));
     }
     checkRep();
     return paths;

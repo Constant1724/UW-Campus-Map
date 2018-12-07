@@ -1,20 +1,19 @@
 package hw8;
 
-import campuspaths.CampusPathsApplication;
-import org.junit.BeforeClass;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit4.SpringRunner;
+import static org.junit.Assert.assertEquals;
 
+import campuspaths.CampusPathsApplication;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
-
-import static org.junit.Assert.assertEquals;
+import org.junit.BeforeClass;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.junit4.SpringRunner;
 
 /**
  * This class, along with HW8TestDriver, can be used to test your Campus Paths application. It is
@@ -27,7 +26,7 @@ import static org.junit.Assert.assertEquals;
  * more examples.
  */
 @RunWith(SpringRunner.class)
-@SpringBootTest(classes={CampusPathsApplication.class})
+@SpringBootTest(classes = {CampusPathsApplication.class})
 public class ScriptFileTests {
 
   private static List<File> testFiles = null;
@@ -57,7 +56,7 @@ public class ScriptFileTests {
 
   @Test
   public void testFiles() throws IOException {
-    for(File test : testFiles) {
+    for (File test : testFiles) {
       File expected = new File("src/test/java/hw8/" + test.getName().split("[.]")[0] + ".expected");
       String expectedContents = fileContents(expected);
       String actualContents = runScriptFile(test);
@@ -119,5 +118,4 @@ public class ScriptFileTests {
     br.close();
     return result.toString();
   }
-
 }
