@@ -1,4 +1,9 @@
 1. How has the View and Controller been split in your code? Think about how React splits up the same.
+    The JS classes corresponding to view part are: DropDownMenu, Mycanvas, SubmitButton and another Button tag
+    in the App class. These classes only handles how to display the data, which are passed as props.
+
+    The App class correspond to the Controller Part, it maintains the logic of the whole UI system,
+     makes requests to backend server upon some actions, handles possible exceptions.
 
 2. What decisions did you make when you refactored your code to work with Spring?
     I did not refactor my previous code as doing that will affect backward compatibility.
@@ -14,3 +19,4 @@
     make the corresponding back-end method to take Strings as parameter.
 
 4. What additional functionality did you add that you would like us to consider for Extra Credit?
+    no.

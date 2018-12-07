@@ -48,7 +48,7 @@ public class PublicApi {
    * @throws ServerSideException if short name of either building is invalid
    *              (i.e not found or does not have a corresponding full name)
    */
-  @GetMapping("/findPath")
+  @GetMapping("/findPath")              // "http://localhost:8080/findPath?start=value&end=value"
   public List<CampusPath> findPath(
       @RequestParam(value = "start") String start, @RequestParam(value = "end") String end)
       throws ServerSideException {
@@ -62,7 +62,7 @@ public class PublicApi {
      *
      * @return an unmodifiable view of all Buildings, each with its own short name, full name and cost.
      */
-    @GetMapping("/listBuilding")
+    @GetMapping("/listBuilding")    // "http://localhost:8080/listBuilding"
     public Set<Building> listBuildings() {
         return service.listBuildings();
     }
