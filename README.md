@@ -59,7 +59,7 @@ at the source root of this project.
 
 Running the server prints some information to the console, then will appear to stop (because it is interacting via a webpage). If needed, you can halt the server by typing Ctrl-c.
   
-- From IntelliJ: run ConvolutionApplication.java
+- From IntelliJ: run ConvolutionApplication.java at src\main\java\campuspaths\CampusPathsApplication.java
 
 Note that this step will take a while.
 
