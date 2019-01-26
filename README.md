@@ -83,7 +83,7 @@ To run the test, simply run
 ```
 ./gradlew test
 ```
-
+## Note that this project is still under project cleaning && More Info is on the way!!
 ## Built With
 
 * [React](https://reactjs.org/) - The web framework used
