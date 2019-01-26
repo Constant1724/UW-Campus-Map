@@ -1,9 +1,9 @@
 package campuspaths.service;
 
 import campuspaths.model.ServerSideException;
-import hw8.Building;
-import hw8.CampusMapModel;
-import hw8.CampusPath;
+import UI.Building;
+import UI.CampusMapModel;
+import UI.CampusPath;
 import java.util.*;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
@@ -23,10 +23,10 @@ public class CampusService {
   // This is NOT An ADT!!!
 
   /** file name for campus path data set. */
-  public static String campusPathFileName = "src/main/java/hw8/data/campus_paths.tsv";
+  public static String campusPathFileName = "src/main/java/UI/data/campus_paths.tsv";
 
   /** file name for campus building data set. */
-  public static String campusBuildingFileName = "src/main/java/hw8/data/campus_buildings.tsv";
+  public static String campusBuildingFileName = "src/main/java/UI/data/campus_buildings.tsv";
 
   /**
    * model implements the main functionality of the CampusService: findPath form one building to

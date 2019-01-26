@@ -4,7 +4,7 @@ import static org.junit.Assert.*;
 
 import campuspaths.CampusPathsApplication;
 import campuspaths.model.ServerSideException;
-import hw8.CampusPath;
+import UI.CampusPath;
 import java.util.List;
 import org.junit.Test;
 import org.junit.runner.RunWith;

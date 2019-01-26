@@ -1,6 +1,6 @@
 package hw6;
 
-import hw3.Graph;
+import DataStructure.Graph;
 import java.util.*;
 import org.checkerframework.checker.nullness.qual.KeyFor;
 import org.checkerframework.checker.nullness.qual.NonNull;

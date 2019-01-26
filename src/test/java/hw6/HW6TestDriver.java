@@ -1,7 +1,7 @@
 package hw6;
 
-import hw3.Graph;
-import hw3.HW3TestDriver;
+import DataStructure.Graph;
+import DataStructure.HW3TestDriver;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;

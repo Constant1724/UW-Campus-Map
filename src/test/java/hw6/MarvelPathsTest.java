@@ -2,8 +2,8 @@ package hw6;
 
 import static org.junit.Assert.*;
 
-import hw3.Graph;
-import hw3.NodeTest;
+import DataStructure.Graph;
+import DataStructure.NodeTest;
 import java.util.ArrayList;
 import java.util.List;
 import org.junit.Before;

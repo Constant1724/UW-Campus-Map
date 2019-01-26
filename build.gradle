@@ -59,9 +59,9 @@ dependencies {
 ///
 
 task copyHw3TestScripts(type: Copy) {
-  from "src/test/java/hw3"
+  from "src/test/java/DataStructure"
   include "*.test", "*.expected"
-  into "${buildDir}/classes/java/test/hw3/"
+  into "${buildDir}/classes/java/test/DataStructure/"
 }
 
 task copyHw6TestScripts(type: Copy) {
@@ -83,44 +83,44 @@ task copyHw6TestData(type: Copy) {
 }
 
 task copyHw7TestScripts(type: Copy) {
-  from "src/test/java/hw7"
+  from "src/test/java/PathFinding"
   include "*.test", "*.expected"
-  into "${buildDir}/classes/java/test/hw7/"
+  into "${buildDir}/classes/java/test/PathFinding/"
 }
 
 task copyHw8TestScripts(type: Copy) {
-  from "src/test/java/hw8"
+  from "src/test/java/UI"
   include "*.test", "*.expected"
-  into "${buildDir}/classes/java/test/hw8/"
+  into "${buildDir}/classes/java/test/UI/"
 }
 
 task copyHw8TestData(type: Copy) {
-  from "src/staffTest/java/hw8/data"
+  from "src/staffTest/java/UI/data"
   include "*.tsv"
-  into "src/main/java/hw8/data"
+  into "src/main/java/UI/data"
 }
 
 task copyHw8StaffTestScripts(type: Copy) {
-  from "src/staffTest/java/hw8"
+  from "src/staffTest/java/UI"
   include "*.test", "*.expected"
-  into "${buildDir}/classes/java/staffTest/hw8/"
+  into "${buildDir}/classes/java/staffTest/UI/"
 }
 
 task copyHW8TestDriver(type: Copy) {
-  from "src/test/java/hw8"
+  from "src/test/java/UI"
   include "HW8TestDriver.java"
-  into "src/staffTest/java/hw8"
+  into "src/staffTest/java/UI"
 }
 
 test {
   // Comment out a line to start work on that homework.
   // exclude 'hw2/**'
-  // exclude 'hw3/**'
+  // exclude 'DataStructure/**'
   // exclude 'hw4/**'
   // exclude 'hw5/**'
   // exclude 'hw6/**'
-  // exclude 'hw7/**'
-  // exclude 'hw8/**'
+  // exclude 'PathFinding/**'
+  // exclude 'UI/**'
 }
 test.dependsOn copyHw3TestScripts
 test.dependsOn copyHw6TestScripts

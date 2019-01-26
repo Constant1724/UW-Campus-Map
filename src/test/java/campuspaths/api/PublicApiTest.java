@@ -6,8 +6,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import campuspaths.service.CampusService;
-import hw8.Building;
-import hw8.Coordinate;
+import UI.Building;
+import UI.Coordinate;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;

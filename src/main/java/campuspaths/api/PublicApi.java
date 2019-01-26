@@ -2,8 +2,8 @@ package campuspaths.api;
 
 import campuspaths.model.ServerSideException;
 import campuspaths.service.CampusService;
-import hw8.Building;
-import hw8.CampusPath;
+import UI.Building;
+import UI.CampusPath;
 import java.util.List;
 import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
