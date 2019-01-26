@@ -1,6 +1,8 @@
 # UW-Campus-Map
 An app for UW Campus Map. Built backend in java and UI in React
 
+## Note that this project is still under project cleaning && More Info is on the way!!
+
 ## Getting Started
 
 These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. See deployment for notes on how to deploy the project on a live system.
@@ -83,7 +85,7 @@ To run the test, simply run
 ```
 ./gradlew test
 ```
-## Note that this project is still under project cleaning && More Info is on the way!!
+
 ## Built With
 
 * [React](https://reactjs.org/) - The web framework used
