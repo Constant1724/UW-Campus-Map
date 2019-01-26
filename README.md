@@ -5,7 +5,7 @@ An app for UW Campus Map. Built backend in java and UI in React
 
 ## Getting Started
 
-These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. See deployment for notes on how to deploy the project on a live system.
+These instructions will get you a copy of the project up and running on your local machine for development and testing purposes.
 
 ### Prerequisites
 
@@ -59,7 +59,7 @@ at the source root of this project.
 
 Running the server prints some information to the console, then will appear to stop (because it is interacting via a webpage). If needed, you can halt the server by typing Ctrl-c.
   
-- From IntelliJ: run ConvolutionApplication.java at src\main\java\campuspaths\CampusPathsApplication.java
+- From IntelliJ: run src\main\java\campuspaths\CampusPathsApplication.java
 
 Note that this step will take a while.
 
